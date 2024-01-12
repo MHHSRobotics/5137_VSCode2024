@@ -3,8 +3,11 @@ package frc.robot.Subsystems;
 import frc.robot.Constants.Arm_Constants;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
@@ -16,10 +19,7 @@ import com.ctre.phoenix6.sim.TalonFXSimState;
 public class Arm extends ProfiledPIDSubsystem {
     private TalonFX leftMotor;
     private TalonFX rightMotor;
-    private TalonFXSimState leftMotorSim;
-    private TalonFXSimState rightMotorSim;
     private CANcoder canCoder;
-    private CANcoderSimState canCoderSim;
     private ArmFeedforward feedForward;
 
     public Arm() {
@@ -34,13 +34,8 @@ public class Arm extends ProfiledPIDSubsystem {
             0.0);
 
         leftMotor = new TalonFX(Arm_Constants.leftMotorID);
-        leftMotorSim = leftMotor.getSimState();
         rightMotor = new TalonFX(Arm_Constants.rightMotorID);
-        rightMotorSim = rightMotor.getSimState();
-        
         canCoder = new CANcoder(Arm_Constants.canCoderID);
-        canCoderSim = canCoder.getSimState();
-        
         feedForward = new ArmFeedforward(
             Arm_Constants.kS,
             Arm_Constants.kG,
@@ -48,7 +43,7 @@ public class Arm extends ProfiledPIDSubsystem {
             Arm_Constants.kA
         );
 
-        setGoal(0.0);
+        setGoal(0.0);  
     }
 
     @Override
@@ -56,10 +51,19 @@ public class Arm extends ProfiledPIDSubsystem {
         double feed = feedForward.calculate(setpoint.position, setpoint.velocity);
         leftMotor.setVoltage(output + feed);
         rightMotor.setVoltage(output + feed);
+
     }
 
     @Override
     public double getMeasurement() {
         return Math.toRadians(canCoder.getPosition().getValueAsDouble());
     }
+
+    @Override 
+    public void simulationPeriodic()
+    {
+        useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
+    }
+
+    
 }
