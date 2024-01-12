@@ -44,6 +44,9 @@ public class RobotContainer {
     operator.circle()
     .onTrue(arm_Commands.moveToAmp());
 
+    operator.cross()
+    .onTrue(arm_Commands.moveToSpeaker());
+
     operator.L2()
     .onTrue(arm_Commands.moveBackward())
     .onFalse(arm_Commands.stopMoving());
