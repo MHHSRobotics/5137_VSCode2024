@@ -11,10 +11,10 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 public class Arm extends ProfiledPIDSubsystem {
-    private static TalonFX leftMotor;
-    private static TalonFX rightMotor;
-    private static CANcoder canCoder;
-    private static ArmFeedforward feedForward;
+    private TalonFX leftMotor;
+    private TalonFX rightMotor;
+    private CANcoder canCoder;
+    private ArmFeedforward feedForward;
 
     public Arm() {
         super(
