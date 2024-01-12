@@ -1,15 +1,19 @@
 package frc.robot.Constants;
 
+import edu.wpi.first.math.system.plant.DCMotor;
+
 public class Arm_Constants {
     // Positions
-    public static final double intakePosition = -75.0;
-    public static final double ampPosition = 15.0;
-    public static final double speakerPosition = -45.0;
+    public static final double intakePosition = Math.toRadians(-75.0);
+    public static final double ampPosition = Math.toRadians(15.0);
+    public static final double speakerPosition = Math.toRadians(-45.0);
+    
 
     // Hardware IDS
     public static final int leftMotorID = 1;
     public static final int rightMotorID = 2;
     public static final int canCoderID = 3;
+
 
     // Feedforward Constants
     public static final double kS = 1.0;
@@ -25,4 +29,6 @@ public class Arm_Constants {
     // Constants
     public static final double kMaxVelocity = 3.0;
     public static final double kMaxAcceleration = 10.0;
+    
+
 }

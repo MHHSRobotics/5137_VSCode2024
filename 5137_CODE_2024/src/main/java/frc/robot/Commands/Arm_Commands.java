@@ -26,15 +26,15 @@ public class Arm_Commands {
     }
 
     public InstantCommand moveToStart() {
-        return new InstantCommand(() -> arm.setGoal(Math.toRadians(Arm_Constants.intakePosition)), arm);
+        return new InstantCommand(() -> arm.setGoal(Arm_Constants.intakePosition), arm);
     }
 
     public InstantCommand moveToAmp() {
-        return new InstantCommand(() -> arm.setGoal(Math.toRadians(Arm_Constants.ampPosition)), arm);
+        return new InstantCommand(() -> arm.setGoal(Arm_Constants.ampPosition), arm);
     }
 
     public InstantCommand moveToSpeaker() {
-        return new InstantCommand(() -> arm.setGoal(Math.toRadians(Arm_Constants.speakerPosition)), arm);
+        return new InstantCommand(() -> arm.setGoal(Arm_Constants.speakerPosition), arm);
     }
 
     public InstantCommand stopMoving() {
