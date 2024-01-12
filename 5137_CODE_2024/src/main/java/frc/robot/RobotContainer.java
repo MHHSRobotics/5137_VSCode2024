@@ -35,12 +35,15 @@ public class RobotContainer {
 
   private void configureBindings() {
     // Operator Bindings
-    operator.square();
+    operator.square()
+    .onTrue(arm_Commands.moveToIntake());
 
-    operator.cross();
+    operator.triangle()
+    .onTrue(arm_Commands.moveToStart());
 
-    operator.circle();
-    
+    operator.circle()
+    .onTrue(arm_Commands.moveToAmp());
+
     operator.L2()
     .onTrue(arm_Commands.moveBackward())
     .onFalse(arm_Commands.stopMoving());

@@ -41,26 +41,6 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     @Override
-    public void periodic() {
-
-    }
-
-    public void run(Boolean direction) {
-        if (direction) {
-            leftMotor.set(0.5);
-            rightMotor.set(0.5);
-        } else {
-            leftMotor.set(-0.5);
-            rightMotor.set(-0.5);
-        }
-    }
-
-    public void stop() {
-        leftMotor.set(0.0);
-        rightMotor.set(0.0);
-    }
-
-    @Override
     public void useOutput(double output, State setpoint) {
         double feed = feedForward.calculate(setpoint.position, setpoint.velocity);
         leftMotor.setVoltage(output + feed);
