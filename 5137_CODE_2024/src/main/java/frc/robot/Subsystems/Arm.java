@@ -7,13 +7,19 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 
+import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.sim.CANcoderSimState;
+import com.ctre.phoenix6.sim.TalonFXSimState;
 
 public class Arm extends ProfiledPIDSubsystem {
     private TalonFX leftMotor;
     private TalonFX rightMotor;
+    private TalonFXSimState leftMotorSim;
+    private TalonFXSimState rightMotorSim;
     private CANcoder canCoder;
+    private CANcoderSimState canCoderSim;
     private ArmFeedforward feedForward;
 
     public Arm() {
@@ -29,7 +35,10 @@ public class Arm extends ProfiledPIDSubsystem {
 
         leftMotor = new TalonFX(Arm_Constants.leftMotorID);
         rightMotor = new TalonFX(Arm_Constants.rightMotorID);
+        leftMotorSim = leftMotor.getSimState();
+        rightMotorSim = rightMotor.getSimState();
         canCoder = new CANcoder(Arm_Constants.canCoderID);
+        canCoderSim = canCoder.getSimState();
         feedForward = new ArmFeedforward(
             Arm_Constants.kS,
             Arm_Constants.kG,
