@@ -34,11 +34,13 @@ public class Arm extends ProfiledPIDSubsystem {
             0.0);
 
         leftMotor = new TalonFX(Arm_Constants.leftMotorID);
-        rightMotor = new TalonFX(Arm_Constants.rightMotorID);
         leftMotorSim = leftMotor.getSimState();
+        rightMotor = new TalonFX(Arm_Constants.rightMotorID);
         rightMotorSim = rightMotor.getSimState();
+        
         canCoder = new CANcoder(Arm_Constants.canCoderID);
         canCoderSim = canCoder.getSimState();
+        
         feedForward = new ArmFeedforward(
             Arm_Constants.kS,
             Arm_Constants.kG,
