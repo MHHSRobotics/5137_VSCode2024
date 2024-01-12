@@ -49,6 +49,6 @@ public class Arm extends ProfiledPIDSubsystem {
 
     @Override
     public double getMeasurement() {
-        return canCoder.getAbsolutePosition().getValueAsDouble();
+        return Math.toRadians(canCoder.getPosition().getValueAsDouble());
     }
 }
