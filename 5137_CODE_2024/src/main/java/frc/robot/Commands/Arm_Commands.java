@@ -33,6 +33,10 @@ public class Arm_Commands {
         return new InstantCommand(() -> arm.setGoal(Math.toRadians(Arm_Constants.ampPosition)), arm);
     }
 
+    public InstantCommand moveToSpeaker() {
+        return new InstantCommand(() -> arm.setGoal(Math.toRadians(Arm_Constants.speakerPosition)), arm);
+    }
+
     public InstantCommand stopMoving() {
         return new InstantCommand(() -> arm.setGoal(arm.getMeasurement()), arm);
     }
