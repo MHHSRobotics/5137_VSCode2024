@@ -4,7 +4,7 @@ public class Arm_Constants {
     // Positions
     public static final double intakePosition = -75.0;
     public static final double ampPosition = 15.0;
-    public static final double speakerPosition = -90.0;
+    public static final double speakerPosition = -45.0;
 
     // Hardware IDS
     public static final int leftMotorID = 1;
