@@ -8,16 +8,15 @@ import frc.robot.Commands.*;
 import frc.robot.Constants.*;
 import frc.robot.Subsystems.*;
 
-import java.util.function.BooleanSupplier;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 
 public class RobotContainer {
 
-  public static Joystick driver;
+  public static CommandPS4Controller driver;
+  public static CommandPS4Controller operator;
 
   public static Arm arm;
 
@@ -25,7 +24,8 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    driver = new Joystick(0);
+    driver = new CommandPS4Controller(0);
+    operator = new CommandPS4Controller(1);
     arm = new Arm();
 
     arm_Commands = new Arm_Commands(arm);
@@ -34,27 +34,20 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new Trigger(createBooleanSupplier(driver, 4, 3))
-    .onTrue(arm_Commands.moveForward())
-    .onFalse(arm_Commands.stopMoving());
+    // Operator Bindings
+    operator.square();
 
-    new Trigger(createBooleanSupplier(driver, 3, 4))
+    operator.cross();
+
+    operator.circle();
+    
+    operator.L2()
     .onTrue(arm_Commands.moveBackward())
     .onFalse(arm_Commands.stopMoving());
-  }
 
-  public static BooleanSupplier createBooleanSupplier(Joystick controller, int requiredPort, int dependentPort) {
-    BooleanSupplier booleanSupply;
-    booleanSupply = () -> {
-      if (controller != null) {
-        if (controller.getRawAxis(requiredPort) > 0.1 && controller.getRawAxis(dependentPort) < 0.1) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {return false;}
-    };
-    return booleanSupply;
+    operator.R2()
+    .onTrue(arm_Commands.moveForward())
+    .onFalse(arm_Commands.stopMoving());
   }
 
   public Command getAutonomousCommand() {

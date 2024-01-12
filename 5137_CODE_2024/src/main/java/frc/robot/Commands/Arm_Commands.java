@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class Arm_Commands {
 
-    private static Arm arm;
+    private Arm arm;
 
     public Arm_Commands(Arm arm) {
         this.arm = arm;
