@@ -13,14 +13,14 @@ public class Arm_Commands {
     };
 
     public InstantCommand moveForward() {
-        return new InstantCommand(() -> arm.run(true));
+        return new InstantCommand(() -> arm.run(true), arm);
     }
 
     public InstantCommand moveBackward() {
-        return new InstantCommand(() -> arm.run(false));
+        return new InstantCommand(() -> arm.run(false), arm);
     }
 
     public InstantCommand stopMoving() {
-        return new InstantCommand(() -> arm.stop());
+        return new InstantCommand(() -> arm.stop(), arm);
     }
 }
