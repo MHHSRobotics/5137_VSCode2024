@@ -13,20 +13,12 @@ public class Arm_Commands {
         this.arm = arm;
     };
 
-    public InstantCommand moveForward() {
-        return new InstantCommand(() -> arm.setGoal(arm.getMeasurement()+0.1), arm);
-    }
-
-    public InstantCommand moveBackward() {
-        return new InstantCommand(() -> arm.setGoal(arm.getMeasurement()-0.1), arm);
-    }
-
     public InstantCommand moveToIntake() {
-        return new InstantCommand(() -> arm.setGoal(0.0), arm);
+        return new InstantCommand(() -> arm.setGoal(Arm_Constants.intakePosition), arm);
     }
 
     public InstantCommand moveToStart() {
-        return new InstantCommand(() -> arm.setGoal(Arm_Constants.intakePosition), arm);
+        return new InstantCommand(() -> arm.setGoal(0.0), arm);
     }
 
     public InstantCommand moveToAmp() {
@@ -35,9 +27,5 @@ public class Arm_Commands {
 
     public InstantCommand moveToSpeaker() {
         return new InstantCommand(() -> arm.setGoal(Arm_Constants.speakerPosition), arm);
-    }
-
-    public InstantCommand stopMoving() {
-        return new InstantCommand(() -> arm.setGoal(arm.getMeasurement()), arm);
     }
 }

@@ -1,26 +1,25 @@
 package frc.robot.Subsystems;
 
+import frc.robot.Robot;
 import frc.robot.Constants.Arm_Constants;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 
-import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
-import com.ctre.phoenix6.sim.TalonFXSimState;
 
 public class Arm extends ProfiledPIDSubsystem {
     private TalonFX leftMotor;
     private TalonFX rightMotor;
     private CANcoder canCoder;
     private ArmFeedforward feedForward;
+
+    private CANcoderSimState canCoderSim;
 
     public Arm() {
         super(
@@ -43,7 +42,12 @@ public class Arm extends ProfiledPIDSubsystem {
             Arm_Constants.kA
         );
 
-        setGoal(0.0);  
+        if (Robot.isSimulation()) {
+            canCoder.setPosition(0.0);
+            canCoderSim = canCoder.getSimState();
+        }
+
+        setGoal(0.0);
     }
 
     @Override
@@ -51,7 +55,11 @@ public class Arm extends ProfiledPIDSubsystem {
         double feed = feedForward.calculate(setpoint.position, setpoint.velocity);
         leftMotor.setVoltage(output + feed);
         rightMotor.setVoltage(output + feed);
-
+        
+        if (Robot.isSimulation()) {
+            canCoderSim.setVelocity(setpoint.velocity);
+            canCoderSim.addPosition(Math.toDegrees(setpoint.velocity)*0.02);
+        }
     }
 
     @Override
@@ -60,10 +68,7 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     @Override 
-    public void simulationPeriodic()
-    {
-        useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
+    public void simulationPeriodic() {
+       useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
     }
-
-    
 }

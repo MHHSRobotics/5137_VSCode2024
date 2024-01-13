@@ -46,14 +46,6 @@ public class RobotContainer {
 
     operator.cross()
     .onTrue(arm_Commands.moveToSpeaker());
-
-    operator.L2()
-    .onTrue(arm_Commands.moveBackward())
-    .onFalse(arm_Commands.stopMoving());
-
-    operator.R2()
-    .onTrue(arm_Commands.moveForward())
-    .onFalse(arm_Commands.stopMoving());
   }
 
   public Command getAutonomousCommand() {
