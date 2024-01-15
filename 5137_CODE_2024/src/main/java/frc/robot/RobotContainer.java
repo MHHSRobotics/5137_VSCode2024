@@ -19,6 +19,7 @@ public class RobotContainer {
   private final CommandPS4Controller operator;
 
   private final Arm arm;
+  private final Vision vision; 
 
   private final Arm_Commands arm_Commands;
 
@@ -27,8 +28,10 @@ public class RobotContainer {
     driver = new CommandPS4Controller(0);
     operator = new CommandPS4Controller(1);
     arm = new Arm();
+    vision = new Vision();
 
     arm_Commands = new Arm_Commands(arm);
+    vision.setDefaultCommand(new AddVisionMeasurement(vision));
 
     configureBindings();
   }
