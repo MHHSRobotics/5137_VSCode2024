@@ -6,11 +6,13 @@ import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.Vision_Constants;
 
 public class Vision extends SubsystemBase{
     
@@ -25,11 +27,12 @@ public class Vision extends SubsystemBase{
         } 
         catch (IOException e) {
         }
+
+        visionPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.LOWEST_AMBIGUITY, camera, Vision_Constants.robotToCamera);
     }
 
-     public Optional<EstimatedRobotPose> getPoseFromARCamCamera(Pose2d referencePose) 
+     public Optional<EstimatedRobotPose> getEstimatedVisionPose() 
     {
-      visionPoseEstimator.setReferencePose(referencePose);
       return visionPoseEstimator.update();
     }
     

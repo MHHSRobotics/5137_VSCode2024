@@ -3,6 +3,7 @@ package frc.robot.Constants;
 import edu.wpi.first.math.system.plant.DCMotor;
 
 public class Arm_Constants {
+    
     // Positions
     public static final double intakePosition = Math.toRadians(-75.0);
     public static final double ampPosition = Math.toRadians(15.0);
