@@ -15,12 +15,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 
 public class RobotContainer {
 
-  public final CommandPS4Controller driver;
-  public final CommandPS4Controller operator;
+  private final CommandPS4Controller driver;
+  private final CommandPS4Controller operator;
 
-  public final Arm arm;
+  private final Arm arm;
 
-  public final Arm_Commands arm_Commands;
+  private final Arm_Commands arm_Commands;
 
   public RobotContainer() {
 
