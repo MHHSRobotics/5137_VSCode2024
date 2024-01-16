@@ -3,6 +3,7 @@ package frc.robot.Constants;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -62,6 +63,8 @@ public class Swerve_Constants {
         public static final double angleKP = chosenModule.angleKP;
         public static final double angleKI = chosenModule.angleKI;
         public static final double angleKD = chosenModule.angleKD;
+        public static final double angleKFF = 0.0;
+
 
         /* Drive Motor PID Values */
         public static final double driveKP = 0.12; //TODO: This must be tuned to specific robot
@@ -81,8 +84,8 @@ public class Swerve_Constants {
         public static final double maxAngularVelocity = 10.0; //TODO: This must be tuned to specific robot
 
         /* Neutral Modes */
-        public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
-        public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
+        public static final IdleMode angleNeutralMode = IdleMode.kBrake;
+        public static final IdleMode driveNeutralMode = IdleMode.kBrake;
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
