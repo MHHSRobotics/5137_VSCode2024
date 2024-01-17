@@ -16,7 +16,7 @@ import frc.robot.Constants.Vision_Constants;
 
 public class Vision extends SubsystemBase{
     
-    private final PhotonCamera camera = new PhotonCamera("cameraNameHere");
+    private final PhotonCamera camera = new PhotonCamera("SPCA2688_AV_Camera");
     private AprilTagFieldLayout aprilTagFieldLayout;
     private PhotonPoseEstimator visionPoseEstimator;
 
