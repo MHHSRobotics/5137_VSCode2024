@@ -31,8 +31,9 @@ public class Vision extends SubsystemBase{
         }
 
         visionPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.LOWEST_AMBIGUITY, camera, Vision_Constants.robotToCamera);
-        SmartDashboard.putString("Robot Pose", getEstimatedVisionPose().get().estimatedPose.toString());
-        SmartDashboard.putNumber("Distance from Origin", getEstimatedVisionPose().get().estimatedPose.getTranslation().toTranslation2d().getDistance(new Translation2d(0,0)));
+       
+        SmartDashboard.putString("Robot Pose", poseString());
+        SmartDashboard.putNumber("Distance from Origin",distanceFromOrigin());
     }
 
      public Optional<EstimatedRobotPose> getEstimatedVisionPose() 
@@ -40,6 +41,22 @@ public class Vision extends SubsystemBase{
       //TODO: Add swerve pose estimator into method once added
       return visionPoseEstimator.update();
     }
-    
-}
+    public String poseString()
+    {
+      if(getEstimatedVisionPose().isPresent()) 
+      {
+        return getEstimatedVisionPose().get().estimatedPose.toString();
+      }
+      return "null";
+    }
+
+    public double distanceFromOrigin()
+    {
+      if(getEstimatedVisionPose().isPresent())
+      {
+        return getEstimatedVisionPose().get().estimatedPose.getTranslation().toTranslation2d().getDistance(new Translation2d(0,0));
+      }
+      return -1;
+    }
+} 
 
