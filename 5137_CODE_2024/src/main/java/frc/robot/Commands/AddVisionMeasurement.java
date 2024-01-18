@@ -32,7 +32,7 @@ public class AddVisionMeasurement extends Command {
     if (visionPose.isPresent()) {
       estimatedPose = visionPose.get().estimatedPose.toPose2d();
       timestamp = visionPose.get().timestampSeconds;
-      System.out.println(estimatedPose);
+     
     }
     }
     
