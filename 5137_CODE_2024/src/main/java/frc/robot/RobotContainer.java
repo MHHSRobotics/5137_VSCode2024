@@ -7,6 +7,8 @@ package frc.robot;
 import frc.robot.Commands.*;
 import frc.robot.Constants.*;
 import frc.robot.Subsystems.*;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -26,9 +28,11 @@ public class RobotContainer {
 
     driver = new CommandPS4Controller(0);
     operator = new CommandPS4Controller(1);
-
+  
+    
     arm = new Arm();
-    dashboard = new Dashboard();
+
+    dashboard = new Dashboard(arm);
 
     arm_Commands = new Arm_Commands(arm);
 
