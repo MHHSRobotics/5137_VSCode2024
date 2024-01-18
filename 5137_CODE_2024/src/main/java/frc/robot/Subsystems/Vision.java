@@ -33,7 +33,11 @@ public class Vision extends SubsystemBase{
         visionPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.LOWEST_AMBIGUITY, camera, Vision_Constants.robotToCamera);
        
         SmartDashboard.putString("Robot Pose", poseString());
+        SmartDashboard.putNumber("Y",distanceFromOriginY());
+        SmartDashboard.putNumber("X",distanceFromOriginX());
         SmartDashboard.putNumber("Distance from Origin",distanceFromOrigin());
+
+
     }
 
      public Optional<EstimatedRobotPose> getEstimatedVisionPose() 
@@ -50,11 +54,28 @@ public class Vision extends SubsystemBase{
       return "null";
     }
 
+    public double distanceFromOriginX()
+    {
+      if(getEstimatedVisionPose().isPresent())
+      {
+        return getEstimatedVisionPose().get().estimatedPose.getTranslation().toTranslation2d().getX();
+      }
+      return -1;
+    }
     public double distanceFromOrigin()
     {
       if(getEstimatedVisionPose().isPresent())
       {
         return getEstimatedVisionPose().get().estimatedPose.getTranslation().toTranslation2d().getDistance(new Translation2d(0,0));
+      }
+      return -1;
+    }
+
+    public double distanceFromOriginY()
+    {
+      if(getEstimatedVisionPose().isPresent())
+      {
+        return getEstimatedVisionPose().get().estimatedPose.getTranslation().toTranslation2d().getY();
       }
       return -1;
     }
