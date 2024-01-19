@@ -19,7 +19,7 @@ public class Intake extends SubsystemBase{
         
     }
     
-    public boolean getBeamBreak()
+    public boolean getBreakBeam()
     {
         return !beamSensor.get();
     }
@@ -27,6 +27,6 @@ public class Intake extends SubsystemBase{
     @Override
     public void periodic()
     {
-        SmartDashboard.putBoolean("Beam Interrupted", getBeamBreak());
+        SmartDashboard.putBoolean("Beam Interrupted", getBreakBeam());
     }
 }
