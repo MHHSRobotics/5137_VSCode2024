@@ -19,6 +19,7 @@ public class RobotContainer {
   public static CommandPS4Controller operator;
 
   public static Arm arm;
+  private final Intake intake; 
 
   public static Arm_Commands arm_Commands;
 
@@ -27,6 +28,7 @@ public class RobotContainer {
     driver = new CommandPS4Controller(0);
     operator = new CommandPS4Controller(1);
     arm = new Arm();
+    intake = new Intake();
 
     arm_Commands = new Arm_Commands(arm);
 
