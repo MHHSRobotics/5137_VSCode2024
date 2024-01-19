@@ -3,6 +3,7 @@ package frc.robot.Subsystems;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -25,6 +26,12 @@ public class Intake extends SubsystemBase{
     public void periodic()
     {
         SmartDashboard.putNumber("Sensor Distance", ultrasonicSensorRange);
+        if(ultrasonicSensorRange <= 20)
+        {
+            SmartDashboard.putBoolean("Object Detected", true);
+        }
+        SmartDashboard.putBoolean("Object Detected", false);
+
  
         voltageScaleFactor = 5/RobotController.getVoltage5V();
         ultrasonicSensorRange = ultrasonicSensor.getValue()*voltageScaleFactor*0.125;
