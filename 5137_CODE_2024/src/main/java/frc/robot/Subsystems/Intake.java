@@ -31,7 +31,8 @@ public class Intake extends SubsystemBase{
     {
         double measurement = m_ultrasonic.getRangeMM();
         double filteredMeasurement = m_filter.calculate(measurement);
-        SmartDashboard.putNumber("Sensor Distance", measurement);
+        double intMeasurement = (int)filteredMeasurement;
+        SmartDashboard.putNumber("Sensor Distance", intMeasurement);
         if(measurement <= 7)
         {
             SmartDashboard.putBoolean("Object Detected", true);
