@@ -1,5 +1,6 @@
 package frc.robot.Subsystems;
 
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.RobotController;
@@ -9,31 +10,35 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase{
 
-    private AnalogInput ultrasonicSensor = new AnalogInput(0);
-    private DigitalOutput ultrasonicTrigger = new DigitalOutput(0);
-    private double ultrasonicSensorRange = 0;
-    private double voltageScaleFactor = 1;
+    private final int kUltrasonicPingPort = 0;
+    private final int kUltrasonicEchoPort = 1;
+    private final Ultrasonic m_ultrasonic = new Ultrasonic(kUltrasonicPingPort, kUltrasonicEchoPort);
+
+
+  // Ultrasonic sensors tend to be quite noisy and susceptible to sudden outliers,
+  // so measurements are filtered with a 5-sample median filter
+    private final MedianFilter m_filter = new MedianFilter(5);
 
 
     public Intake()
     {
         SmartDashboard.putNumber("Sensor Distance", 500);
-        ultrasonicTrigger.set(true);
     }
     
 
     @Override
     public void periodic()
     {
-        SmartDashboard.putNumber("Sensor Distance", ultrasonicSensorRange);
-        if(ultrasonicSensorRange <= 20)
+        double measurement = m_ultrasonic.getRangeMM();
+        double filteredMeasurement = m_filter.calculate(measurement);
+        SmartDashboard.putNumber("Sensor Distance", measurement);
+        if(measurement <= 7)
         {
             SmartDashboard.putBoolean("Object Detected", true);
         }
         SmartDashboard.putBoolean("Object Detected", false);
 
  
-        voltageScaleFactor = 5/RobotController.getVoltage5V();
-        ultrasonicSensorRange = ultrasonicSensor.getValue()*voltageScaleFactor*0.125;
+        
     }
 }
