@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Ultrasonic;
@@ -10,37 +11,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase{
 
-    private final int kUltrasonicPingPort = 0;
-    private final int kUltrasonicEchoPort = 1;
-    private final Ultrasonic m_ultrasonic = new Ultrasonic(kUltrasonicPingPort, kUltrasonicEchoPort);
-
-
-  // Ultrasonic sensors tend to be quite noisy and susceptible to sudden outliers,
-  // so measurements are filtered with a 5-sample median filter
-    private final MedianFilter m_filter = new MedianFilter(5);
-
+    private final DigitalInput beamSensor = new DigitalInput(0);
 
     public Intake()
     {
-        SmartDashboard.putNumber("Sensor Distance", 500);
-        m_ultrasonic.setEnabled(true);
+        SmartDashboard.putBoolean("Beam Interrupted", false);
+        
     }
     
+    public boolean getBeamBreak()
+    {
+        return !beamSensor.get();
+    }
 
     @Override
     public void periodic()
     {
-        
-        double measurement = m_ultrasonic.getRangeInches(); // use inches
-        double filteredMeasurement = m_filter.calculate(measurement);
-        SmartDashboard.putNumber("Sensor Distance", filteredMeasurement);
-        if(measurement <= 7)
-        {
-            SmartDashboard.putBoolean("Object Detected", true);
-        }
-        SmartDashboard.putBoolean("Object Detected", false);
-
- 
-        
+        SmartDashboard.putBoolean("Beam Interrupted", getBeamBreak());
     }
 }
