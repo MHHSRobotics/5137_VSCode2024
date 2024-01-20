@@ -21,7 +21,7 @@ import frc.robot.Constants.Vision_Constants;
 
 public class Vision extends SubsystemBase{
     
-    private final PhotonCamera camera = new PhotonCamera("SPCA2688_AV_Camera");
+    private final PhotonCamera camera = new PhotonCamera("AR2");
     private AprilTagFieldLayout aprilTagFieldLayout;
     private PhotonPoseEstimator visionPoseEstimator;
     private Optional<EstimatedRobotPose> globalPose = Optional.of(new EstimatedRobotPose(new Pose3d(0,0,0, new Rotation3d(0,0,0)), 0, null, null));
