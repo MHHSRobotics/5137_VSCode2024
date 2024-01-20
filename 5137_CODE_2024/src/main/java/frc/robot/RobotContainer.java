@@ -15,20 +15,23 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 
 public class RobotContainer {
 
-  public static CommandPS4Controller driver;
-  public static CommandPS4Controller operator;
+  private final CommandPS4Controller driver;
+  private final CommandPS4Controller operator;
 
-  public static Arm arm;
+  private final Arm arm;
+  private final Vision vision; 
 
-  public static Arm_Commands arm_Commands;
+  private final Arm_Commands arm_Commands;
 
   public RobotContainer() {
 
     driver = new CommandPS4Controller(0);
     operator = new CommandPS4Controller(1);
     arm = new Arm();
+    vision = new Vision();
 
     arm_Commands = new Arm_Commands(arm);
+    vision.setDefaultCommand(new AddVisionMeasurement(vision));
 
     configureBindings();
   }
