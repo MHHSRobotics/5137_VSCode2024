@@ -1,7 +1,5 @@
 package frc.robot.Constants;
 
-import edu.wpi.first.math.system.plant.DCMotor;
-
 public class Arm_Constants {
     // Positions
     public static final double intakePosition = Math.toRadians(0);
@@ -14,12 +12,11 @@ public class Arm_Constants {
     public static final int rightMotorID = 2;
     public static final int canCoderID = 3;
 
-
     // Feedforward Constants
-    public static final double kS = 1.0;
-    public static final double kG = 1.0;
-    public static final double kV = 1.0;
-    public static final double kA = 1.0;
+    public static final double kS = 0.5;
+    public static final double kG = 0.43;
+    public static final double kV = 1.80;
+    public static final double kA = 0.02;
 
     // PID Constants
     public static final double kP = 1.0;
@@ -27,8 +24,6 @@ public class Arm_Constants {
     public static final double kD = 0.0;
 
     // Constants
-    public static final double kMaxVelocity = 3.0;
-    public static final double kMaxAcceleration = 10.0;
-    
-
+    public static final double kMaxVelocity = 1.0;
+    public static final double kMaxAcceleration = 3.0;
 }
