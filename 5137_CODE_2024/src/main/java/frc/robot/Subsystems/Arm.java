@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -18,10 +19,12 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class Arm extends ProfiledPIDSubsystem {
-    private TalonFX leftMotor;
-    private TalonFX rightMotor;
+    private CANSparkMax leftMotor;
+    private CANSparkMax rightMotor;
     private CANcoder canCoder;
     private ArmFeedforward feedForward;
 
@@ -42,8 +45,8 @@ public class Arm extends ProfiledPIDSubsystem {
                 Arm_Constants.kMaxAcceleration)),
             0.0);
 
-        leftMotor = new TalonFX(Arm_Constants.leftMotorID);
-        rightMotor = new TalonFX(Arm_Constants.rightMotorID);
+        leftMotor = new CANSparkMax(Arm_Constants.leftMotorID, MotorType.kBrushless);
+        rightMotor = new CANSparkMax(Arm_Constants.rightMotorID, MotorType.kBrushless);
         canCoder = new CANcoder(Arm_Constants.canCoderID);
         feedForward = new ArmFeedforward(
             Arm_Constants.kS,
