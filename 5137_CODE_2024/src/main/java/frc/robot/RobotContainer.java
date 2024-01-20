@@ -18,44 +18,23 @@ public class RobotContainer {
   public static CommandPS4Controller driver;
   public static CommandPS4Controller operator;
 
-  public static Arm arm;
-  private final Intake intake; 
+  private Intake intake; 
 
-  public static Arm_Commands arm_Commands;
+  private Intake_Commands intake_Commands;
 
   public RobotContainer() {
-
     driver = new CommandPS4Controller(0);
     operator = new CommandPS4Controller(1);
-    arm = new Arm();
+
     intake = new Intake();
 
-    arm_Commands = new Arm_Commands(arm);
+    intake_Commands = new Intake_Commands(intake);
 
     configureBindings();
   }
 
   private void configureBindings() {
-    // Operator Bindings
-    operator.square()
-    .onTrue(arm_Commands.moveToIntake());
-
-    operator.triangle()
-    .onTrue(arm_Commands.moveToStart());
-
-    operator.circle()
-    .onTrue(arm_Commands.moveToAmp());
-
-    operator.cross()
-    .onTrue(arm_Commands.moveToSpeaker());
-
-    operator.L2()
-    .onTrue(arm_Commands.moveBackward())
-    .onFalse(arm_Commands.stopMoving());
-
-    operator.R2()
-    .onTrue(arm_Commands.moveForward())
-    .onFalse(arm_Commands.stopMoving());
+    
   }
 
   public Command getAutonomousCommand() {
