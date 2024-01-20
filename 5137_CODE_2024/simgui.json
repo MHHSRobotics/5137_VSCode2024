@@ -32,6 +32,8 @@
           "width": 0.8199999928474426
         },
         "XModules": {
+          "arrowSize": 100,
+          "arrowWeight": 2.0,
           "length": 0.20000000298023224,
           "style": "Box/Image",
           "width": 0.20000000298023224

@@ -1,5 +1,6 @@
 package frc.robot.Subsystems;
 
+import frc.robot.Robot;
 import frc.robot.Constants.Swerve_Constants;
 
 import java.io.File;
@@ -42,6 +43,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void setFieldRelative(boolean fieldRelative) {
-        this.fieldRelative = fieldRelative;
+        if (Robot.isReal()) this.fieldRelative = fieldRelative;
+        else System.out.println("Cannot change control mode in simulation.");
     }
 }

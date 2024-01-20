@@ -9,5 +9,5 @@ public class Swerve_Constants {
     public static final double RX_Deadband = 0.1;
 
     // Other Constants
-    public static final double maxVelocity = Units.feetToMeters(15);
+    public static final double maxVelocity = Units.feetToMeters(5);
 }
