@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.Commands.*;
-import frc.robot.Constants.*;
 import frc.robot.Subsystems.*;
 
 
@@ -15,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 
 public class RobotContainer {
 
-  public static CommandPS4Controller driver;
-  public static CommandPS4Controller operator;
+  public CommandPS4Controller driver;
+  public CommandPS4Controller operator;
 
   private Intake intake; 
 
@@ -34,7 +33,12 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    
+    operator.square()
+    .onTrue(intake_Commands.intakeForward());
+    operator.triangle()
+    .onTrue(intake_Commands.toStop());
+    operator.circle()
+    .onTrue(intake_Commands.intakeReverse());
   }
 
   public Command getAutonomousCommand() {
