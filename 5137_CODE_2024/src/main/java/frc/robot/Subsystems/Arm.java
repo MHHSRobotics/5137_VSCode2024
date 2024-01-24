@@ -7,7 +7,6 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
-import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -17,7 +16,6 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -76,7 +74,7 @@ public class Arm extends ProfiledPIDSubsystem {
         if (Robot.isSimulation()) {
             canCoderSim.setVelocity(setpoint.velocity);
             canCoderSim.addPosition(Math.toDegrees(setpoint.velocity)*0.02);
-            armSim.setAngle(-Math.toDegrees(getMeasurement())+105);
+            armSim.setAngle(-Math.toDegrees(getMeasurement())+180);
         }
     }
 
@@ -88,5 +86,13 @@ public class Arm extends ProfiledPIDSubsystem {
     @Override 
     public void simulationPeriodic() {
         useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
+    }
+
+    public double getGoal() {
+        return super.m_controller.getGoal().position;
+    }
+
+    public boolean getMovementFinished() {
+        return (Math.abs(this.getMeasurement() - super.m_controller.getGoal().position)) < Arm_Constants.errorMargin;
     }
 }

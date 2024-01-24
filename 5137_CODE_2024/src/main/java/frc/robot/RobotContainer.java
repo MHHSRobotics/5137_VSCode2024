@@ -35,11 +35,13 @@ public class RobotContainer {
 
   private void configureBindings() {
     // Operator Bindings
+    arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftX()));
+
     operator.square()
     .onTrue(arm_Commands.moveToIntake());
 
     operator.triangle()
-    .onTrue(arm_Commands.moveToStart());
+    .onTrue(arm_Commands.moveToDefault());
 
     operator.circle()
     .onTrue(arm_Commands.moveToAmp());

@@ -3,9 +3,9 @@ package frc.robot.Constants;
 public class Arm_Constants {
     // Positions
     public static final double intakePosition = Math.toRadians(0);
-    public static final double ampPosition = Math.toRadians(75);
-    public static final double speakerPosition = Math.toRadians(90);
-    
+    public static final double speakerPosition = Math.toRadians(30);
+    public static final double defaultPosition = Math.toRadians(75);
+    public static final double ampPosition = Math.toRadians(90);
 
     // Hardware IDS
     public static final int leftMotorID = 1;
@@ -25,5 +25,7 @@ public class Arm_Constants {
 
     // Constants
     public static final double kMaxVelocity = 1.0;
-    public static final double kMaxAcceleration = 3.0;
+    public static final double kMaxAcceleration = 3.0; // Meters per Second Squared
+    public static final double kManualSpeed = 5; // Degrees per Second
+    public static final double errorMargin = Math.toRadians(1.0); // Degrees
 }
