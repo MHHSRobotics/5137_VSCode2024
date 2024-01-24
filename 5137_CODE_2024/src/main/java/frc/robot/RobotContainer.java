@@ -19,24 +19,32 @@ public class RobotContainer {
   private final CommandPS4Controller operator;
 
   private final Arm arm;
+  private final Shooter shooter; 
   private final Vision vision; 
 
   private final Arm_Commands arm_Commands;
+  private final Shooter_Commands shooter_Commands;
 
   public RobotContainer() {
 
     driver = new CommandPS4Controller(0);
     operator = new CommandPS4Controller(1);
     arm = new Arm();
+    shooter = new Shooter();
     vision = new Vision();
 
     arm_Commands = new Arm_Commands(arm);
+    shooter_Commands = new Shooter_Commands(shooter);
     vision.setDefaultCommand(new AddVisionMeasurement(vision));
 
     configureBindings();
   }
 
   private void configureBindings() {
+
+    operator.L1()
+    .onTrue(shooter_Commands.shootDefault())
+    .onFalse(shooter_Commands.stop());
     // Operator Bindings
     operator.square()
     .onTrue(arm_Commands.moveToIntake());
