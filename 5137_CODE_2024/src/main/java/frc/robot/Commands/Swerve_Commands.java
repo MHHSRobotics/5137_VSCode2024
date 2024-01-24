@@ -6,6 +6,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class Swerve_Commands {
@@ -22,5 +23,9 @@ public class Swerve_Commands {
                 rotation.getAsDouble(), 
                 fieldRelative.getAsBoolean()),
             swerve);
+    }
+
+    public Command runAuto(String name) {
+        return swerve.getAuto(name);
     }
 }
