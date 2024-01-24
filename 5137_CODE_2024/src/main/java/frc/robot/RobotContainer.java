@@ -39,7 +39,7 @@ public class RobotContainer {
       () -> driver.getLeftX(),
       () -> -driver.getLeftY(),
       () -> -driver.getRightX(),
-      () -> driver.L1().getAsBoolean()
+      () -> !driver.L1().getAsBoolean()
     ));
   }
 
