@@ -33,12 +33,13 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    operator.square()
-    .onTrue(intake_Commands.intakeForward());
-    operator.triangle()
-    .onTrue(intake_Commands.toStop());
-    operator.circle()
-    .onTrue(intake_Commands.intakeReverse());
+    operator.R2()
+    .onTrue(intake_Commands.intakeForward())
+    .onFalse(intake_Commands.stop());
+
+    operator.L2()
+    .onTrue(intake_Commands.intakeReverse())
+    .onFalse(intake_Commands.stop());
   }
 
   public Command getAutonomousCommand() {
