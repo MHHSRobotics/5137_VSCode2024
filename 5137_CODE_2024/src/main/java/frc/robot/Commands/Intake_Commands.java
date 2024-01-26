@@ -1,5 +1,6 @@
 package frc.robot.Commands;
 
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.Intake_Constants;
 import frc.robot.Subsystems.Intake;
@@ -22,5 +23,9 @@ public class Intake_Commands {
 
     public InstantCommand intakeReverse() {
         return new InstantCommand(()->intake.set(-Intake_Constants.defaultMotorSpeed),intake);
+    
+    }
+    public FunctionalCommand continuousIntake() {
+        return new FunctionalCommand(()-> intake.set(Intake_Constants.defaultMotorSpeed), () -> {}, (Boolean x) -> intake.stop(), () -> {return intake.objectInRange();}, intake);
     }
 }

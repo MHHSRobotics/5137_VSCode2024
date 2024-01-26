@@ -28,10 +28,11 @@ public class RobotContainer {
     intake = new Intake();
 
     intake_Commands = new Intake_Commands(intake);
-
     configureBindings();
   }
 
+  
+  
   private void configureBindings() {
     operator.square()
     .onTrue(intake_Commands.intakeForward());
@@ -39,6 +40,9 @@ public class RobotContainer {
     .onTrue(intake_Commands.toStop());
     operator.circle()
     .onTrue(intake_Commands.intakeReverse());
+    operator.cross()
+    .onTrue(intake_Commands.continuousIntake());
+    
   }
 
   public Command getAutonomousCommand() {
