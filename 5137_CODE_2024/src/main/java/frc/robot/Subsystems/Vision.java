@@ -91,13 +91,26 @@ public class Vision extends SubsystemBase{
     @Override
     public void periodic() {
   
-      if(ar1Pose.isPresent()){
+      if(ar1Pose.isPresent() ){
         EstimatedRobotPose pose1 = ar1Pose.get();
-        EstimatedRobotPose pose2 = ar2Pose.get();
+   
+        System.out.println(pose1.estimatedPose.toPose2d());
         {
         SmartDashboard.putNumber("timestamp Ar1",pose1.timestampSeconds);
-        SmartDashboard.putNumber("timestamp Ar2",pose2.timestampSeconds);
+      
         SmartDashboard.putString("Pose ar1", poseString(pose1));
+
+        }
+        
+      }
+      if(ar2Pose.isPresent() ){
+    
+        EstimatedRobotPose pose2 = ar2Pose.get();
+ 
+        {
+   
+        SmartDashboard.putNumber("timestamp Ar2",pose2.timestampSeconds);
+     
         SmartDashboard.putString("Pose ar2", poseString(pose2));
         }
         
