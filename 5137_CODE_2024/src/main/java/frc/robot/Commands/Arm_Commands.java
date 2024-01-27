@@ -5,8 +5,7 @@ import frc.robot.Subsystems.Arm;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.*;
 
 public class Arm_Commands {
 
@@ -29,13 +28,8 @@ public class Arm_Commands {
             arm);
     }
 
-    public FunctionalCommand moveToSpeaker() {
-        return new FunctionalCommand(
-            () -> arm.setGoal(Arm_Constants.speakerPosition),
-            () -> {},
-            (Boolean x) -> {},
-            () -> arm.getMovementFinished(),
-            arm);
+    public InstantCommand moveToSpeaker(double distance) {
+        return new InstantCommand(() -> arm.followSpeaker(distance));
     }
 
     public FunctionalCommand moveToDefault() {
