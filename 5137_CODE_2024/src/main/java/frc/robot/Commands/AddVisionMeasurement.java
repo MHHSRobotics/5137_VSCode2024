@@ -26,14 +26,11 @@ public class AddVisionMeasurement extends Command {
   
   @Override
   public void execute() {
-    Optional<EstimatedRobotPose> visionPose = vision.getEstimatedVisionPose();
+    Optional<EstimatedRobotPose> ar1Pose = vision.getEstimatedAR1Pose();
+    Optional<EstimatedRobotPose> ar2Pose = vision.getEstimatedAR2Pose();
+
     //TODO: Add result from vision system to swerve pose estimator. See off-season 2023 robot code
 
-    if (visionPose.isPresent()) {
-      estimatedPose = visionPose.get().estimatedPose.toPose2d();
-      timestamp = visionPose.get().timestampSeconds;
-     
-    }
     }
     
     
