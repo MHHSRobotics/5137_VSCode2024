@@ -34,7 +34,7 @@ public class Intake extends SubsystemBase {
 
     public boolean objectInRange()
     {
-        if(getDistance() <= 5.4)
+        if(getDistance() <= 6)
         {
             return true;
         }
@@ -43,11 +43,13 @@ public class Intake extends SubsystemBase {
 
     public void set (double speed) {
         intakeMotor.set(TalonSRXControlMode.PercentOutput, speed);
+        
     }
     public void stop () {
         intakeMotor.set(TalonSRXControlMode.PercentOutput, 0.0);
         intakeMotor.setNeutralMode(NeutralMode.Brake);
     }
+
     @Override
     public void periodic() {
 
