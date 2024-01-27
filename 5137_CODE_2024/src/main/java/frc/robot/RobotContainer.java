@@ -17,7 +17,7 @@ public class RobotContainer {
     operator = new CommandPS4Controller(1);
     intake = new Intake();
     private final Shooter shooter; 
-    shooter = new Shooter();
+    
 
     intake_Commands = new Intake_Commands(intake);
 
