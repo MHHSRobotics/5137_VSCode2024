@@ -1,5 +1,6 @@
 package frc.robot.Subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -23,6 +24,7 @@ public class Intake extends SubsystemBase {
         ultrasonic.setEnabled(true);
         Ultrasonic.setAutomaticMode(true);
         intakeMotor.setInverted(true);
+        intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,40,40,10));
     }
 
     public double getDistance()
@@ -34,7 +36,7 @@ public class Intake extends SubsystemBase {
 
     public boolean objectInRange()
     {
-        if(getDistance() <= 6)
+        if(getDistance() <= 5)
         {
             return true;
         }

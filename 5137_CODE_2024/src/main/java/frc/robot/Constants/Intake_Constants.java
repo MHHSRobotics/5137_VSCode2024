@@ -1,5 +1,5 @@
 package frc.robot.Constants;
 
 public class Intake_Constants {
-    public static final double defaultMotorSpeed = 0.6;
+    public static final double defaultMotorSpeed = .50;
 }

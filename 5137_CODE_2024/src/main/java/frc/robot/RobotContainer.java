@@ -12,15 +12,15 @@ public class RobotContainer {
   public CommandPS4Controller operator;
   private Intake intake; 
   private Intake_Commands intake_Commands;
+  private Shooter shooter;
+
   public RobotContainer() {
+
     driver = new CommandPS4Controller(0);
     operator = new CommandPS4Controller(1);
     intake = new Intake();
-    private final Shooter shooter; 
-    
-
-    intake_Commands = new Intake_Commands(intake);
-
+    shooter = new Shooter();
+    intake_Commands = new Intake_Commands(intake, shooter);
     configureBindings();
   }
 
@@ -28,14 +28,18 @@ public class RobotContainer {
 
   private void configureBindings() {
     operator.square()
-    .onTrue(intake_Commands.intakeForward());
-    operator.triangle()
-    .onTrue(intake_Commands.toStop());
+    .onTrue(intake_Commands.intakeForward())
+    .onFalse(intake_Commands.toStop());
     operator.circle()
-    .onTrue(intake_Commands.intakeReverse());
+    .onTrue(intake_Commands.intakeReverse())
+    .onFalse(intake_Commands.toStop());
     operator.cross()
     .onTrue(intake_Commands.continuousIntake());
-
+    operator.R1()
+    .onTrue(intake_Commands.shootDefault())
+    .onFalse(intake_Commands.stop());
+    operator.L1()
+    .onTrue(intake_Commands.launch());
   }
 
   public Command getAutonomousCommand() {
