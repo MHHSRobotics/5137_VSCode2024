@@ -49,6 +49,11 @@
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/navX-Sensor[4]": {
+        "window": {
+          "visible": true
+        }
       }
     }
   },
