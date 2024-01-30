@@ -9,20 +9,29 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 public class RobotContainer {
 
-  public static CommandPS4Controller driver;
-  public static CommandPS4Controller operator;
+  private CommandPS4Controller driver;
+  private CommandPS4Controller operator;
 
-  public static Arm arm;
+  private Arm arm;
+  private Intake intake; 
+  private Shooter shooter;
+  private Vision vision;
 
-  public static Arm_Commands arm_Commands;
+  private Arm_Commands arm_Commands;
+  private Intake_Commands intake_Commands;
 
   public RobotContainer() {
 
     driver = new CommandPS4Controller(0);
     operator = new CommandPS4Controller(1);
     arm = new Arm();
+    intake = new Intake();
+    shooter = new Shooter();
+    vision = new Vision();
 
     arm_Commands = new Arm_Commands(arm);
+    intake_Commands = new Intake_Commands(intake, shooter);
+    vision.setDefaultCommand(new AddVisionMeasurement(vision));
 
     configureBindings();
   }
@@ -30,19 +39,29 @@ public class RobotContainer {
 
 
   private void configureBindings() {
-    operator.square()
+    operator.R2()
     .onTrue(intake_Commands.intakeForward())
     .onFalse(intake_Commands.toStop());
-    operator.circle()
+
+    operator.L2()
     .onTrue(intake_Commands.intakeReverse())
     .onFalse(intake_Commands.toStop());
+  
     operator.cross()
-    .onTrue(intake_Commands.continuousIntake());
-    operator.R1()
-    .onTrue(intake_Commands.shootDefault())
-    .onFalse(intake_Commands.stop());
-    operator.L1()
-    .onTrue(intake_Commands.launch());
+    .onTrue(arm_Commands.moveToSpeaker())
+    .onFalse(arm_Commands.stopMoving());
+
+    operator.square()
+    .onTrue(arm_Commands.moveToAmp())
+    .onFalse(arm_Commands.stopMoving());
+
+    operator.triangle()
+    .onTrue(arm_Commands.moveToStart())
+    .onFalse(arm_Commands.stopMoving());
+
+    operator.circle()
+    .onTrue(arm_Commands.moveToIntake())
+    .onFalse(arm_Commands.stopMoving());
   }
 
   public Command getAutonomousCommand() {
