@@ -11,6 +11,9 @@ public class Arm_Constants {
     public static final int rightMotorID = 2;
     public static final int canCoderID = 3;
 
+    //Motor Limits 
+    public static final int maxSupplyCurrent = 80;
+
     // Feedforward Constants
     public static final double kS = 0.5;
     public static final double kG = 0.43;

@@ -45,6 +45,10 @@ public class Arm extends ProfiledPIDSubsystem {
 
         leftMotor = new CANSparkMax(Arm_Constants.leftMotorID, MotorType.kBrushless);
         rightMotor = new CANSparkMax(Arm_Constants.rightMotorID, MotorType.kBrushless);
+
+        leftMotor.setSmartCurrentLimit(Arm_Constants.maxSupplyCurrent);
+        rightMotor.setSmartCurrentLimit(Arm_Constants.maxSupplyCurrent);
+
         canCoder = new CANcoder(Arm_Constants.canCoderID);
         feedForward = new ArmFeedforward(
             Arm_Constants.kS,
