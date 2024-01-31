@@ -36,7 +36,7 @@ public class RobotContainer {
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> driver.getLeftX(),
       () -> -driver.getLeftY(),
-      () -> -driver.getRightX(),
+      () -> driver.getRightX(),
       () -> !driver.L1().getAsBoolean()
     ));
   }
