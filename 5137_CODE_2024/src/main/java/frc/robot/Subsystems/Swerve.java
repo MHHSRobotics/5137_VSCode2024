@@ -42,11 +42,11 @@ public class Swerve extends SubsystemBase {
             this::getRobotVelocity,
             this::setChassisSpeeds,
             new HolonomicPathFollowerConfig(
-                new PIDConstants(5.0, 0.0, 0.0),
+                new PIDConstants(0.0, 0.0, 0.0),
                 new PIDConstants(
-                    swerve.swerveController.config.headingPIDF.p,
-                    swerve.swerveController.config.headingPIDF.i,
-                    swerve.swerveController.config.headingPIDF.d),
+                    swerve.swerveController.thetaController.getP(),
+                    swerve.swerveController.thetaController.getI(),
+                    swerve.swerveController.thetaController.getD()),
                 Swerve_Constants.maxModuleSpeed,
                 swerve.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
                 new ReplanningConfig()),
