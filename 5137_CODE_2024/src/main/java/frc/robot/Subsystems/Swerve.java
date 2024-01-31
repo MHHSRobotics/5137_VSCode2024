@@ -13,7 +13,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import swervelib.SwerveDrive;
+import swervelib.parser.PIDFConfig;
+import swervelib.parser.SwerveModuleConfiguration;
 import swervelib.parser.SwerveParser;
+import swervelib.parser.json.PIDFPropertiesJson;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -31,22 +34,25 @@ public class Swerve extends SubsystemBase {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         setUpPathPlanner();
     }
 
     public void setUpPathPlanner() {
+        SwerveModuleConfiguration moduleConfig = swerve.getModules()[0].configuration;
+        PIDFConfig anglePID = moduleConfig.anglePIDF;
+        PIDFConfig drivePID = moduleConfig.velocityPIDF;
+
         AutoBuilder.configureHolonomic(
             this::getPose,
             this::resetOdometry,
             this::getRobotVelocity,
             this::setChassisSpeeds,
             new HolonomicPathFollowerConfig(
-                new PIDConstants(0.0, 0.0, 0.0),
+                new PIDConstants(drivePID.p, drivePID.i, drivePID.d),
                 new PIDConstants(
-                    swerve.swerveController.thetaController.getP(),
-                    swerve.swerveController.thetaController.getI(),
-                    swerve.swerveController.thetaController.getD()),
+                    anglePID.p,
+                    anglePID.i,
+                    anglePID.d),
                 Swerve_Constants.maxModuleSpeed,
                 swerve.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
                 new ReplanningConfig()),
