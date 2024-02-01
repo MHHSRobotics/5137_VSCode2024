@@ -14,7 +14,9 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
   public static CommandPS4Controller driver;
@@ -39,11 +41,14 @@ public class RobotContainer {
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> MathUtil.applyDeadband(-driver.getLeftY(), Swerve_Constants.LY_Deadband),
-      () -> MathUtil.applyDeadband(-driver.getRightX(), Swerve_Constants.RX_Deadband),
+      () -> MathUtil.applyDeadband(driver.getRightX(), Swerve_Constants.RX_Deadband),
       () -> !driver.L1().getAsBoolean()
     ));
 
-    
+
+    driver.triangle()
+    .onTrue(swerve_Commands.zeroGyro());
+
     driver.cross()
     .onTrue(swerve_Commands.aimAtTarget());
 

@@ -3,7 +3,8 @@
     "front": 10.6,
     "left": 10.6
   },
-  "absoluteEncoderOffset": 312.71472,
+  "absoluteEncoderOffset": 0,
+
   "drive": {
     "type": "sparkmax",
     "id": 1,
@@ -14,10 +15,6 @@
     "id": 5,
     "canbus": "rio"
   },
-  "conversionFactor": {
-    "angle": 16.8,
-    "drive": 0.0472
-  },
   "encoder": {
     "type": "cancoder",
     "id": 9,
@@ -25,6 +22,6 @@
   },
   "inverted": {
     "drive": false,
-    "angle": false
+    "angle": true
   }
 }

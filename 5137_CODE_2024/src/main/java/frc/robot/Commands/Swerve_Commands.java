@@ -51,4 +51,10 @@ public class Swerve_Commands {
         return new FunctionalCommand(() -> {}, () -> swerve.aimAtTarget(), (Boolean x) -> {}, () -> swerve.robotAligned(), swerve);
     }
     
+    public InstantCommand zeroGyro()
+    {
+        return new InstantCommand(
+            () -> swerve.zeroGyro(),
+            swerve);
+    }
 }
