@@ -5,10 +5,12 @@
 package frc.robot;
 
 import frc.robot.Commands.*;
+import frc.robot.Constants.Swerve_Constants;
 import frc.robot.Subsystems.*;
 
 import java.io.File;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -35,9 +37,9 @@ public class RobotContainer {
 
   private void configureBindings() {
     swerve.setDefaultCommand(swerve_Commands.drive(
-      () -> driver.getLeftX(),
-      () -> -driver.getLeftY(),
-      () -> -driver.getRightX(),
+      () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
+      () -> MathUtil.applyDeadband(-driver.getLeftY(), Swerve_Constants.LY_Deadband),
+      () -> MathUtil.applyDeadband(-driver.getRightX(), Swerve_Constants.RX_Deadband),
       () -> !driver.L1().getAsBoolean()
     ));
 
