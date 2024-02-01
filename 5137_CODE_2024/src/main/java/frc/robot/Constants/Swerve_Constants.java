@@ -1,5 +1,7 @@
 package frc.robot.Constants;
 
+import com.pathplanner.lib.util.PIDConstants;
+
 import edu.wpi.first.math.util.Units;
 
 public class Swerve_Constants {
@@ -9,6 +11,14 @@ public class Swerve_Constants {
     public static final double RX_Deadband = 0.1;
 
     // Physics
-    public static final double maxVelocity = Units.feetToMeters(5);
+    public static final double maxVelocity = 4.5;
+    public static final double maxAngularSpeed = 10.0;
     public static final double maxModuleSpeed = 4.5;
+
+    //Constants
+    public static final double aimToleranceRadians = 0.1;
+    public static final double alignKP = 1.0;
+    public static final double alignKI = 0.0;
+    public static final double alignKD = 0.0;
+
 }

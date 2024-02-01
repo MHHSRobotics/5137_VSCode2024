@@ -11,6 +11,7 @@ import java.io.File;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 
 public class RobotContainer {
@@ -36,12 +37,18 @@ public class RobotContainer {
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> driver.getLeftX(),
       () -> -driver.getLeftY(),
-      () -> driver.getRightX(),
+      () -> -driver.getRightX(),
       () -> !driver.L1().getAsBoolean()
     ));
+
+    
+    //driver.cross()
+    //.onTrue(swerve_Commands.aimAtTarget());
+
   }
 
   public Command getAutonomousCommand() {
+    //return swerve_Commands.runAuto("StartToMid");
     return swerve_Commands.runAuto("StartToMid");
   }
 }
