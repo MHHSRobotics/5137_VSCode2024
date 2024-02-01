@@ -49,7 +49,7 @@ public class Swerve extends SubsystemBase {
         }
         setUpPathPlanner();
 
-        /* 
+        
         try 
         {
           aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
@@ -58,7 +58,7 @@ public class Swerve extends SubsystemBase {
         {
           e.printStackTrace();
         }
-        */
+        
     }
 
     public void setUpPathPlanner() {
@@ -114,22 +114,23 @@ public class Swerve extends SubsystemBase {
 
     public double getRadiansToTarget()
     {
+        Pose2d targetPose;
         if(DriverStation.getAlliance().equals(Alliance.Red))
         {
-            Pose2d targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
+            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
         }
         else
         {
-            Pose2d targetPose = aprilTagFieldLayout.getTagPose(8).get().toPose2d();
+            targetPose = aprilTagFieldLayout.getTagPose(8).get().toPose2d(); 
         }
 
-        Pose2d targetPose = new Pose2d(0,0, new Rotation2d());
         double radiansToPose = PhotonUtils.getYawToPose(swerve.getPose(), targetPose).getRadians();
         return radiansToPose;
     }
 
     public boolean robotAligned()
     {
+        System.out.println(Math.abs(getRadiansToTarget()));
         if(Math.abs(getRadiansToTarget()) < Swerve_Constants.aimToleranceRadians)
         {
             return true;
@@ -140,7 +141,7 @@ public class Swerve extends SubsystemBase {
     public void aimAtTarget()
     {
         PIDController turnController = new PIDController(Swerve_Constants.alignKP, Swerve_Constants.alignKI, Swerve_Constants.alignKD);
-        double turnVelocity = turnController.calculate(getRadiansToTarget(),0);
+        double turnVelocity = -turnController.calculate(getRadiansToTarget(),0);
         drive(new Translation2d(0,0),turnVelocity, true);
     }
      

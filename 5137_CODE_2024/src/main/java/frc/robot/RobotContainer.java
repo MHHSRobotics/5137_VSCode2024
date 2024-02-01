@@ -42,8 +42,8 @@ public class RobotContainer {
     ));
 
     
-    //driver.cross()
-    //.onTrue(swerve_Commands.aimAtTarget());
+    driver.cross()
+    .onTrue(swerve_Commands.aimAtTarget());
 
   }
 
