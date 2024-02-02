@@ -39,9 +39,11 @@ public class RobotContainer {
     intake = new Intake();
     shooter = new Shooter();
     vision = new Vision();
+    arm = new Arm();
 
     swerve_Commands = new Swerve_Commands(swerve);
     intake_Commands = new Intake_Commands(intake, shooter);
+    arm_Commands = new Arm_Commands(arm);
     vision.setDefaultCommand(new AddVisionMeasurement(vision));
 
     configureBindings();
