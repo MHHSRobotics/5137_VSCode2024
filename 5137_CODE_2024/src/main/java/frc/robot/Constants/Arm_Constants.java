@@ -3,6 +3,7 @@ package frc.robot.Constants;
 public class Arm_Constants {
     // Positions
     public static final double intakePosition = Math.toRadians(0);
+    public static final double speakerPosition = Math.toRadians(30);
     public static final double defaultPosition = Math.toRadians(75);
     public static final double ampPosition = Math.toRadians(90);
 

@@ -47,7 +47,7 @@ public class RobotContainer {
     .onTrue(arm_Commands.moveToAmp());
 
     operator.cross()
-    .onTrue(arm_Commands.moveToSpeaker(0.5)); // Get distance from april tags
+    .onTrue(arm_Commands.moveToSpeaker());
   }
 
   public Command getAutonomousCommand() {

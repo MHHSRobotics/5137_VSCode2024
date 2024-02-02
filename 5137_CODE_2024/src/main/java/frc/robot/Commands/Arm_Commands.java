@@ -28,8 +28,13 @@ public class Arm_Commands {
             arm);
     }
 
-    public InstantCommand moveToSpeaker(double distance) {
-        return new InstantCommand(() -> arm.followSpeaker(distance));
+    public FunctionalCommand moveToSpeaker() {
+        return new FunctionalCommand(
+            () -> arm.setGoal(Arm_Constants.speakerPosition),
+            () -> {},
+            (Boolean x) -> {},
+            () -> arm.getMovementFinished(),
+            arm);
     }
 
     public FunctionalCommand moveToDefault() {

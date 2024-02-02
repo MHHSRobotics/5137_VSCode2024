@@ -99,27 +99,4 @@ public class Arm extends ProfiledPIDSubsystem {
     public boolean getMovementFinished() {
         return (Math.abs(this.getMeasurement() - super.m_controller.getGoal().position)) < Arm_Constants.errorMargin;
     }
-
-    /**
-     * Automatically aligns the arm to speaker to follow a project trajectory.
-     * @param distance Distance to speaker horizontally. Must be within 5 meters.
-    */
-    public void followSpeaker(double distance) {
-        if (distance < 5) {
-            double x = distance - 0.115;
-            double y = Arm_Constants.kTargetY;
-            double g = Arm_Constants.kGravity;
-            double v = (distance <= 2) ? Arm_Constants.kShooterVelocity/1.5 : Arm_Constants.kShooterVelocity;
-
-            double a = ((Math.pow(y,2)/Math.pow(x,2))+1);
-            double b = (-((g*y)/Math.pow(v,2))-1);
-            double c = ((Math.pow(g,2)*Math.pow(x,2))/(4*Math.pow(v,4)));
-
-            double targetAngle = Math.acos(Math.sqrt((-b+Math.sqrt(Math.pow(b,2)-(4*a*c)))/(2*a)));
-
-            this.setGoal(targetAngle);
-        } else {
-            System.out.println("Distance too great to align to speaker!");
-        }
-    }
 }
