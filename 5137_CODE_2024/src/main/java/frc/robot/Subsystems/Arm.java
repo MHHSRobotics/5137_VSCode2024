@@ -53,6 +53,8 @@ public class Arm extends ProfiledPIDSubsystem {
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
 
+        leftMotor.setInverted(true);
+
         canCoder = new CANcoder(Arm_Constants.canCoderID);
         feedForward = new ArmFeedforward(
             Arm_Constants.kS,
@@ -96,6 +98,11 @@ public class Arm extends ProfiledPIDSubsystem {
         useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
     }
 
+    public void runManual(double output) {
+        leftMotor.set(0.3*output);
+        rightMotor.set(0.3*output);
+    }
+
     public double getGoal() {
         return super.m_controller.getGoal().position;
     }
@@ -104,8 +111,14 @@ public class Arm extends ProfiledPIDSubsystem {
         return (Math.abs(this.getMeasurement() - super.m_controller.getGoal().position)) < Arm_Constants.errorMargin;
     }
 
+    public void release() {
+        leftMotor.setIdleMode(IdleMode.kCoast);
+        rightMotor.setIdleMode(IdleMode.kCoast);
+    }
+
     @Override
     public void periodic() {
-        System.out.println("Measure: "+this.getMeasurement()+", Goal: "+this.getGoal());
+        //System.out.println("Measure: "+this.getMeasurement()+", Goal: "+this.getGoal());
+        //useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
     }
 }
