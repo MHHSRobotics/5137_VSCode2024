@@ -47,6 +47,10 @@ public class RobotContainer {
     .onTrue(intake_Commands.intakeReverse())
     .onFalse(intake_Commands.toStop());
 
+    operator.cross()
+    .onTrue(intake_Commands.shootDefault())
+    .onFalse(intake_Commands.stop());
+
     arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftX()));
   }
 

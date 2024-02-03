@@ -25,17 +25,6 @@
     "Persistent Values": {
       "open": false
     },
-    "Retained Values": {
-      "open": false
-    },
-    "Transitory Values": {
-      "open": false
-    }
-  },
-  "NetworkTables": {
-    "Persistent Values": {
-      "open": false
-    },
     "transitory": {
       "Shuffleboard": {
         ".metadata": {

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {  
 
-    TalonSRX intakeMotor= new TalonSRX(1);
+    TalonSRX intakeMotor= new TalonSRX(20);
 
     private final Ultrasonic ultrasonic = new Ultrasonic(0, 1);
     // Ultrasonic sensors tend to be quite noisy and susceptible to sudden outliers,
