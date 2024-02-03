@@ -8,9 +8,9 @@ public class Arm_Constants {
     public static final double ampPosition = Math.toRadians(90);
 
     // Hardware IDS
-    public static final int leftMotorID = 1;
-    public static final int rightMotorID = 2;
-    public static final int canCoderID = 3;
+    public static final int leftMotorID = 23;
+    public static final int rightMotorID = 24;
+    public static final int canCoderID = 25;
 
     //Motor Limits 
     public static final int maxSupplyCurrent = 80;

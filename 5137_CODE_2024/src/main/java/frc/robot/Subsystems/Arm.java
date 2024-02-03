@@ -103,4 +103,9 @@ public class Arm extends ProfiledPIDSubsystem {
     public boolean getMovementFinished() {
         return (Math.abs(this.getMeasurement() - super.m_controller.getGoal().position)) < Arm_Constants.errorMargin;
     }
+
+    @Override
+    public void periodic() {
+        System.out.println("Measure: "+this.getMeasurement()+", Goal: "+this.getGoal());
+    }
 }
