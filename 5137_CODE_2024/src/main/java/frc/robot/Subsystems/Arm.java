@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class Arm extends ProfiledPIDSubsystem {
@@ -48,6 +49,9 @@ public class Arm extends ProfiledPIDSubsystem {
 
         leftMotor.setSmartCurrentLimit(Arm_Constants.maxSupplyCurrent);
         rightMotor.setSmartCurrentLimit(Arm_Constants.maxSupplyCurrent);
+
+        leftMotor.setIdleMode(IdleMode.kBrake);
+        rightMotor.setIdleMode(IdleMode.kBrake);
 
         canCoder = new CANcoder(Arm_Constants.canCoderID);
         feedForward = new ArmFeedforward(
