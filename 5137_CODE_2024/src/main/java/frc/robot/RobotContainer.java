@@ -15,13 +15,21 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 
 public class RobotContainer {
 
-  public static CommandPS4Controller driver;
-  public static CommandPS4Controller operator;
+  public CommandPS4Controller driver;
+  public CommandPS4Controller operator;
+
+  public LED led;
+
+  public LED_Commands led_Commands;
 
   public RobotContainer() {
 
     driver = new CommandPS4Controller(0);
     operator = new CommandPS4Controller(1);
+
+    led = new LED();
+
+    led_Commands = new LED_Commands();
 
     configureBindings();
   }
