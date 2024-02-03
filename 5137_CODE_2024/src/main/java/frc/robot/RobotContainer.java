@@ -46,22 +46,12 @@ public class RobotContainer {
     operator.L2()
     .onTrue(intake_Commands.intakeReverse())
     .onFalse(intake_Commands.toStop());
-  
-    operator.cross()
-    .onTrue(arm_Commands.moveToSpeaker())
-    .onFalse(arm_Commands.stopMoving());
 
-    operator.square()
-    .onTrue(arm_Commands.moveToAmp())
-    .onFalse(arm_Commands.stopMoving());
+    arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftX()));
+  }
 
-    operator.triangle()
-    .onTrue(arm_Commands.moveToStart())
-    .onFalse(arm_Commands.stopMoving());
-
-    operator.circle()
-    .onTrue(arm_Commands.moveToIntake())
-    .onFalse(arm_Commands.stopMoving());
+  public Command disableInit() {
+    return arm_Commands.release();
   }
 
   public Command getAutonomousCommand() {

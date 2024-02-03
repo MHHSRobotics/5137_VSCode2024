@@ -3,7 +3,9 @@ package frc.robot.Commands;
 import frc.robot.Constants.Arm_Constants;
 import frc.robot.Subsystems.Arm;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.wpilibj2.command.*;
 
 public class Arm_Commands {
 
@@ -13,31 +15,48 @@ public class Arm_Commands {
         this.arm = arm;
     };
 
-    public InstantCommand moveForward() {
-        return new InstantCommand(() -> arm.setGoal(arm.getMeasurement()+0.1), arm);
+    public InstantCommand manualMove(DoubleSupplier translationX) {
+        //return new InstantCommand(() -> arm.setGoal(Math.max(0.0, Math.min(0.5*Math.PI, arm.getGoal() + Math.toRadians(0.02*Arm_Constants.kManualSpeed*translationX.getAsDouble())))), arm);
+        return new InstantCommand(() -> arm.runManual(translationX.getAsDouble()), arm);
     }
 
-    public InstantCommand moveBackward() {
-        return new InstantCommand(() -> arm.setGoal(arm.getMeasurement()-0.1), arm);
+    public FunctionalCommand moveToIntake() {
+        return new FunctionalCommand(
+            () -> arm.setGoal(Arm_Constants.intakePosition),
+            () -> {},
+            (Boolean x) -> {},
+            () -> arm.getMovementFinished(),
+            arm);
     }
 
-    public InstantCommand moveToIntake() {
-        return new InstantCommand(() -> arm.setGoal(0.0), arm);
+    public FunctionalCommand moveToSpeaker() {
+        return new FunctionalCommand(
+            () -> arm.setGoal(Arm_Constants.speakerPosition),
+            () -> {},
+            (Boolean x) -> {},
+            () -> arm.getMovementFinished(),
+            arm);
     }
 
-    public InstantCommand moveToStart() {
-        return new InstantCommand(() -> arm.setGoal(Arm_Constants.intakePosition), arm);
+    public FunctionalCommand moveToDefault() {
+        return new FunctionalCommand(
+            () -> arm.setGoal(Arm_Constants.defaultPosition),
+            () -> {},
+            (Boolean x) -> {},
+            () -> arm.getMovementFinished(),
+            arm);
     }
 
-    public InstantCommand moveToAmp() {
-        return new InstantCommand(() -> arm.setGoal(Arm_Constants.ampPosition), arm);
+    public FunctionalCommand moveToAmp() {
+        return new FunctionalCommand(
+            () -> arm.setGoal(Arm_Constants.ampPosition),
+            () -> {},
+            (Boolean x) -> {},
+            () -> arm.getMovementFinished(),
+            arm);
     }
 
-    public InstantCommand moveToSpeaker() {
-        return new InstantCommand(() -> arm.setGoal(Arm_Constants.speakerPosition), arm);
-    }
-
-    public InstantCommand stopMoving() {
-        return new InstantCommand(() -> arm.setGoal(arm.getMeasurement()), arm);
+    public InstantCommand release() {
+        return new InstantCommand(() -> {arm.release();}, arm);
     }
 }
