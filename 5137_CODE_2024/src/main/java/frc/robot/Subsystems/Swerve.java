@@ -74,6 +74,10 @@ public class Swerve extends SubsystemBase {
         swerve.resetOdometry(pose);
     }
 
+    public void zeroGyro() {
+        swerve.zeroGyro();
+    }
+
     public ChassisSpeeds getRobotVelocity() {
         return swerve.getRobotVelocity();
     }

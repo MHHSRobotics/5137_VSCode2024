@@ -37,6 +37,10 @@ public class Intake_Commands {
         return new InstantCommand(() -> shooter.shoot(Shooter_Constants.defaultShooterSpeed), shooter);
         }
 
+    public InstantCommand shootAmp() {
+        return new InstantCommand(() -> shooter.shoot(Shooter_Constants.ampShooterSpeer), shooter);
+    }
+
     public InstantCommand stop() {
         return new InstantCommand(() -> shooter.stop(), intake);
     }

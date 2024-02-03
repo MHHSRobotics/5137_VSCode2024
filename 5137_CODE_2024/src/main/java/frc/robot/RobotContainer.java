@@ -60,7 +60,14 @@ public class RobotContainer {
     .onTrue(intake_Commands.shootDefault())
     .onFalse(intake_Commands.stop());
 
+    operator.triangle()
+    .onTrue(intake_Commands.shootAmp())
+    .onFalse(intake_Commands.stop());
+
     arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftX()));
+
+    driver.triangle()
+    .onTrue(swerve_Commands.zeroGyro());
 
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> driver.getLeftX(),
