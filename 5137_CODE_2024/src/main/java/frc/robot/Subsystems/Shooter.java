@@ -18,14 +18,13 @@ private CANSparkMax lowerMotor = new CANSparkMax(5, MotorType.kBrushless);
         higherMotor.setIdleMode(IdleMode.kCoast);
     }
 
-    public void shoot(double speed)
-    {
+    public void shoot(double speed) {
+        //TODO Add method for changing speed based on arm position.
         lowerMotor.set(speed);
         higherMotor.set(speed);
     }
 
-    public void stop()
-    {
+    public void stop() {
         lowerMotor.set(0);
         higherMotor.set(0);
     }
