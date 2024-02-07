@@ -7,6 +7,8 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -15,7 +17,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -24,10 +25,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 public class Arm extends ProfiledPIDSubsystem {
     private CANSparkMax leftMotor;
     private CANSparkMax rightMotor;
-    private CANcoder canCoder;
+    private Encoder encoder;
     private ArmFeedforward feedForward;
-
-    private CANcoderSimState canCoderSim;
 
     private Mechanism2d armSimMech;
     private MechanismRoot2d armSimRoot;
@@ -55,7 +54,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
         leftMotor.setInverted(true);
 
-        canCoder = new CANcoder(Arm_Constants.canCoderID);
+        encoder = new Encoder(1,2);
         feedForward = new ArmFeedforward(
             Arm_Constants.kS,
             Arm_Constants.kG,
@@ -64,8 +63,6 @@ public class Arm extends ProfiledPIDSubsystem {
         );
 
         if (Robot.isSimulation()) {
-            canCoder.setPosition(0.0);
-            canCoderSim = canCoder.getSimState();
             armSimMech = new Mechanism2d(10, 10, new Color8Bit(Color.kBlack));
             armSimRoot = armSimMech.getRoot("ArmRoot", 5, 0);
             armSim = armSimRoot.append(new MechanismLigament2d("Arm", 5, 105, 10, new Color8Bit(Color.kRed)));
@@ -80,22 +77,11 @@ public class Arm extends ProfiledPIDSubsystem {
         double feed = feedForward.calculate(setpoint.position, setpoint.velocity);
         leftMotor.setVoltage(output + feed);
         rightMotor.setVoltage(output + feed);
-        
-        if (Robot.isSimulation()) {
-            canCoderSim.setVelocity(setpoint.velocity);
-            canCoderSim.addPosition(Math.toDegrees(setpoint.velocity)*0.02);
-            armSim.setAngle(-Math.toDegrees(getMeasurement())+180);
-        }
     }
 
     @Override
     public double getMeasurement() {
-        return Math.toRadians(canCoder.getPosition().getValueAsDouble());
-    }
-
-    @Override 
-    public void simulationPeriodic() {
-        useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
+        return Math.toRadians(encoder.get());
     }
 
     public void runManual(double output) {
