@@ -6,9 +6,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.Intake_Constants;
 
 public class Intake extends SubsystemBase {  
 
@@ -24,7 +24,8 @@ public class Intake extends SubsystemBase {
         ultrasonic.setEnabled(true);
         Ultrasonic.setAutomaticMode(true);
         intakeMotor.setInverted(true);
-        intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,40,40,10));
+        intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, Intake_Constants.maxSupplyCurrent, Intake_Constants.maxSupplyCurrent, 0));
+        //TODO: if intake not working/cutting out adjust current limit above
     }
 
     public double getDistance()
