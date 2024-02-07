@@ -1,6 +1,5 @@
 package frc.robot.Subsystems;
 
-import frc.robot.Robot;
 import frc.robot.Constants.Arm_Constants;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -8,16 +7,8 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 
-import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -27,10 +18,6 @@ public class Arm extends ProfiledPIDSubsystem {
     private CANSparkMax rightMotor;
     private Encoder encoder;
     private ArmFeedforward feedForward;
-
-    private Mechanism2d armSimMech;
-    private MechanismRoot2d armSimRoot;
-    private MechanismLigament2d armSim;
 
     public Arm() {
         super(
@@ -61,13 +48,6 @@ public class Arm extends ProfiledPIDSubsystem {
             Arm_Constants.kV,
             Arm_Constants.kA
         );
-
-        if (Robot.isSimulation()) {
-            armSimMech = new Mechanism2d(10, 10, new Color8Bit(Color.kBlack));
-            armSimRoot = armSimMech.getRoot("ArmRoot", 5, 0);
-            armSim = armSimRoot.append(new MechanismLigament2d("Arm", 5, 105, 10, new Color8Bit(Color.kRed)));
-            SmartDashboard.putData("Arm Sim", armSimMech);
-        }
 
         setGoal(0.0);
     }
