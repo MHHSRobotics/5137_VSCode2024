@@ -79,7 +79,7 @@ public class RobotContainer {
     .onFalse(intake_Commands.stop());
 
     operator.touchpad()
-    .onTrue(new ParallelCommandGroup(shooter_Commands.shoot(), intake_Commands.intakeForward(1.0)))
+    .onTrue(new ParallelCommandGroup(shooter_Commands.shoot(arm.getMeasurement()), intake_Commands.intakeForward(1.0)))
     .onFalse(new ParallelCommandGroup(shooter_Commands.stop(), intake_Commands.stop()));
   }
 

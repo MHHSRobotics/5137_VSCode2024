@@ -61,7 +61,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
     @Override
     public double getMeasurement() {
-        return Math.toRadians(encoder.get());
+        return Math.toRadians(encoder.getDistance());
     }
 
     public void runManual(double output) {
