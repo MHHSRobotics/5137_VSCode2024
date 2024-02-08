@@ -55,12 +55,15 @@ public class Arm extends ProfiledPIDSubsystem {
         leftMotor.setInverted(true);
 
         encoder = new Encoder(1,2);
-        feedForward = new ArmFeedforward(
+        feedForward = new ArmFeedforward()
             Arm_Constants.kS,
             Arm_Constants.kG,
             Arm_Constants.kV,
             Arm_Constants.kA
-        );
+            encoder.setDistancePerPulse(4.0/256.0);
+            encoder.setMinRate(10);
+            encoder.setSamplesToAverage(5);
+            encoder.setMaxPeriod(0.2);
 
         if (Robot.isSimulation()) {
             armSimMech = new Mechanism2d(10, 10, new Color8Bit(Color.kBlack));
