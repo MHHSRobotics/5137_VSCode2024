@@ -21,10 +21,13 @@ import frc.robot.Constants.Vision_Constants;
 
 public class Vision extends SubsystemBase{
     
-    private final PhotonCamera camera = new PhotonCamera("SPCA2688_AV_Camera");
+    private final PhotonCamera ar1Camera = new PhotonCamera("AR1");
+    private final PhotonCamera ar2Camera = new PhotonCamera("AR1");
     private AprilTagFieldLayout aprilTagFieldLayout;
-    private PhotonPoseEstimator visionPoseEstimator;
-    private Optional<EstimatedRobotPose> globalPose = Optional.of(new EstimatedRobotPose(new Pose3d(0,0,0, new Rotation3d(0,0,0)), 0, null, null));
+    private PhotonPoseEstimator ar1PoseEstimator;
+    private PhotonPoseEstimator ar2PoseEstimator;
+    private Optional<EstimatedRobotPose> ar1Pose = Optional.of(new EstimatedRobotPose(new Pose3d(0,0,0, new Rotation3d(0,0,0)), 0, null, null));
+    private Optional<EstimatedRobotPose> ar2Pose = Optional.of(new EstimatedRobotPose(new Pose3d(0,0,0, new Rotation3d(0,0,0)), 0, null, null));
 
     public Vision()
     {
@@ -34,17 +37,27 @@ public class Vision extends SubsystemBase{
         catch (IOException e) {
         }
 
-        visionPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.LOWEST_AMBIGUITY, camera, Vision_Constants.robotToCamera);
-      
+        ar1PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.LOWEST_AMBIGUITY, ar1Camera, Vision_Constants.robotToAR1);
+        ar2PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.LOWEST_AMBIGUITY, ar2Camera, Vision_Constants.robotToAR2);
+
     }
 
-     public Optional<EstimatedRobotPose> getEstimatedVisionPose() 
+     public Optional<EstimatedRobotPose> getEstimatedAR1Pose() 
     {
       //TODO: Add swerve pose estimator into method once added
       
-        globalPose = visionPoseEstimator.update();
-        return globalPose;
+        ar1Pose = ar1PoseEstimator.update();
+        return ar1Pose;
     }
+
+    public Optional<EstimatedRobotPose> getEstimatedAR2Pose() 
+    {
+      //TODO: Add swerve pose estimator into method once added
+      
+        ar2Pose = ar2PoseEstimator.update();
+        return ar2Pose;
+    }
+
     public String poseString(EstimatedRobotPose pose)
     {
     
@@ -78,13 +91,27 @@ public class Vision extends SubsystemBase{
     @Override
     public void periodic() {
   
-      if(globalPose.isPresent()){
-        EstimatedRobotPose pose = globalPose.get();
+      if(ar1Pose.isPresent() ){
+        EstimatedRobotPose pose1 = ar1Pose.get();
+   
+        System.out.println(pose1.estimatedPose.toPose2d());
         {
-        SmartDashboard.putString("Robot Pose", poseString(pose));
-        SmartDashboard.putNumber("Y", distanceFromOriginY(pose));
-        SmartDashboard.putNumber("X",distanceFromOriginX(pose));
-        SmartDashboard.putNumber("Distance from Origin",distanceFromOrigin(pose));
+        SmartDashboard.putNumber("timestamp Ar1",pose1.timestampSeconds);
+      
+        SmartDashboard.putString("Pose ar1", poseString(pose1));
+
+        }
+        
+      }
+      if(ar2Pose.isPresent() ){
+    
+        EstimatedRobotPose pose2 = ar2Pose.get();
+ 
+        {
+   
+        SmartDashboard.putNumber("timestamp Ar2",pose2.timestampSeconds);
+     
+        SmartDashboard.putString("Pose ar2", poseString(pose2));
         }
         
       }
