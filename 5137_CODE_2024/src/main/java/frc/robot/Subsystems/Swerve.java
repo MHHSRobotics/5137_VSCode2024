@@ -5,10 +5,16 @@ import frc.robot.Constants.Swerve_Constants;
 import java.io.File;
 import java.io.IOException;
 
+import org.photonvision.PhotonUtils;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -24,12 +30,20 @@ import com.pathplanner.lib.util.ReplanningConfig;
 public class Swerve extends SubsystemBase {
 
     private SwerveDrive swerve;
+
+    AprilTagFieldLayout aprilTagFieldLayout;
     
     public Swerve(File directory) {
         try {
-        swerve = new SwerveParser(directory).createSwerveDrive(Swerve_Constants.maxVelocity);
+            swerve = new SwerveParser(directory).createSwerveDrive(Swerve_Constants.maxVelocity);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+
+        try {
+          aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+        } catch (IOException e) {
+          e.printStackTrace();
         }
 
         setUpPathPlanner();
@@ -76,6 +90,36 @@ public class Swerve extends SubsystemBase {
 
     public void zeroGyro() {
         swerve.zeroGyro();
+    }
+
+    public double getRadiansToTarget() {
+        Pose2d targetPose;
+        if(DriverStation.getAlliance().equals(Alliance.Red))
+        {
+            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
+        }
+        else
+        {
+            targetPose = aprilTagFieldLayout.getTagPose(8).get().toPose2d(); 
+        }
+
+        double radiansToPose = PhotonUtils.getYawToPose(swerve.getPose(), targetPose).getRadians();
+        return radiansToPose;
+    }
+
+    public boolean robotAligned() {
+        System.out.println(Math.abs(getRadiansToTarget()));
+        if(Math.abs(getRadiansToTarget()) < Swerve_Constants.aimToleranceRadians)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void aimAtTarget() {
+        PIDController turnController = new PIDController(Swerve_Constants.alignKP, Swerve_Constants.alignKI, Swerve_Constants.alignKD);
+        double turnVelocity = -turnController.calculate(getRadiansToTarget(),0);
+        drive(new Translation2d(0,0),turnVelocity, true);
     }
 
     public ChassisSpeeds getRobotVelocity() {
