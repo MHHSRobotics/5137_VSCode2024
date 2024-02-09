@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class RobotContainer {
 
@@ -75,6 +76,7 @@ public class RobotContainer {
     operator.circle()
     .onTrue(arm_Commands.moveToIntake())
     .onFalse(arm_Commands.stopMoving());
+
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> MathUtil.applyDeadband(-driver.getLeftY(), Swerve_Constants.LY_Deadband),
@@ -82,13 +84,22 @@ public class RobotContainer {
       () -> !driver.L1().getAsBoolean()
     ));
 
-
     driver.triangle()
     .onTrue(swerve_Commands.zeroGyro());
 
     driver.cross()
     .onTrue(swerve_Commands.aimAtTarget());
 
+
+/* 
+    driver.cross().onTrue(swerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
+
+    driver.circle().onTrue(swerve.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+    driver.square().onTrue(swerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+
+    driver.triangle().onTrue(swerve.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    */
   }
 
   public Command getAutonomousCommand() {

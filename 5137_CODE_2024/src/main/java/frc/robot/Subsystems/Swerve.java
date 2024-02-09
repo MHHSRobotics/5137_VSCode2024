@@ -17,16 +17,27 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import swervelib.SwerveDrive;
 import swervelib.parser.PIDFConfig;
 import swervelib.parser.SwerveModuleConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.parser.json.PIDFPropertiesJson;
+
+import static edu.wpi.first.units.MutableMeasure.mutable;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
@@ -38,8 +49,42 @@ import com.pathplanner.lib.util.ReplanningConfig;
 
 public class Swerve extends SubsystemBase {
 
+    
     private SwerveDrive swerve;
     AprilTagFieldLayout aprilTagFieldLayout;
+
+    // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+    private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
+    // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
+    private final MutableMeasure<Distance> m_distance = mutable(Meters.of(0));
+    // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
+    private final MutableMeasure<Velocity<Distance>> m_velocity = mutable(MetersPerSecond.of(0));
+
+    SysIdRoutine routine = new SysIdRoutine(
+        new SysIdRoutine.Config(),
+        new SysIdRoutine.Mechanism(
+        (Measure<Voltage> volts) -> {
+            setVoltage(volts.in(Volts));
+        }, 
+        log -> {
+            // Record a frame for the left motors.  Since these share an encoder, we consider
+            // the entire group to be one motor.
+            log.motor("drive-left")
+                .voltage(
+                    m_appliedVoltage.mut_replace(
+                        swerve.swerveDriveConfiguration.modules[0].getDriveMotor().getVoltage(), Volts))
+                .linearPosition(m_distance.mut_replace(swerve.swerveDriveConfiguration.modules[0].getDriveMotor().getPosition(), Meters))
+                .linearVelocity(
+                    m_velocity.mut_replace(swerve.swerveDriveConfiguration.modules[0].getDriveMotor().getVelocity(), MetersPerSecond));
+            log.motor("drive-right")
+                .voltage(
+                    m_appliedVoltage.mut_replace(
+                        swerve.swerveDriveConfiguration.modules[1].getDriveMotor().getVoltage(), Volts))
+                .linearPosition(m_distance.mut_replace(swerve.swerveDriveConfiguration.modules[1].getDriveMotor().getPosition(), Meters))
+                .linearVelocity(
+                    m_velocity.mut_replace(swerve.swerveDriveConfiguration.modules[1].getDriveMotor().getVelocity(), MetersPerSecond));
+            },
+        this));
 
     
     public Swerve(File directory) {
@@ -48,6 +93,14 @@ public class Swerve extends SubsystemBase {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        swerve.swerveDriveConfiguration.modules[0].getAngleMotor().setMotorBrake(true);
+        swerve.swerveDriveConfiguration.modules[1].getAngleMotor().setMotorBrake(true);
+        swerve.swerveDriveConfiguration.modules[2].getAngleMotor().setMotorBrake(true);
+        swerve.swerveDriveConfiguration.modules[3].getAngleMotor().setMotorBrake(true);
+
+        swerve.chassisVelocityCorrection = true;
+
         setUpPathPlanner();
 
 
@@ -90,6 +143,13 @@ public class Swerve extends SubsystemBase {
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
         swerve.drive(translation, rotation, fieldRelative, false);
+    }
+
+    public void setVoltage(double volts) {
+        swerve.swerveDriveConfiguration.modules[0].getDriveMotor().setVoltage(volts);
+        swerve.swerveDriveConfiguration.modules[1].getDriveMotor().setVoltage(volts);
+        swerve.swerveDriveConfiguration.modules[2].getDriveMotor().setVoltage(-volts);
+        swerve.swerveDriveConfiguration.modules[3].getDriveMotor().setVoltage(volts);
     }
 
     public Command getAuto(String name) {
@@ -150,6 +210,12 @@ public class Swerve extends SubsystemBase {
         double turnVelocity = -turnController.calculate(getRadiansToTarget(),0);
         drive(new Translation2d(0,0),turnVelocity, true);
     }
-     
 
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return routine.quasistatic(direction);
+      }
+    
+      public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return routine.dynamic(direction);
+      }
 }

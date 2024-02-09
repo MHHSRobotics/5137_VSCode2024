@@ -49,8 +49,8 @@ public class Arm extends ProfiledPIDSubsystem {
     @Override
     public void useOutput(double output, State setpoint) {
         double feed = feedForward.calculate(setpoint.position, setpoint.velocity);
-        leftMotor.setVoltage(output + feed);
-        rightMotor.setVoltage(output + feed);
+        //leftMotor.setVoltage(output + feed);
+        //rightMotor.setVoltage(output + feed);
 
     }
 
