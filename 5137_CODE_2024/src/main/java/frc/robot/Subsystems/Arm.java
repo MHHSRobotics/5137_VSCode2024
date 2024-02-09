@@ -77,14 +77,9 @@ public class Arm extends ProfiledPIDSubsystem {
         return (Math.abs(this.getMeasurement() - super.m_controller.getGoal().position)) < Arm_Constants.errorMargin;
     }
 
-    public void release() {
-        leftMotor.setIdleMode(IdleMode.kCoast);
-        rightMotor.setIdleMode(IdleMode.kCoast);
-    }
-
     @Override
     public void periodic() {
-        //System.out.println("Measure: "+this.getMeasurement()+", Goal: "+this.getGoal());
+        System.out.println("Measure: "+this.getMeasurement()+", Goal: "+this.getGoal());
         //useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
     }
 }

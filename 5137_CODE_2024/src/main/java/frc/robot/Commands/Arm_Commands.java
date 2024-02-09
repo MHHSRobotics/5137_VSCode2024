@@ -55,8 +55,4 @@ public class Arm_Commands {
             () -> arm.getMovementFinished(),
             arm);
     }
-
-    public InstantCommand release() {
-        return new InstantCommand(() -> {arm.release();}, arm);
-    }
 }

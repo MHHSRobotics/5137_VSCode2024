@@ -11,11 +11,12 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
 
   private CommandPS4Controller driver;
-  private CommandPS4Controller operator;
+  private CommandXboxController operator;
 
   private Swerve swerve;
   private Arm arm;
@@ -31,7 +32,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     driver = new CommandPS4Controller(0);
-    operator = new CommandPS4Controller(1);
+    operator = new CommandXboxController(1);
 
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(),"swerve"));
     arm = new Arm();
@@ -66,25 +67,21 @@ public class RobotContainer {
 
     // Arm Bindings
 
-    arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftX()));
+    arm.setDefaultCommand(arm_Commands.manualMove(() -> -operator.getLeftY()));
 
     // Intake/Shooter Bindings
 
-    operator.R2()
+    operator.rightBumper()
     .onTrue(intake_Commands.intakeForward())
     .onFalse(intake_Commands.stop());
 
-    operator.L2()
+    operator.leftBumper()
     .onTrue(intake_Commands.intakeReverse())
     .onFalse(intake_Commands.stop());
 
-    operator.touchpad()
+    operator.a()
     .onTrue(new ParallelCommandGroup(shooter_Commands.shoot(arm.getMeasurement()), intake_Commands.intakeForward(1.0)))
     .onFalse(new ParallelCommandGroup(shooter_Commands.stop(), intake_Commands.stop()));
-  }
-
-  public Command disableInit() {
-    return arm_Commands.release();
   }
 
   public Command getAutonomousCommand() {

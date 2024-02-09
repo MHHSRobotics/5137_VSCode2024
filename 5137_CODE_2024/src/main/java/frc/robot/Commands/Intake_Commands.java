@@ -38,6 +38,7 @@ public class Intake_Commands {
         return new InstantCommand(() -> intake.set(-Intake_Constants.defaultMotorSpeed), intake);
     }
 
+    /*
     public FunctionalCommand continuousIntake() {
         return new FunctionalCommand(
             () -> intake.set(Intake_Constants.defaultMotorSpeed),
@@ -45,5 +46,5 @@ public class Intake_Commands {
             (Boolean x) -> intake.stop(),
             () -> {return intake.objectInRange();},
             intake);
-    }
+    }*/
 }
