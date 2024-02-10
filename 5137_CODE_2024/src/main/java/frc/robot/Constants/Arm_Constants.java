@@ -2,7 +2,7 @@ package frc.robot.Constants;
 
 public class Arm_Constants {
     // Positions
-    public static final double intakePosition = Math.toRadians(0);
+    public static final double intakePosition = Math.toRadians(-3);
     public static final double speakerPosition = Math.toRadians(30);
     public static final double defaultPosition = Math.toRadians(75);
     public static final double ampPosition = Math.toRadians(90);
@@ -22,7 +22,7 @@ public class Arm_Constants {
     public static final double kA = 0.02;
 
     // PID Constants
-    public static final double kP = 1.0;
+    public static final double kP = 6.0;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 

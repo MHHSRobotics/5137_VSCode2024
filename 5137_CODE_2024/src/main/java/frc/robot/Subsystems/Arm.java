@@ -44,7 +44,10 @@ public class Arm extends ProfiledPIDSubsystem {
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
 
-        leftMotor.setInverted(true);
+        //Make sure to not do twisties
+        leftMotor.setInverted(false);
+        rightMotor.setInverted(true);
+
 
         feedForward = new ArmFeedforward(
             Arm_Constants.kS,
@@ -60,7 +63,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
         updateDashboard();
 
-        setGoal(0.0);
+        setGoal(Arm_Constants.intakePosition);
     }
 
     @Override
@@ -104,6 +107,6 @@ public class Arm extends ProfiledPIDSubsystem {
     @Override
     public void periodic() {
         updateDashboard();
-        //useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
+        useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
     }
 }
