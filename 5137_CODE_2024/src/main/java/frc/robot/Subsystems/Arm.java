@@ -79,7 +79,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
     @Override
     public void periodic() {
-        System.out.println("Measure: "+this.getMeasurement()+", Goal: "+this.getGoal());
+        //System.out.println("Measure: "+this.getMeasurement()+", Goal: "+this.getGoal());
         //useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
     }
 }

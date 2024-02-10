@@ -3,10 +3,12 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 import frc.robot.Commands.*;
+import frc.robot.Constants.Swerve_Constants;
 import frc.robot.Subsystems.*;
 
 import java.io.File;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -23,7 +25,6 @@ public class RobotContainer {
   private Intake intake; 
   private Shooter shooter;
   private Vision vision;
-  
 
   private Swerve_Commands swerve_Commands;
   private Arm_Commands arm_Commands;
@@ -44,7 +45,7 @@ public class RobotContainer {
     arm_Commands = new Arm_Commands(arm);
     intake_Commands = new Intake_Commands(intake);
     shooter_Commands = new Shooter_Commands(shooter);
-    vision.setDefaultCommand(new AddVisionMeasurement(vision));
+    vision.setDefaultCommand(new AddVisionMeasurement(vision, swerve));
 
     configureBindings();
   }
@@ -56,18 +57,21 @@ public class RobotContainer {
     //Swerve Bindings
 
     swerve.setDefaultCommand(swerve_Commands.drive(
-      () -> driver.getLeftX(),
-      () -> -driver.getLeftY(),
-      () -> driver.getRightX(),
+      () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
+      () -> -MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
+      () -> MathUtil.applyDeadband(driver.getRightX(), Swerve_Constants.RX_Deadband),
       () -> !driver.L1().getAsBoolean()
     ));
+
+    driver.cross()
+    .onTrue(swerve_Commands.aimAtTarget());
 
     driver.triangle()
     .onTrue(swerve_Commands.zeroGyro());
 
     // Arm Bindings
 
-    arm.setDefaultCommand(arm_Commands.manualMove(() -> -operator.getLeftY()));
+    arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftY()));
 
     // Intake/Shooter Bindings
 
@@ -80,7 +84,7 @@ public class RobotContainer {
     .onFalse(intake_Commands.stop());
 
     operator.a()
-    .onTrue(new ParallelCommandGroup(shooter_Commands.shoot(arm.getMeasurement()), intake_Commands.intakeForward(1.0)))
+    .onTrue(new ParallelCommandGroup(shooter_Commands.shoot(arm.getMeasurement()), intake_Commands.intakeForward(1.5)))
     .onFalse(new ParallelCommandGroup(shooter_Commands.stop(), intake_Commands.stop()));
   }
 

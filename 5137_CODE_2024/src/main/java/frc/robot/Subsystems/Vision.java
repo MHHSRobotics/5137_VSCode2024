@@ -37,25 +37,24 @@ public class Vision extends SubsystemBase{
         catch (IOException e) {
         }
 
-        ar1PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.LOWEST_AMBIGUITY, ar1Camera, Vision_Constants.robotToAR1);
-        ar2PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.LOWEST_AMBIGUITY, ar2Camera, Vision_Constants.robotToAR2);
+        ar1PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, ar1Camera, Vision_Constants.robotToAR1);
+        ar2PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, ar2Camera, Vision_Constants.robotToAR2);
 
     }
 
-     public Optional<EstimatedRobotPose> getEstimatedAR1Pose() 
+     public Optional<EstimatedRobotPose> getEstimatedAR1Pose(Pose2d referencePose) 
     {
       //TODO: Add swerve pose estimator into method once added
-      
-        ar1Pose = ar1PoseEstimator.update();
-        return ar1Pose;
+        ar1PoseEstimator.setReferencePose(referencePose);
+        return ar1PoseEstimator.update();
     }
 
-    public Optional<EstimatedRobotPose> getEstimatedAR2Pose() 
+    public Optional<EstimatedRobotPose> getEstimatedAR2Pose(Pose2d referencePose) 
     {
       //TODO: Add swerve pose estimator into method once added
       
-        ar2Pose = ar2PoseEstimator.update();
-        return ar2Pose;
+        ar2PoseEstimator.setReferencePose(referencePose);
+        return ar2PoseEstimator.update();
     }
 
     public String poseString(EstimatedRobotPose pose)
@@ -94,7 +93,7 @@ public class Vision extends SubsystemBase{
       if(ar1Pose.isPresent() ){
         EstimatedRobotPose pose1 = ar1Pose.get();
    
-        System.out.println(pose1.estimatedPose.toPose2d());
+        //System.out.println(pose1.estimatedPose.toPose2d());
         {
         SmartDashboard.putNumber("timestamp Ar1",pose1.timestampSeconds);
       

@@ -11,6 +11,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -109,7 +110,7 @@ public class Swerve extends SubsystemBase {
 
     public boolean robotAligned() {
         System.out.println(Math.abs(getRadiansToTarget()));
-        if(Math.abs(getRadiansToTarget()) < Swerve_Constants.aimToleranceRadians)
+        if(Math.abs(getRadiansToTarget()) < Swerve_Constants.aimToleranceRadians && Math.abs(swerve.getRobotVelocity().omegaRadiansPerSecond) <= 0.01)
         {
             return true;
         }
@@ -118,7 +119,8 @@ public class Swerve extends SubsystemBase {
 
     public void aimAtTarget() {
         PIDController turnController = new PIDController(Swerve_Constants.alignKP, Swerve_Constants.alignKI, Swerve_Constants.alignKD);
-        double turnVelocity = -turnController.calculate(getRadiansToTarget(),0);
+        turnController.setTolerance(0.02, 0.01);
+        double turnVelocity = turnController.calculate(getRadiansToTarget(),0);
         drive(new Translation2d(0,0),turnVelocity, true);
     }
 
@@ -128,5 +130,10 @@ public class Swerve extends SubsystemBase {
 
     public Pose2d getPose() {
         return swerve.getPose();
+    }
+
+    public void addVisionMeasurement(Pose2d pose, double timestamp)
+    { 
+        swerve.addVisionMeasurement(pose, timestamp);
     }
 }
