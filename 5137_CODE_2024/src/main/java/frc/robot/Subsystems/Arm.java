@@ -7,12 +7,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 
 import com.revrobotics.CANSparkMax;
@@ -24,12 +19,6 @@ public class Arm extends ProfiledPIDSubsystem {
     private CANSparkMax rightMotor;
     private DutyCycleEncoder encoder;
     private ArmFeedforward feedForward;
-
-    private Mechanism2d armSimMech;
-    private MechanismRoot2d armSimRoot;
-    private MechanismLigament2d armSim;
-    private MechanismRoot2d armGoalSimRoot;
-    private MechanismLigament2d armGoalSim;
 
     public Arm() {
         super(
@@ -62,20 +51,7 @@ public class Arm extends ProfiledPIDSubsystem {
         encoder = new DutyCycleEncoder(Arm_Constants.encoderID);
         encoder.setDistancePerRotation(2*Math.PI);
 
-        armSimMech = new Mechanism2d(10, 10, new Color8Bit(Color.kBlack));
-        armSimRoot = armSimMech.getRoot("ArmRoot", 5, 0);
-        armSim = armSimRoot.append(new MechanismLigament2d("Arm", 5, 105, 10, new Color8Bit(Color.kBlue)));
-        SmartDashboard.putData("Arm Sim", armSimMech);
-
-        armGoalSimRoot = armSimMech.getRoot("GoalRoot", 5, 0);
-        armGoalSim = armGoalSimRoot.append(new MechanismLigament2d("Goal", 5, 105, 10, new Color8Bit(Color.kOrange)));
-        SmartDashboard.putData("Arm Sim", armSimMech);
-
-        SmartDashboard.putNumber("Encoder Value", encoder.get());
-        SmartDashboard.putNumber("Encoder Absolute Position", encoder.getAbsolutePosition());
-        SmartDashboard.putNumber("Encoder Distance", encoder.getDistance());
-        SmartDashboard.putNumber("Arm Position", this.getMeasurement());
-        SmartDashboard.putNumber("Arm Goal", this.getGoal());
+        updateDashboard();
 
         setGoal(0.0);
     }
@@ -106,8 +82,12 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     private void updateDashboard() {
-        armSim.setAngle(-Math.toDegrees(this.getMeasurement())+180);
-        armGoalSim.setAngle(-Math.toDegrees(this.getGoal())+180);
+        SmartDashboard.putNumber("Encoder Value", encoder.get());
+        SmartDashboard.putNumber("Encoder Absolute Position", encoder.getAbsolutePosition());
+        SmartDashboard.putNumber("Encoder Distance", encoder.getDistance());
+        SmartDashboard.putBoolean("Encoder", encoder.isConnected());
+        SmartDashboard.putNumber("Arm Position", Math.toDegrees(this.getMeasurement()));
+        SmartDashboard.putNumber("Arm Goal", Math.toDegrees(this.getGoal()));
     }
 
     @Override
