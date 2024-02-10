@@ -1,7 +1,7 @@
 package frc.robot.Subsystems;
 
 import frc.robot.Constants.Arm_Constants;
-
+import frc.robot.Other.ArmTrajectoryAlignment;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -9,6 +9,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+
+import java.io.File;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -20,7 +22,9 @@ public class Arm extends ProfiledPIDSubsystem {
     private DutyCycleEncoder encoder;
     private ArmFeedforward feedForward;
 
-    public Arm() {
+    private ArmTrajectoryAlignment align;
+
+    public Arm(File RobotConstants) {
         super(
             new ProfiledPIDController(
                 Arm_Constants.kP,
@@ -51,6 +55,8 @@ public class Arm extends ProfiledPIDSubsystem {
         encoder = new DutyCycleEncoder(Arm_Constants.encoderID);
         encoder.setDistancePerRotation(2*Math.PI);
 
+        align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 4.5, 30.0);
+
         updateDashboard();
 
         setGoal(0.0);
@@ -71,6 +77,10 @@ public class Arm extends ProfiledPIDSubsystem {
     public void runManual(double output) {
         leftMotor.set(0.3*output);
         rightMotor.set(0.3*output);
+    }
+
+    public void alignToSpeaker(double position) {
+        this.setGoal(align.calculateAngle(position));
     }
 
     public double getGoal() {
