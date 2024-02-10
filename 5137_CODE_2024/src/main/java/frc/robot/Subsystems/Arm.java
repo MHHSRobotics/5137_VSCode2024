@@ -53,7 +53,8 @@ public class Arm extends ProfiledPIDSubsystem {
             Arm_Constants.kA);
 
         encoder = new DutyCycleEncoder(Arm_Constants.encoderID);
-        encoder.setDistancePerRotation(2*Math.PI);
+        encoder.setDistancePerRotation(-2*Math.PI);
+        encoder.setPositionOffset(0.134);
 
         align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 4.5, 30.0);
 
@@ -71,7 +72,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
     @Override
     public double getMeasurement() {
-        return encoder.getAbsolutePosition();
+        return encoder.getDistance();
     }
 
     public void runManual(double output) {

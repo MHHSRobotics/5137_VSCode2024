@@ -14,11 +14,12 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
 
   public static CommandPS4Controller driver;
-  public static CommandPS4Controller operator;
+  public static CommandXboxController operator;
 
   public static Arm arm;
 
@@ -27,7 +28,7 @@ public class RobotContainer {
   public RobotContainer() {
 
     driver = new CommandPS4Controller(0);
-    operator = new CommandPS4Controller(1);
+    operator = new CommandXboxController(1);
     arm = new Arm(new File(Filesystem.getDeployDirectory(), "RobotConstants.json"));
 
     arm_Commands = new Arm_Commands(arm);
@@ -39,16 +40,16 @@ public class RobotContainer {
     // Operator Bindings
     arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftY()));
 
-    operator.square()
+    operator.x()
     .onTrue(arm_Commands.moveToIntake());
 
-    operator.triangle()
+    operator.y()
     .onTrue(arm_Commands.moveToDefault());
 
-    operator.circle()
+    operator.b()
     .onTrue(arm_Commands.moveToAmp());
 
-    operator.cross()
+    operator.a()
     .onTrue(arm_Commands.moveToSpeaker());
   }
 
