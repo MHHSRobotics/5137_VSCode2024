@@ -35,7 +35,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     // Operator Bindings
-    arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftX()));
+    arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftY()));
 
     operator.square()
     .onTrue(arm_Commands.moveToIntake());

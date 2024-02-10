@@ -10,7 +10,7 @@ public class Arm_Constants {
     // Hardware IDS
     public static final int leftMotorID = 23;
     public static final int rightMotorID = 24;
-    public static final int canCoderID = 25;
+    public static final int encoderID = 0;
 
     //Motor Limits 
     public static final int maxSupplyCurrent = 80;

@@ -6,7 +6,13 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 
 import com.revrobotics.CANSparkMax;
@@ -16,8 +22,14 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 public class Arm extends ProfiledPIDSubsystem {
     private CANSparkMax leftMotor;
     private CANSparkMax rightMotor;
-    private Encoder encoder;
+    private DutyCycleEncoder encoder;
     private ArmFeedforward feedForward;
+
+    private Mechanism2d armSimMech;
+    private MechanismRoot2d armSimRoot;
+    private MechanismLigament2d armSim;
+    private MechanismRoot2d armGoalSimRoot;
+    private MechanismLigament2d armGoalSim;
 
     public Arm() {
         super(
@@ -47,11 +59,23 @@ public class Arm extends ProfiledPIDSubsystem {
             Arm_Constants.kV,
             Arm_Constants.kA);
 
-        encoder = new Encoder(1,2);
-        encoder.setDistancePerPulse(4.0/256.0);
-        encoder.setMinRate(10);
-        encoder.setSamplesToAverage(5);
-        encoder.setMaxPeriod(0.2);
+        encoder = new DutyCycleEncoder(Arm_Constants.encoderID);
+        encoder.setDistancePerRotation(2*Math.PI);
+
+        armSimMech = new Mechanism2d(10, 10, new Color8Bit(Color.kBlack));
+        armSimRoot = armSimMech.getRoot("ArmRoot", 5, 0);
+        armSim = armSimRoot.append(new MechanismLigament2d("Arm", 5, 105, 10, new Color8Bit(Color.kBlue)));
+        SmartDashboard.putData("Arm Sim", armSimMech);
+
+        armGoalSimRoot = armSimMech.getRoot("GoalRoot", 5, 0);
+        armGoalSim = armGoalSimRoot.append(new MechanismLigament2d("Goal", 5, 105, 10, new Color8Bit(Color.kOrange)));
+        SmartDashboard.putData("Arm Sim", armSimMech);
+
+        SmartDashboard.putNumber("Encoder Value", encoder.get());
+        SmartDashboard.putNumber("Encoder Absolute Position", encoder.getAbsolutePosition());
+        SmartDashboard.putNumber("Encoder Distance", encoder.getDistance());
+        SmartDashboard.putNumber("Arm Position", this.getMeasurement());
+        SmartDashboard.putNumber("Arm Goal", this.getGoal());
 
         setGoal(0.0);
     }
@@ -65,7 +89,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
     @Override
     public double getMeasurement() {
-        return Math.toRadians(encoder.get());
+        return encoder.getAbsolutePosition();
     }
 
     public void runManual(double output) {
@@ -81,14 +105,14 @@ public class Arm extends ProfiledPIDSubsystem {
         return (Math.abs(this.getMeasurement() - super.m_controller.getGoal().position)) < Arm_Constants.errorMargin;
     }
 
-    public void release() {
-        leftMotor.setIdleMode(IdleMode.kCoast);
-        rightMotor.setIdleMode(IdleMode.kCoast);
+    private void updateDashboard() {
+        armSim.setAngle(-Math.toDegrees(this.getMeasurement())+180);
+        armGoalSim.setAngle(-Math.toDegrees(this.getGoal())+180);
     }
 
     @Override
     public void periodic() {
-        //System.out.println("Measure: "+this.getMeasurement()+", Goal: "+this.getGoal());
+        updateDashboard();
         //useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
     }
 }
