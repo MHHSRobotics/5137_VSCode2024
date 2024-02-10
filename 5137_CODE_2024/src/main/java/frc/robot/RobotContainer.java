@@ -50,10 +50,6 @@ public class RobotContainer {
     .onTrue(arm_Commands.moveToSpeaker());
   }
 
-  public Command disableInit() {
-    return arm_Commands.release();
-  }
-
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
   }
