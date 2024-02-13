@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class RobotContainer {
 
@@ -36,7 +37,7 @@ public class RobotContainer {
     operator = new CommandXboxController(1);
 
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(),"swerve"));
-    arm = new Arm();
+    arm = new Arm(new File(Filesystem.getDeployDirectory(), "RobotConstants.json"));
     intake = new Intake();
     shooter = new Shooter();
     vision = new Vision();
@@ -71,7 +72,19 @@ public class RobotContainer {
 
     // Arm Bindings
 
-    arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftY()));
+    //arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftY()));
+
+    operator.a()
+    .onTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kForward));
+
+    operator.b()
+    .onTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+    operator.x()
+    .onTrue(arm.sysIdQuasisttatic(SysIdRoutine.Direction.kForward));
+
+    operator.y()
+    .onTrue(arm.sysIdQuasisttatic(SysIdRoutine.Direction.kReverse));
 
     // Intake/Shooter Bindings
 
@@ -83,9 +96,9 @@ public class RobotContainer {
     .onTrue(intake_Commands.intakeReverse())
     .onFalse(intake_Commands.stop());
 
-    operator.a()
+    /*operator.a()
     .onTrue(new ParallelCommandGroup(shooter_Commands.shoot(arm.getMeasurement()), intake_Commands.intakeForward(1.5)))
-    .onFalse(new ParallelCommandGroup(shooter_Commands.stop(), intake_Commands.stop()));
+    .onFalse(new ParallelCommandGroup(shooter_Commands.stop(), intake_Commands.stop()));*/
   }
 
   public Command getAutonomousCommand() {
