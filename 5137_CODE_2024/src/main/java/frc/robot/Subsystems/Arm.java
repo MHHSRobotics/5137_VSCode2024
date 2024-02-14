@@ -12,6 +12,7 @@ import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
@@ -36,6 +37,8 @@ public class Arm extends ProfiledPIDSubsystem {
 
     private ArmTrajectoryAlignment align;
 
+    private Timer timer;
+
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
     private final MutableMeasure<Angle> m_distance = mutable(Radians.of(0));
     private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
@@ -48,15 +51,17 @@ public class Arm extends ProfiledPIDSubsystem {
             },
             log -> {
                 log.motor("arm-left")
-                    .voltage(
-                        m_appliedVoltage.mut_replace(
-                            leftMotor.getBusVoltage(), Volts))
-                    .angularPosition(m_distance.mut_replace(encoder.getDistance(), Radians));
+                .voltage(
+                    m_appliedVoltage.mut_replace(
+                        leftMotor.getBusVoltage(), Volts))
+                        .angularPosition(m_distance.mut_replace(encoder.getDistance(), Radians))
+                        .angularVelocity(m_velocity.mut_replace(leftMotor.getEncoder().getVelocity(), RadiansPerSecond));
                 log.motor("arm-right")
                 .voltage(
                     m_appliedVoltage.mut_replace(
                         rightMotor.getBusVoltage(), Volts))
-                    .angularPosition(m_distance.mut_replace(encoder.getDistance(), Radians));
+                        .angularPosition(m_distance.mut_replace(encoder.getDistance(), Radians))
+                        .angularVelocity(m_velocity.mut_replace(rightMotor.getEncoder().getVelocity(), RadiansPerSecond));
             },
             this
         ));
@@ -93,6 +98,9 @@ public class Arm extends ProfiledPIDSubsystem {
         encoder = new DutyCycleEncoder(Arm_Constants.encoderID);
         encoder.setDistancePerRotation(-2*Math.PI);
         encoder.setPositionOffset(0.134);
+
+        timer = new Timer();
+        timer.reset();
 
         align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 4.5, 30.0);
 
@@ -146,14 +154,17 @@ public class Arm extends ProfiledPIDSubsystem {
     @Override
     public void periodic() {
         updateDashboard();
+        System.out.println("Left Velocity: "+leftMotor.getEncoder().getVelocity()+", Right Velocity: "+rightMotor.getEncoder().getVelocity());
         //useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
     }
 
     public Command sysIdQuasisttatic(SysIdRoutine.Direction direction) {
+        timer.restart();
         return routine.quasistatic(direction);
     }
 
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        timer.restart();
         return routine.dynamic(direction);
     }
 }
