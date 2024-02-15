@@ -1,5 +1,6 @@
 package frc.robot.Commands;
 
+import frc.robot.Constants.Swerve_Constants;
 import frc.robot.Subsystems.Swerve;
 
 import java.util.function.BooleanSupplier;
@@ -20,8 +21,8 @@ public class Swerve_Commands {
     public InstantCommand drive(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier rotation, BooleanSupplier fieldRelative) {
         return new InstantCommand(
             () -> swerve.drive(
-                new Translation2d(translationX.getAsDouble(), translationY.getAsDouble()), 
-                rotation.getAsDouble(), 
+                new Translation2d(translationX.getAsDouble(), translationY.getAsDouble()).times(Swerve_Constants.maxModuleSpeed), 
+                rotation.getAsDouble()*Swerve_Constants.maxAngularSpeed, 
                 fieldRelative.getAsBoolean()),
             swerve);
     }
