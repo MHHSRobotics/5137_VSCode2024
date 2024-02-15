@@ -21,38 +21,18 @@ public class Arm_Commands {
     }
 
     public FunctionalCommand moveToIntake() {
-        return new FunctionalCommand(
-            () -> arm.setGoal(Arm_Constants.intakePosition),
-            () -> {},
-            (Boolean x) -> {},
-            () -> arm.getMovementFinished(),
-            arm);
+        return new InstantCommand(() -> arm.setGoal(Arm_Constants.intakePosition), arm);
     }
 
     public FunctionalCommand moveToSpeaker() {
-        return new FunctionalCommand(
-            () -> arm.setGoal(Arm_Constants.speakerPosition),
-            () -> {},
-            (Boolean x) -> {},
-            () -> arm.getMovementFinished(),
-            arm);
+        return new InstantCommand(() -> arm.setGoal(Arm_Constants.speakerPosition), arm);
     }
 
     public FunctionalCommand moveToDefault() {
-        return new FunctionalCommand(
-            () -> arm.setGoal(Arm_Constants.defaultPosition),
-            () -> {},
-            (Boolean x) -> {},
-            () -> arm.getMovementFinished(),
-            arm);
+        return new InstantCommand(() -> arm.setGoal(Arm_Constants.defaultPosition), arm);
     }
 
     public FunctionalCommand moveToAmp() {
-        return new FunctionalCommand(
-            () -> arm.setGoal(Arm_Constants.ampPosition),
-            () -> {},
-            (Boolean x) -> {},
-            () -> arm.getMovementFinished(),
-            arm);
+        return new InstantCommand(() -> arm.setGoal(Arm_Constants.ampPosition), arm);
     }
 }

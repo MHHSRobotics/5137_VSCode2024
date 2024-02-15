@@ -74,17 +74,14 @@ public class RobotContainer {
 
     //arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftY()));
 
-    operator.a()
-    .onTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kForward));
-
     operator.b()
-    .onTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    .onTrue(arm_Commands.moveToAmp());
 
     operator.x()
-    .onTrue(arm.sysIdQuasisttatic(SysIdRoutine.Direction.kForward));
+    .onTrue(arm_Commands.moveToSpeaker());
 
     operator.y()
-    .onTrue(arm.sysIdQuasisttatic(SysIdRoutine.Direction.kReverse));
+    .onTrue(arm_Commands.moveToIntake());
 
     // Intake/Shooter Bindings
 
@@ -96,9 +93,9 @@ public class RobotContainer {
     .onTrue(intake_Commands.intakeReverse())
     .onFalse(intake_Commands.stop());
 
-    /*operator.a()
+    operator.a()
     .onTrue(new ParallelCommandGroup(shooter_Commands.shoot(arm.getMeasurement()), intake_Commands.intakeForward(1.5)))
-    .onFalse(new ParallelCommandGroup(shooter_Commands.stop(), intake_Commands.stop()));*/
+    .onFalse(new ParallelCommandGroup(shooter_Commands.stop(), intake_Commands.stop()));
   }
 
   public Command getAutonomousCommand() {

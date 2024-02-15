@@ -54,13 +54,13 @@ public class Arm extends ProfiledPIDSubsystem {
                 .voltage(
                     m_appliedVoltage.mut_replace(
                         leftMotor.getBusVoltage(), Volts))
-                        .angularPosition(m_distance.mut_replace(encoder.getDistance(), Radians))
+                        .angularPosition(m_distance.mut_replace(leftMotor.getEncoder().getPosition(), Radians))
                         .angularVelocity(m_velocity.mut_replace(leftMotor.getEncoder().getVelocity(), RadiansPerSecond));
                 log.motor("arm-right")
                 .voltage(
                     m_appliedVoltage.mut_replace(
                         rightMotor.getBusVoltage(), Volts))
-                        .angularPosition(m_distance.mut_replace(encoder.getDistance(), Radians))
+                        .angularPosition(m_distance.mut_replace(rightMotor.getEncoder().getPosition(), Radians))
                         .angularVelocity(m_velocity.mut_replace(rightMotor.getEncoder().getVelocity(), RadiansPerSecond));
             },
             this
@@ -143,9 +143,6 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     private void updateDashboard() {
-        SmartDashboard.putNumber("Encoder Value", encoder.get());
-        SmartDashboard.putNumber("Encoder Absolute Position", encoder.getAbsolutePosition());
-        SmartDashboard.putNumber("Encoder Distance", encoder.getDistance());
         SmartDashboard.putBoolean("Encoder", encoder.isConnected());
         SmartDashboard.putNumber("Arm Position", Math.toDegrees(this.getMeasurement()));
         SmartDashboard.putNumber("Arm Goal", Math.toDegrees(this.getGoal()));
@@ -154,8 +151,7 @@ public class Arm extends ProfiledPIDSubsystem {
     @Override
     public void periodic() {
         updateDashboard();
-        System.out.println("Left Velocity: "+leftMotor.getEncoder().getVelocity()+", Right Velocity: "+rightMotor.getEncoder().getVelocity());
-        //useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
+        useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
     }
 
     public Command sysIdQuasisttatic(SysIdRoutine.Direction direction) {
