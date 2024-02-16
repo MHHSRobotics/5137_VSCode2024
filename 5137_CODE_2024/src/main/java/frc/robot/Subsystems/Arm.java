@@ -154,7 +154,7 @@ public class Arm extends ProfiledPIDSubsystem {
     public void periodic() {
         updateDashboard();
         if (encoder.isConnected()) {
-            //useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
+            useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
         }
     }
 

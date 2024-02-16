@@ -7,6 +7,8 @@ import frc.robot.Constants.Swerve_Constants;
 import frc.robot.Subsystems.*;
 
 import java.io.File;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -14,27 +16,30 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
 
   private CommandPS4Controller driver;
-  private CommandXboxController operator;
+  private CommandPS4Controller operator;
 
   private Swerve swerve;
   private Arm arm;
   private Intake intake; 
   private Shooter shooter;
   private Vision vision;
+  public LED led;
 
   private Swerve_Commands swerve_Commands;
   private Arm_Commands arm_Commands;
   private Intake_Commands intake_Commands;
   private Shooter_Commands shooter_Commands;
 
+  public LED_Commands led_Commands;
+
   public RobotContainer() {
     driver = new CommandPS4Controller(0);
-    operator = new CommandXboxController(1);
+    operator = new CommandPS4Controller(1);
 
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(),"swerve"));
     arm = new Arm(new File(Filesystem.getDeployDirectory(), "RobotConstants.json"));
@@ -47,6 +52,10 @@ public class RobotContainer {
     intake_Commands = new Intake_Commands(intake);
     shooter_Commands = new Shooter_Commands(shooter);
     vision.setDefaultCommand(new AddVisionMeasurement(vision, swerve));
+
+    led = new LED();
+
+    led_Commands = new LED_Commands();
 
     configureBindings();
   }
@@ -72,28 +81,43 @@ public class RobotContainer {
 
     // Arm Bindings
 
-    arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftY()));
+    //arm.setDefaultCommand(arm_Commands.manualMove(() -> -operator.getLeftY()));
 
-    operator.b()
+    operator.circle()
     .onTrue(arm_Commands.moveToAmp());
 
-    operator.x()
+    operator.square()
     .onTrue(arm_Commands.moveToSpeaker());
 
-    operator.y()
+    operator.triangle()
     .onTrue(arm_Commands.moveToIntake());
 
     // Intake/Shooter Bindings
 
-    operator.rightBumper()
-    .onTrue(intake_Commands.continuousIntake());
+    operator.R2()
+    .onTrue(intake_Commands.intakeForward())
+    .onFalse(intake_Commands.stop());
     
-    operator.leftBumper()
+    operator.L2()
     .onTrue(intake_Commands.intakeReverse())
     .onFalse(intake_Commands.stop());
 
-    operator.a()
-    .onTrue(new ParallelCommandGroup(shooter_Commands.shoot(arm.getMeasurement()), intake_Commands.intakeForward(1.5)))
+    new Trigger(new BooleanSupplier() {
+      @Override
+      public boolean getAsBoolean() {
+        return intake.objectInRange();
+      }
+    })
+    .onTrue(intake_Commands.stop());
+        
+    operator.cross()
+    .onTrue(new ParallelCommandGroup(shooter_Commands.shoot(new DoubleSupplier() {
+      @Override
+      public double getAsDouble() {
+        return arm.getMeasurement();
+      }
+    }),
+    intake_Commands.intakeForward(1.5)))
     .onFalse(new ParallelCommandGroup(shooter_Commands.stop(), intake_Commands.stop()));
   }
 
