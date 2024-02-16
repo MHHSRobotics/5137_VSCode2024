@@ -14,7 +14,7 @@ public class Intake extends SubsystemBase {
 
     TalonSRX intakeMotor= new TalonSRX(20);
 
-    //private final Ultrasonic ultrasonic = new Ultrasonic(0, 1);
+    private final Ultrasonic ultrasonic = new Ultrasonic(0, 2);
     // Ultrasonic sensors tend to be quite noisy and susceptible to sudden outliers,
   // so measurements are filtered with a 5-sample median filter
     private final MedianFilter m_filter = new MedianFilter(5);
@@ -28,15 +28,15 @@ public class Intake extends SubsystemBase {
         //TODO: if intake not working/cutting out adjust current limit above
     }
 
-    /*
+    
     public double getDistance()
     {
         double measurement = ultrasonic.getRangeInches();
         double filteredMeasurement = m_filter.calculate(measurement);
         return filteredMeasurement;
-    }*/
+    }
 
-    /*
+    
     public boolean objectInRange()
     {
         if(getDistance() <= 5)
@@ -44,7 +44,7 @@ public class Intake extends SubsystemBase {
             return true;
         }
         return false;
-    }*/
+    }
 
     public void set (double speed) {
         intakeMotor.set(TalonSRXControlMode.PercentOutput, speed);
