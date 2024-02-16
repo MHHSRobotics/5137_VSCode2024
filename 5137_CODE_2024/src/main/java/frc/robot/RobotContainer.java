@@ -29,13 +29,15 @@ public class RobotContainer {
 
     led = new LED();
 
-    led_Commands = new LED_Commands();
+    led_Commands = new LED_Commands(led);
 
     configureBindings();
   }
 
   private void configureBindings() {
 
+    operator.square()
+    .onTrue(led_Commands.rbow());
   }
 
   public Command getAutonomousCommand() {
