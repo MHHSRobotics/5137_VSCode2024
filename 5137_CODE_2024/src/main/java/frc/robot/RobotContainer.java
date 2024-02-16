@@ -72,7 +72,7 @@ public class RobotContainer {
 
     // Arm Bindings
 
-    //arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftY()));
+    arm.setDefaultCommand(arm_Commands.manualMove(() -> operator.getLeftY()));
 
     operator.b()
     .onTrue(arm_Commands.moveToAmp());

@@ -126,8 +126,10 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     public void runManual(double output) {
-        leftMotor.set(0.3*output);
-        rightMotor.set(0.3*output);
+        //if (!encoder.isConnected()) {
+            leftMotor.set(0.3*output);
+            rightMotor.set(0.3*output);
+        //}
     }
 
     public void alignToSpeaker(double position) {
@@ -151,7 +153,9 @@ public class Arm extends ProfiledPIDSubsystem {
     @Override
     public void periodic() {
         updateDashboard();
-        useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
+        if (encoder.isConnected()) {
+            //useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
+        }
     }
 
     public Command sysIdQuasisttatic(SysIdRoutine.Direction direction) {
