@@ -86,9 +86,8 @@ public class RobotContainer {
     // Intake/Shooter Bindings
 
     operator.rightBumper()
-    .onTrue(intake_Commands.intakeForward())
-    .onFalse(intake_Commands.stop());
-
+    .onTrue(intake_Commands.continuousIntake());
+    
     operator.leftBumper()
     .onTrue(intake_Commands.intakeReverse())
     .onFalse(intake_Commands.stop());
