@@ -33,5 +33,8 @@ public class Arm_Constants {
     public static final double kMaxAcceleration = 2.0; // Radians per Second Squared
     public static final double kManualSpeed = 5; // Degrees per Second
     public static final double errorMargin = Math.toRadians(0.5); // Degrees
-    public static final double minimumExpectedAngle = Math.toRadians(-20); // Degrees
+    public static final double minimumNormalAngle = Math.toRadians(-20); // Degrees
+    public static final double maximumNormalAngle = Math.toRadians(360) + minimumNormalAngle; // Degrees - Must be 360 degrees above minimum 
+    public static final double normalRangeCenter = (minimumNormalAngle+maximumNormalAngle)/2.0; //Radians
+
 }

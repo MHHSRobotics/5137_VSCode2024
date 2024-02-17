@@ -26,6 +26,8 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.io.File;
 
+import org.apache.commons.math3.util.MathUtils;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -123,8 +125,6 @@ public class Arm extends ProfiledPIDSubsystem {
             e.printStackTrace();
         }
 
-        encoderInverted = getEncoderInvert();
-
         setGoal(getMeasurement());
         updateDashboard();
     }
@@ -140,21 +140,12 @@ public class Arm extends ProfiledPIDSubsystem {
         rightMotor.setVoltage(volts);
     }
 
-    public boolean getEncoderInvert() {
-        if(encoder.getDistance() < Arm_Constants.minimumExpectedAngle) {
-            return true; 
-        }
-        return false;
-    }
-
     @Override
     public double getMeasurement() {
-        if (encoderInverted) {
-            return (encoder.getDistance()+(2*Math.PI))%(2*Math.PI);
-        } else {
-            return encoder.getDistance();
+            double unfilteredAngle = encoder.getDistance();
+            double normalizedAngle = MathUtils.normalizeAngle(unfilteredAngle, Arm_Constants.normalRangeCenter);
+            return normalizedAngle;
         }
-    }
 
     public void runManual(double output) {
         if (!encoder.isConnected()) {
