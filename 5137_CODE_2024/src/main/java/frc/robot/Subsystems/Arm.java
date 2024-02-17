@@ -63,14 +63,14 @@ public class Arm extends ProfiledPIDSubsystem {
                 .voltage(
                     m_appliedVoltage.mut_replace(
                         leftMotor.getBusVoltage()*leftMotor.getAppliedOutput(), Volts))
-                        .angularPosition(m_distance.mut_replace((leftEncoder.getPosition())/(227.555), Rotations))
-                        .angularVelocity(m_velocity.mut_replace((leftEncoder.getVelocity())/(227.555*60), RotationsPerSecond));
+                        .angularPosition(m_distance.mut_replace((leftEncoder.getPosition())/(Arm_Constants.gearRatio), Rotations))
+                        .angularVelocity(m_velocity.mut_replace((leftEncoder.getVelocity())/(Arm_Constants.gearRatio*60), RotationsPerSecond));
                 log.motor("arm-right")
                 .voltage(
                     m_appliedVoltage.mut_replace(
                         rightMotor.getBusVoltage()*rightMotor.getAppliedOutput(), Volts))
-                        .angularPosition(m_distance.mut_replace((rightEncoder.getPosition())/(227.555), Rotations))
-                        .angularVelocity(m_velocity.mut_replace((rightEncoder.getVelocity())/(227.555*60), RotationsPerSecond));
+                        .angularPosition(m_distance.mut_replace((rightEncoder.getPosition())/(Arm_Constants.gearRatio), Rotations))
+                        .angularVelocity(m_velocity.mut_replace((rightEncoder.getVelocity())/(Arm_Constants.gearRatio*60), RotationsPerSecond));
             },
             this
         ));
@@ -112,7 +112,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
         encoder = new DutyCycleEncoder(Arm_Constants.encoderID);
         encoder.setDistancePerRotation(-2*Math.PI);
-        encoder.setPositionOffset(0.134);
+        encoder.setPositionOffset(Arm_Constants.encoderOffset);
 
         timer = new Timer();
         timer.reset();

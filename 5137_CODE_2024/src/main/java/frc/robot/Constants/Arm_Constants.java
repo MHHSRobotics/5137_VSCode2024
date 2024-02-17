@@ -13,7 +13,7 @@ public class Arm_Constants {
     public static final int rightMotorID = 24;
     public static final int encoderID = 1;
 
-    //Motor Limits 
+    // Motor Limits 
     public static final int maxSupplyCurrent = 80;
 
     // Feedforward Constants
@@ -36,5 +36,10 @@ public class Arm_Constants {
     public static final double minimumNormalAngle = Math.toRadians(-20); // Degrees
     public static final double maximumNormalAngle = Math.toRadians(360) + minimumNormalAngle; // Degrees - Must be 360 degrees above minimum 
     public static final double normalRangeCenter = (minimumNormalAngle+maximumNormalAngle)/2.0; //Radians
+
+    // Characteristics
+    public static final double encoderOffset = 0.134;
+    public static final double gearRatio = 227.555/1.0; 
+
 
 }
