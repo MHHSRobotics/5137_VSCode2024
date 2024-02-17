@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 public class RobotContainer {
 
@@ -66,12 +67,13 @@ public class RobotContainer {
 
     //Swerve Bindings
 
+    /*
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> -MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
       () -> MathUtil.applyDeadband(driver.getRightX(), Swerve_Constants.RX_Deadband),
       () -> !driver.L1().getAsBoolean()
-    ));
+    ));*/
 
     driver.cross()
     .onTrue(swerve_Commands.aimAtTarget());
@@ -81,11 +83,24 @@ public class RobotContainer {
 
     // Arm Bindings
 
-    //arm.setDefaultCommand(arm_Commands.manualMove(() -> -operator.getLeftY()));
+    arm.setDefaultCommand(arm_Commands.manualMove(() -> -operator.getLeftY()));
+
+    /*
+    operator.square()
+    .onTrue(arm.sysIdQuasisttatic(Direction.kForward));
+
+    operator.triangle()
+    .onTrue(arm.sysIdQuasisttatic(Direction.kReverse));
+
+    operator.cross()
+    .onTrue(arm.sysIdDynamic(Direction.kForward));
+
+    operator.circle()
+    .onTrue(arm.sysIdDynamic(Direction.kReverse));*/
 
     operator.circle()
     .onTrue(arm_Commands.moveToAmp());
-
+    
     operator.square()
     .onTrue(arm_Commands.moveToSpeaker());
 
@@ -110,6 +125,8 @@ public class RobotContainer {
     })
     .onTrue(intake_Commands.stop());
         
+    
+    /*
     operator.cross()
     .onTrue(new ParallelCommandGroup(shooter_Commands.shoot(new DoubleSupplier() {
       @Override
@@ -118,7 +135,7 @@ public class RobotContainer {
       }
     }),
     intake_Commands.intakeForward(1.5)))
-    .onFalse(new ParallelCommandGroup(shooter_Commands.stop(), intake_Commands.stop()));
+    .onFalse(new ParallelCommandGroup(shooter_Commands.stop(), intake_Commands.stop()));*/
   }
 
   public Command getAutonomousCommand() {

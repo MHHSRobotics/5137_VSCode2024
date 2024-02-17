@@ -1,5 +1,6 @@
 package frc.robot.Subsystems;
 
+import frc.robot.Robot;
 import frc.robot.Constants.Arm_Constants;
 import frc.robot.Other.ArmTrajectoryAlignment;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -20,12 +21,13 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Volts;
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.io.File;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -35,13 +37,18 @@ public class Arm extends ProfiledPIDSubsystem {
     private DutyCycleEncoder encoder;
     private ArmFeedforward feedForward;
 
+    private RelativeEncoder leftEncoder;
+    private RelativeEncoder rightEncoder;
+
     private ArmTrajectoryAlignment align;
 
     private Timer timer;
 
+    private boolean encoderInverted;
+
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
-    private final MutableMeasure<Angle> m_distance = mutable(Radians.of(0));
-    private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
+    private final MutableMeasure<Angle> m_distance = mutable(Rotations.of(0));
+    private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RotationsPerSecond.of(0));
 
     SysIdRoutine routine = new SysIdRoutine(
         new SysIdRoutine.Config(),
@@ -53,15 +60,15 @@ public class Arm extends ProfiledPIDSubsystem {
                 log.motor("arm-left")
                 .voltage(
                     m_appliedVoltage.mut_replace(
-                        leftMotor.getBusVoltage(), Volts))
-                        .angularPosition(m_distance.mut_replace(leftMotor.getEncoder().getPosition(), Radians))
-                        .angularVelocity(m_velocity.mut_replace(leftMotor.getEncoder().getVelocity(), RadiansPerSecond));
+                        leftMotor.getBusVoltage()*leftMotor.getAppliedOutput(), Volts))
+                        .angularPosition(m_distance.mut_replace((leftEncoder.getPosition())/(227.555), Rotations))
+                        .angularVelocity(m_velocity.mut_replace((leftEncoder.getVelocity())/(227.555*60), RotationsPerSecond));
                 log.motor("arm-right")
                 .voltage(
                     m_appliedVoltage.mut_replace(
-                        rightMotor.getBusVoltage(), Volts))
-                        .angularPosition(m_distance.mut_replace(rightMotor.getEncoder().getPosition(), Radians))
-                        .angularVelocity(m_velocity.mut_replace(rightMotor.getEncoder().getVelocity(), RadiansPerSecond));
+                        rightMotor.getBusVoltage()*rightMotor.getAppliedOutput(), Volts))
+                        .angularPosition(m_distance.mut_replace((rightEncoder.getPosition())/(227.555), Rotations))
+                        .angularVelocity(m_velocity.mut_replace((rightEncoder.getVelocity())/(227.555*60), RotationsPerSecond));
             },
             this
         ));
@@ -80,6 +87,9 @@ public class Arm extends ProfiledPIDSubsystem {
         leftMotor = new CANSparkMax(Arm_Constants.leftMotorID, MotorType.kBrushless);
         rightMotor = new CANSparkMax(Arm_Constants.rightMotorID, MotorType.kBrushless);
 
+        leftMotor.restoreFactoryDefaults();
+        rightMotor.restoreFactoryDefaults();
+
         leftMotor.setSmartCurrentLimit(Arm_Constants.maxSupplyCurrent);
         rightMotor.setSmartCurrentLimit(Arm_Constants.maxSupplyCurrent);
 
@@ -88,6 +98,9 @@ public class Arm extends ProfiledPIDSubsystem {
 
         leftMotor.setInverted(false);
         rightMotor.setInverted(true);
+
+        leftEncoder = leftMotor.getEncoder();
+        rightEncoder = rightMotor.getEncoder();
 
         feedForward = new ArmFeedforward(
             Arm_Constants.kS,
@@ -104,9 +117,17 @@ public class Arm extends ProfiledPIDSubsystem {
 
         align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 4.5, 30.0);
 
-        updateDashboard();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-        setGoal(Arm_Constants.intakePosition);
+        encoderInverted = (encoder.getDistance() < -Math.PI);
+
+        setGoal(getMeasurement());
+        updateDashboard();
     }
 
     @Override
@@ -122,14 +143,18 @@ public class Arm extends ProfiledPIDSubsystem {
 
     @Override
     public double getMeasurement() {
-        return encoder.getDistance();
+        if (encoderInverted) {
+            return (encoder.getDistance()+(2*Math.PI))%(2*Math.PI);
+        } else {
+            return encoder.getDistance();
+        }
     }
 
     public void runManual(double output) {
-        //if (!encoder.isConnected()) {
+        if (!encoder.isConnected()) {
             leftMotor.set(0.3*output);
             rightMotor.set(0.3*output);
-        //}
+        }
     }
 
     public void alignToSpeaker(double position) {

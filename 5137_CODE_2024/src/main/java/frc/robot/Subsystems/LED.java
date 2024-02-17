@@ -23,7 +23,7 @@ public class LED extends SubsystemBase {
         speed = 0;
         leds.start();
         timer = new Timer();
-        //timer.restart();
+        timer.restart();
     }
 
     public void solidColor(Color color, int brightness) {
@@ -70,7 +70,7 @@ public class LED extends SubsystemBase {
         offset %= 200;
     }
 
-    /*
+    
     @Override
     public void periodic() {
         if (timer.hasElapsed(20)) {
@@ -81,6 +81,6 @@ public class LED extends SubsystemBase {
         } else {
             pulsingCG();
         }
-        offset += speed;
-    }*/
+        offset += speed; 
+    }
 }
