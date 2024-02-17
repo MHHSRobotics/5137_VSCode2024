@@ -35,6 +35,7 @@ public class Arm extends ProfiledPIDSubsystem {
     private CANSparkMax leftMotor;
     private CANSparkMax rightMotor;
     private DutyCycleEncoder encoder;
+    private boolean encoderInverted;
     private ArmFeedforward feedForward;
 
     private RelativeEncoder leftEncoder;
@@ -44,7 +45,6 @@ public class Arm extends ProfiledPIDSubsystem {
 
     private Timer timer;
 
-    private boolean encoderInverted;
 
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
     private final MutableMeasure<Angle> m_distance = mutable(Rotations.of(0));
@@ -120,11 +120,10 @@ public class Arm extends ProfiledPIDSubsystem {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        encoderInverted = (encoder.getDistance() < -Math.PI);
+        encoderInverted = getEncoderInvert();
 
         setGoal(getMeasurement());
         updateDashboard();
@@ -139,6 +138,13 @@ public class Arm extends ProfiledPIDSubsystem {
     public void setVoltage(double volts) {
         leftMotor.setVoltage(volts);
         rightMotor.setVoltage(volts);
+    }
+
+    public boolean getEncoderInvert() {
+        if(encoder.getDistance() < Arm_Constants.minimumExpectedAngle) {
+            return true; 
+        }
+        return false;
     }
 
     @Override
