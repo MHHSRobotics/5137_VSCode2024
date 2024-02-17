@@ -126,7 +126,7 @@ public class RobotContainer {
     .onTrue(intake_Commands.stop());
         
     
-    /*
+    
     operator.cross()
     .onTrue(new ParallelCommandGroup(shooter_Commands.shoot(new DoubleSupplier() {
       @Override
@@ -135,7 +135,7 @@ public class RobotContainer {
       }
     }),
     intake_Commands.intakeForward(1.5)))
-    .onFalse(new ParallelCommandGroup(shooter_Commands.stop(), intake_Commands.stop()));*/
+    .onFalse(new ParallelCommandGroup(shooter_Commands.stop(), intake_Commands.stop()));
   }
 
   public Command getAutonomousCommand() {
