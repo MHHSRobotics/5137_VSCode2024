@@ -48,7 +48,7 @@ public class RobotContainer {
     shooter = new Shooter();
     vision = new Vision();
 
-    swerve_Commands = new Swerve_Commands(swerve);
+    swerve_Commands = new Swerve_Commands(swerve, vision);
     arm_Commands = new Arm_Commands(arm);
     intake_Commands = new Intake_Commands(intake);
     shooter_Commands = new Shooter_Commands(shooter);

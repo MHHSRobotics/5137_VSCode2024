@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import frc.robot.Constants.Arm_Constants;
 import frc.robot.Constants.Swerve_Constants;
+import frc.robot.Constants.Vision_Constants;
 
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
@@ -10,6 +11,7 @@ import static edu.wpi.first.units.Units.Volts;
 import java.io.File;
 import java.io.IOException;
 
+import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -17,8 +19,10 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
@@ -51,6 +55,9 @@ public class Swerve extends SubsystemBase {
     private SwerveDrive swerve;
 
     AprilTagFieldLayout aprilTagFieldLayout;
+    PIDController turnController;
+    PIDController xController;
+    PIDController yController;
     
     private Timer timer;
 
@@ -87,8 +94,12 @@ public class Swerve extends SubsystemBase {
         ));
     public Swerve(File directory) {
 
-       
-
+        turnController = new PIDController(Swerve_Constants.turnKP, Swerve_Constants.turnKI, Swerve_Constants.turnKD);
+        xController = new PIDController(Swerve_Constants.driveKP, Swerve_Constants.driveKI, Swerve_Constants.driveKD);
+        yController = new PIDController(Swerve_Constants.driveKP, Swerve_Constants.driveKI, Swerve_Constants.driveKD);
+        turnController.setTolerance(0.02, 0.01);
+        xController.setTolerance(0.05, 0.01);
+        yController.setTolerance(0.05, 0.01);
 
         try {
             swerve = new SwerveParser(directory).createSwerveDrive(Swerve_Constants.maxVelocity);
@@ -119,7 +130,7 @@ public class Swerve extends SubsystemBase {
             this::getRobotVelocity,
             this::setChassisSpeeds,
             new HolonomicPathFollowerConfig(
-                new PIDConstants(5.0, 0.0, 0.0),
+                new PIDConstants(.02065, 0.0, 0.0),
                 new PIDConstants(
                     swerve.swerveController.config.headingPIDF.p,
                     swerve.swerveController.config.headingPIDF.i,
@@ -192,9 +203,12 @@ public class Swerve extends SubsystemBase {
         return distanceToPose;
     }
 
-    public boolean robotAligned() {
-        System.out.println(Math.abs(getRadiansToTarget()));
-        if(Math.abs(getRadiansToTarget()) < Swerve_Constants.aimToleranceRadians && Math.abs(swerve.getRobotVelocity().omegaRadiansPerSecond) <= 0.01)
+    public boolean turnAligned() {
+        return turnController.atSetpoint();
+    }
+
+    public boolean robotAligned(){
+        if(turnController.atSetpoint() && xController.atSetpoint()&& yController.atSetpoint())
         {
             return true;
         }
@@ -202,8 +216,6 @@ public class Swerve extends SubsystemBase {
     }
 
     public void aimAtTarget() {
-        PIDController turnController = new PIDController(Swerve_Constants.alignKP, Swerve_Constants.alignKI, Swerve_Constants.alignKD);
-        turnController.setTolerance(0.02, 0.01);
         double turnVelocity = turnController.calculate(getRadiansToTarget(),0);
         drive(new Translation2d(0,0),turnVelocity, true);
     }
@@ -238,4 +250,18 @@ public class Swerve extends SubsystemBase {
         timer.restart();
         return routine.dynamic(direction);
     }
+
+    
+
+    public void driveToTarget(Translation2d translationToTarget)
+    {
+        Translation2d translation = translationToTarget; 
+        
+        double turnVelocity = turnController.calculate(translation.getAngle().getRadians(),0);
+        double xVelocity = turnController.calculate(translation.getX(),0);
+        double yVelocity = turnController.calculate(translation.getY(),0);
+    
+        drive(new Translation2d(xVelocity, yVelocity), turnVelocity, true);
+    }
+    
 }

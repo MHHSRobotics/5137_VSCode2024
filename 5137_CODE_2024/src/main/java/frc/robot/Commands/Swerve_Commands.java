@@ -2,6 +2,7 @@ package frc.robot.Commands;
 
 import frc.robot.Constants.Swerve_Constants;
 import frc.robot.Subsystems.Swerve;
+import frc.robot.Subsystems.Vision;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -13,9 +14,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class Swerve_Commands {
     private Swerve swerve;
+    private Vision vision;
 
-    public Swerve_Commands(Swerve swerve) {
+    public Swerve_Commands(Swerve swerve, Vision vision) {
         this.swerve = swerve;
+        this.vision = vision;
     }
 
     public InstantCommand drive(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier rotation, BooleanSupplier fieldRelative) {
@@ -28,7 +31,11 @@ public class Swerve_Commands {
     }
 
     public FunctionalCommand aimAtTarget() {
-        return new FunctionalCommand(() -> {}, () -> swerve.aimAtTarget(), (Boolean x) -> {}, () -> swerve.robotAligned(), swerve);
+        return new FunctionalCommand(() -> {}, () -> swerve.aimAtTarget(), (Boolean x) -> {}, () -> swerve.turnAligned(), swerve);
+    }
+
+    public FunctionalCommand driveToNote() {
+        return new FunctionalCommand(() -> {}, () -> swerve.driveToTarget(vision.getTranslationToNote()), (Boolean x) -> {}, () -> swerve.robotAligned(), swerve);
     }
 
     public InstantCommand zeroGyro() {
@@ -38,4 +45,5 @@ public class Swerve_Commands {
     public Command runAuto(String name) {
         return swerve.getAuto(name);
     }
+
 }

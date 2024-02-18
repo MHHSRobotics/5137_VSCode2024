@@ -7,15 +7,18 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.PhotonUtils;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,6 +28,8 @@ public class Vision extends SubsystemBase{
     
     private final PhotonCamera ar1Camera = new PhotonCamera("AR1");
     private final PhotonCamera ar2Camera = new PhotonCamera("AR2");
+    private final PhotonCamera objCamera = new PhotonCamera("OBJ");
+
     private AprilTagFieldLayout aprilTagFieldLayout;
     private PhotonPoseEstimator ar1PoseEstimator;
     private PhotonPoseEstimator ar2PoseEstimator;
@@ -87,6 +92,20 @@ public class Vision extends SubsystemBase{
       
         return pose.estimatedPose.toPose2d().getTranslation().getDistance(new Translation2d(0,0));
     
+    }
+
+    public Translation2d getTranslationToNote()
+    {
+        Transform3d robotToCamera = Vision_Constants.robotToOBJ;
+        var result = objCamera.getLatestResult();
+        if(result.hasTargets())
+        {
+            var target = result.getBestTarget();
+            double distance = PhotonUtils.calculateDistanceToTargetMeters(robotToCamera.getZ(), Vision_Constants.noteDetectionHeight, robotToCamera.getRotation().getY(), Units.degreesToRadians(target.getPitch()));
+            Translation2d translation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(-target.getYaw()));
+            return translation;
+        }
+        return new Translation2d();
     }
 
     @Override
