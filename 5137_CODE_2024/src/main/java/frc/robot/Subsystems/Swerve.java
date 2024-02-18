@@ -203,8 +203,34 @@ public class Swerve extends SubsystemBase {
         return distanceToPose;
     }
 
+    public ChassisSpeeds getRobotVelocity() {
+        return swerve.getRobotVelocity();
+    }
+
+    public Pose2d getPose() {
+        return swerve.getPose();
+    }
+
+    public void addVisionMeasurement(Pose2d pose, double timestamp){ 
+        swerve.addVisionMeasurement(pose, timestamp);
+    }
+
+    public void aimAtTarget() {
+        double turnVelocity = turnController.calculate(getRadiansToTarget(),0);
+        drive(new Translation2d(0,0),turnVelocity, true);
+    }
+
     public boolean turnAligned() {
         return turnController.atSetpoint();
+    }
+
+    public void driveToTarget(Translation2d translationToTarget){
+       
+        Translation2d translation = translationToTarget; 
+        double turnVelocity = turnController.calculate(translation.getAngle().getRadians(),0);
+        double xVelocity = turnController.calculate(translation.getX(),0);
+        double yVelocity = turnController.calculate(translation.getY(),0);
+        drive(new Translation2d(xVelocity, yVelocity), turnVelocity, true);
     }
 
     public boolean robotAligned(){
@@ -215,30 +241,11 @@ public class Swerve extends SubsystemBase {
         return false;
     }
 
-    public void aimAtTarget() {
-        double turnVelocity = turnController.calculate(getRadiansToTarget(),0);
-        drive(new Translation2d(0,0),turnVelocity, true);
-    }
-
-    public ChassisSpeeds getRobotVelocity() {
-        return swerve.getRobotVelocity();
-    }
-
-    public Pose2d getPose() {
-        return swerve.getPose();
-    }
-
-    public void addVisionMeasurement(Pose2d pose, double timestamp)
-    { 
-        swerve.addVisionMeasurement(pose, timestamp);
-    }
-
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Distance to Target", getDistanceToTarget());
         SmartDashboard.putString("TargetPose", aprilTagFieldLayout.getTagPose(4).get().toPose2d().toString());
         SmartDashboard.putString("SwervePose", swerve.getPose().toString());
-
     }
     
      public Command sysIdQuasisttatic(SysIdRoutine.Direction direction) {
@@ -252,16 +259,5 @@ public class Swerve extends SubsystemBase {
     }
 
     
-
-    public void driveToTarget(Translation2d translationToTarget)
-    {
-        Translation2d translation = translationToTarget; 
-        
-        double turnVelocity = turnController.calculate(translation.getAngle().getRadians(),0);
-        double xVelocity = turnController.calculate(translation.getX(),0);
-        double yVelocity = turnController.calculate(translation.getY(),0);
-    
-        drive(new Translation2d(xVelocity, yVelocity), turnVelocity, true);
-    }
     
 }
