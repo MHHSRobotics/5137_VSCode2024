@@ -38,7 +38,6 @@ public class Vision extends SubsystemBase{
         } 
         catch (IOException e) {
         }
-        ar1Camera.getLatestResult().getBestTarget().
 
         ar1PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, ar1Camera, Vision_Constants.robotToAR1);
         ar2PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, ar2Camera, Vision_Constants.robotToAR2);
