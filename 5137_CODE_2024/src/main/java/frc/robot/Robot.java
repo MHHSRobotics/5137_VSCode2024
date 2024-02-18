@@ -28,14 +28,10 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     SmartDashboard.updateValues();
     CommandScheduler.getInstance().run();
-    
-
   }
 
   @Override
-  public void disabledInit() {
-
-  }
+  public void disabledInit() {}
 
   @Override
   public void disabledPeriodic() {}

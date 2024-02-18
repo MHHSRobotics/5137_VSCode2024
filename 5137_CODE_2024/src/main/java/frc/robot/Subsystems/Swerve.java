@@ -174,34 +174,7 @@ public class Swerve extends SubsystemBase {
         swerve.zeroGyro();
     }
 
-    public double getRadiansToTarget() {
-        Pose2d targetPose;
-        if(DriverStation.getAlliance().equals(Alliance.Red))
-        {
-            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
-        }
-        else
-        {
-            targetPose = aprilTagFieldLayout.getTagPose(8).get().toPose2d(); 
-        }
-
-        double radiansToPose = PhotonUtils.getYawToPose(swerve.getPose(), targetPose).getRadians();
-        return radiansToPose;
-    }
-
-    public double getDistanceToTarget() {
-        Pose2d targetPose;
-        if(DriverStation.getAlliance().equals(Alliance.Red))
-        {
-            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
-        }
-        else
-        {
-            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d(); 
-        }
-        double distanceToPose = PhotonUtils.getDistanceToPose(swerve.getPose(), targetPose);
-        return distanceToPose;
-    }
+    
 
     public ChassisSpeeds getRobotVelocity() {
         return swerve.getRobotVelocity();
@@ -224,6 +197,30 @@ public class Swerve extends SubsystemBase {
         return turnController.atSetpoint();
     }
 
+    public double getRadiansToTarget() {
+        Pose2d targetPose;
+        if(DriverStation.getAlliance().equals(Alliance.Red)){
+            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
+        }
+        else{
+            targetPose = aprilTagFieldLayout.getTagPose(8).get().toPose2d(); 
+        }
+        double radiansToPose = PhotonUtils.getYawToPose(swerve.getPose(), targetPose).getRadians();
+        return radiansToPose;
+    }
+
+    public double getDistanceToTarget() {
+        Pose2d targetPose;
+        if(DriverStation.getAlliance().equals(Alliance.Red)){
+            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
+        }
+        else{
+            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d(); 
+        }
+        double distanceToPose = PhotonUtils.getDistanceToPose(swerve.getPose(), targetPose);
+        return distanceToPose;
+    }
+    
     public void driveToTarget(Translation2d translationToTarget){
        
         Translation2d translation = translationToTarget; 

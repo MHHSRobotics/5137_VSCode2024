@@ -118,8 +118,6 @@ public class Arm extends ProfiledPIDSubsystem {
         encoder.setDistancePerRotation(-2*Math.PI);
         encoder.setPositionOffset(Arm_Constants.encoderOffset);
 
-        
-
         align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 4.5, 30.0);
 
         try {

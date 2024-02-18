@@ -26,116 +26,49 @@ import frc.robot.Constants.Vision_Constants;
 
 public class Vision extends SubsystemBase{
     
+    private AprilTagFieldLayout aprilTagFieldLayout;
+
     private final PhotonCamera ar1Camera = new PhotonCamera("AR1");
     private final PhotonCamera ar2Camera = new PhotonCamera("AR2");
     private final PhotonCamera objCamera = new PhotonCamera("OBJ");
 
-    private AprilTagFieldLayout aprilTagFieldLayout;
     private PhotonPoseEstimator ar1PoseEstimator;
     private PhotonPoseEstimator ar2PoseEstimator;
-    private Optional<EstimatedRobotPose> ar1Pose = Optional.of(new EstimatedRobotPose(new Pose3d(0,0,0, new Rotation3d(0,0,0)), 0, null, null));
-    private Optional<EstimatedRobotPose> ar2Pose = Optional.of(new EstimatedRobotPose(new Pose3d(0,0,0, new Rotation3d(0,0,0)), 0, null, null));
 
-    public Vision()
-    {
+    public Vision(){
         try {
         aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
         } 
         catch (IOException e) {
         }
-
         ar1PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, ar1Camera, Vision_Constants.robotToAR1);
         ar2PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, ar2Camera, Vision_Constants.robotToAR2);
-
     }
 
-     public Optional<EstimatedRobotPose> getEstimatedAR1Pose(Pose2d referencePose) 
-    {
-      //TODO: Add swerve pose estimator into method once added
-        //ar1PoseEstimator.setReferencePose(referencePose);
-        return ar1PoseEstimator.update();
+     public Optional<EstimatedRobotPose> getEstimatedAR1Pose(Pose2d referencePose) {
+      ar1PoseEstimator.setReferencePose(referencePose);
+      return ar1PoseEstimator.update();
     }
 
-    public Optional<EstimatedRobotPose> getEstimatedAR2Pose(Pose2d referencePose) 
-    {
-      //TODO: Add swerve pose estimator into method once added
-      
-        ar2PoseEstimator.setReferencePose(referencePose);
-        return ar2PoseEstimator.update();
+    public Optional<EstimatedRobotPose> getEstimatedAR2Pose(Pose2d referencePose) {      
+      ar2PoseEstimator.setReferencePose(referencePose);
+      return ar2PoseEstimator.update();
     }
-
-    public String poseString(EstimatedRobotPose pose)
-    {
-    
-      return pose.estimatedPose.toPose2d().toString();
-      
-    }
- 
-    //CODE FOR TESTING, PRINTS, DASHBOARD
-    public double distanceFromOriginY(EstimatedRobotPose pose)
-    {
-        return pose.estimatedPose.toPose2d().getY();
-      
-    }
-    
-    public double distanceFromOriginX(EstimatedRobotPose pose)
-    {
-
-     
-        return pose.estimatedPose.toPose2d().getX();
-     
-    }
-
-     public double distanceFromOrigin(EstimatedRobotPose pose)
-    {
-
-      
-        return pose.estimatedPose.toPose2d().getTranslation().getDistance(new Translation2d(0,0));
-    
-    }
-
-    public Translation2d getTranslationToNote()
-    {
-        Transform3d robotToCamera = Vision_Constants.robotToOBJ;
-        var result = objCamera.getLatestResult();
-        if(result.hasTargets())
-        {
-            var target = result.getBestTarget();
-            double distance = PhotonUtils.calculateDistanceToTargetMeters(robotToCamera.getZ(), Vision_Constants.noteDetectionHeight, robotToCamera.getRotation().getY(), Units.degreesToRadians(target.getPitch()));
-            Translation2d translation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(-target.getYaw()));
-            return translation;
-        }
-        return new Translation2d();
+   
+    public Translation2d getTranslationToNote(){
+      Transform3d robotToCamera = Vision_Constants.robotToOBJ;
+      var result = objCamera.getLatestResult();
+      if(result.hasTargets()){
+        var target = result.getBestTarget();
+        double distance = PhotonUtils.calculateDistanceToTargetMeters(robotToCamera.getZ(), Vision_Constants.noteDetectionHeight, robotToCamera.getRotation().getY(), Units.degreesToRadians(target.getPitch()));
+        Translation2d translation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(-target.getYaw()));
+        return translation;
+      }
+      return new Translation2d();
     }
 
     @Override
     public void periodic() {
-  
-      if(ar1Pose.isPresent() ){
-        EstimatedRobotPose pose1 = ar1Pose.get();
-   
-        //System.out.println(pose1.estimatedPose.toPose2d());
-        {
-        SmartDashboard.putNumber("timestamp Ar1",pose1.timestampSeconds);
-      
-        SmartDashboard.putString("Pose ar1", poseString(pose1));
-
-        }
-        
-      }
-      if(ar2Pose.isPresent() ){
-    
-        EstimatedRobotPose pose2 = ar2Pose.get();
- 
-        {
-   
-        SmartDashboard.putNumber("timestamp Ar2",pose2.timestampSeconds);
-     
-        SmartDashboard.putString("Pose ar2", poseString(pose2));
-        }
-        
-      }
-    
     }
 } 
 
