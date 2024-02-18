@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -108,6 +109,20 @@ public class Swerve extends SubsystemBase {
         return radiansToPose;
     }
 
+    public double getDistanceToTarget() {
+        Pose2d targetPose;
+        if(DriverStation.getAlliance().equals(Alliance.Red))
+        {
+            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
+        }
+        else
+        {
+            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d(); 
+        }
+        double distanceToPose = PhotonUtils.getDistanceToPose(swerve.getPose(), targetPose);
+        return distanceToPose;
+    }
+
     public boolean robotAligned() {
         System.out.println(Math.abs(getRadiansToTarget()));
         if(Math.abs(getRadiansToTarget()) < Swerve_Constants.aimToleranceRadians && Math.abs(swerve.getRobotVelocity().omegaRadiansPerSecond) <= 0.01)
@@ -135,5 +150,13 @@ public class Swerve extends SubsystemBase {
     public void addVisionMeasurement(Pose2d pose, double timestamp)
     { 
         swerve.addVisionMeasurement(pose, timestamp);
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Distance to Target", getDistanceToTarget());
+        SmartDashboard.putString("TargetPose", aprilTagFieldLayout.getTagPose(4).get().toPose2d().toString());
+        SmartDashboard.putString("SwervePose", swerve.getPose().toString());
+
     }
 }

@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 public class RobotContainer {
 
-  private CommandPS4Controller driver;
+  private CommandXboxController driver;
   private CommandPS4Controller operator;
 
   private Swerve swerve;
@@ -39,7 +39,7 @@ public class RobotContainer {
   public LED_Commands led_Commands;
 
   public RobotContainer() {
-    driver = new CommandPS4Controller(0);
+    driver = new CommandXboxController(0);
     operator = new CommandPS4Controller(1);
 
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(),"swerve"));
@@ -67,18 +67,18 @@ public class RobotContainer {
 
     //Swerve Bindings
 
-    /*
+    
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> -MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
       () -> MathUtil.applyDeadband(driver.getRightX(), Swerve_Constants.RX_Deadband),
-      () -> !driver.L1().getAsBoolean()
-    ));*/
+      () -> !driver.leftBumper().getAsBoolean()
+    ));
 
-    driver.cross()
+    driver.a()
     .onTrue(swerve_Commands.aimAtTarget());
 
-    driver.triangle()
+    driver.y()
     .onTrue(swerve_Commands.zeroGyro());
 
     // Arm Bindings
@@ -102,7 +102,12 @@ public class RobotContainer {
     .onTrue(arm_Commands.moveToAmp());
     
     operator.square()
-    .onTrue(arm_Commands.moveToSpeaker());
+    .onTrue(arm_Commands.moveToSpeaker(new DoubleSupplier() {
+      @Override
+      public double getAsDouble() {
+        return swerve.getDistanceToTarget();
+      }
+    }));
 
     operator.triangle()
     .onTrue(arm_Commands.moveToIntake());

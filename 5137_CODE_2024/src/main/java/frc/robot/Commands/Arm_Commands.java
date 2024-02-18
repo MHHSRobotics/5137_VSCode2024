@@ -20,19 +20,19 @@ public class Arm_Commands {
         return new InstantCommand(() -> arm.runManual(translationX.getAsDouble()), arm);
     }
 
-    public FunctionalCommand moveToIntake() {
+    public InstantCommand moveToIntake() {
         return new InstantCommand(() -> arm.setGoal(Arm_Constants.intakePosition), arm);
     }
 
-    public FunctionalCommand moveToSpeaker() {
-        return new InstantCommand(() -> arm.setGoal(Arm_Constants.speakerPosition), arm);
+    public InstantCommand moveToSpeaker(DoubleSupplier distance) {
+        return new InstantCommand(() -> arm.alignToSpeaker(distance.getAsDouble()), arm);
     }
 
-    public FunctionalCommand moveToDefault() {
+    public InstantCommand moveToDefault() {
         return new InstantCommand(() -> arm.setGoal(Arm_Constants.defaultPosition), arm);
     }
 
-    public FunctionalCommand moveToAmp() {
+    public InstantCommand moveToAmp() {
         return new InstantCommand(() -> arm.setGoal(Arm_Constants.ampPosition), arm);
     }
 }

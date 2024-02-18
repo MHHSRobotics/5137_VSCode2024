@@ -22,7 +22,7 @@ import frc.robot.Constants.Vision_Constants;
 public class Vision extends SubsystemBase{
     
     private final PhotonCamera ar1Camera = new PhotonCamera("AR1");
-    private final PhotonCamera ar2Camera = new PhotonCamera("AR1");
+    private final PhotonCamera ar2Camera = new PhotonCamera("AR2");
     private AprilTagFieldLayout aprilTagFieldLayout;
     private PhotonPoseEstimator ar1PoseEstimator;
     private PhotonPoseEstimator ar2PoseEstimator;
@@ -45,7 +45,7 @@ public class Vision extends SubsystemBase{
      public Optional<EstimatedRobotPose> getEstimatedAR1Pose(Pose2d referencePose) 
     {
       //TODO: Add swerve pose estimator into method once added
-        ar1PoseEstimator.setReferencePose(referencePose);
+        //ar1PoseEstimator.setReferencePose(referencePose);
         return ar1PoseEstimator.update();
     }
 

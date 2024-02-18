@@ -7,7 +7,7 @@ public class Swerve_Constants {
     public static final double RX_Deadband = 0.1;
 
     // Physics
-    public static final double maxVelocity = 4.6;
+    public static final double maxVelocity = 4.5;
     public static final double maxAngularSpeed = 10.0;
     public static final double maxModuleSpeed = 4.6;
 

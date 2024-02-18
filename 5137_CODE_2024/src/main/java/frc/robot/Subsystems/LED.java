@@ -16,9 +16,9 @@ public class LED extends SubsystemBase {
     private Timer timer;
     
     public LED() {
-        leds = new AddressableLED(9);
-        leds.setLength(144);
-        buffer = new AddressableLEDBuffer(144);
+        leds = new AddressableLED(8);
+        leds.setLength(240);
+        buffer = new AddressableLEDBuffer(240);
         offset = 0;
         speed = 0;
         leds.start();
@@ -70,15 +70,38 @@ public class LED extends SubsystemBase {
         offset %= 200;
     }
 
+    public void chasingCG() {
+        speed = 1;
+        for (int i = 0; i < buffer.getLength(); i++) {
+            if (i%24 < 12) {
+                buffer.setRGB(i,
+                    (int)(255*((offset%12)/12)*Color.kRed.red),
+                    (int)(255*((offset%12)/12)*Color.kRed.green),
+                    (int)(255*((offset%12)/12)*Color.kRed.blue));
+            } else {
+                buffer.setRGB(i,
+                    (int)(255*((offset%12)/12)*Color.kGold.red),
+                    (int)(255*((offset%12)/12)*Color.kGold.green),
+                    (int)(255*((offset%12)/12)*Color.kGold.blue));
+            }
+        }
+        leds.setData(buffer);
+    }
+
     
     @Override
     public void periodic() {
-        if (timer.hasElapsed(20)) {
-            pulsingCG();
+        if (timer.hasElapsed(40)) {
+            //chasingCG();
             timer.reset();
+        } else if (timer.hasElapsed(30)) {
+            rainbow();
+        } else if (timer.hasElapsed(20)) {
+            pulsingCG();
         } else if (timer.hasElapsed(10)) {
             rainbow();
         } else {
+            //chasingCG();
             pulsingCG();
         }
         offset += speed; 
