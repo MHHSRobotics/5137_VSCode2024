@@ -55,10 +55,10 @@ public class Swerve extends SubsystemBase {
 
     private SwerveDrive swerve;
 
-    AprilTagFieldLayout aprilTagFieldLayout;
-    PIDController turnController;
-    PIDController xController;
-    PIDController yController;
+    private AprilTagFieldLayout aprilTagFieldLayout;
+    private PIDController turnController;
+    private PIDController xController;
+    private PIDController yController;
     
     private Timer timer;
 
@@ -148,13 +148,6 @@ public class Swerve extends SubsystemBase {
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
         swerve.drive(translation, rotation, fieldRelative, false);
-    }
-
-    public void setVoltage(double volts)
-    {
-        for(SwerveModule module: swerve.getModules()){
-            module.getDriveMotor().setVoltage(volts);
-        }
     }
 
     public Command getAuto(String name) {
@@ -253,6 +246,10 @@ public class Swerve extends SubsystemBase {
         return routine.dynamic(direction);
     }
 
-    
-    
+    public void setVoltage(double volts){
+        leftFrontMotor.setVoltage(volts);
+        rightFrontMotor.setVoltage(volts);
+        leftBackMotor.setVoltage(volts);
+        rightBackMotor.setVoltage(volts);
+    }
 }
