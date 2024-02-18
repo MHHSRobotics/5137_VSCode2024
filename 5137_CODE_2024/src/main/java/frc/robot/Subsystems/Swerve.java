@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import swervelib.SwerveDrive;
+import swervelib.SwerveModule;
 import swervelib.motors.SwerveMotor;
 import swervelib.parser.SwerveParser;
 
@@ -151,10 +152,9 @@ public class Swerve extends SubsystemBase {
 
     public void setVoltage(double volts)
     {
-        swerve.getModules()[0].getDriveMotor().setVoltage(volts);
-        swerve.getModules()[1].getDriveMotor().setVoltage(volts);
-        swerve.getModules()[2].getDriveMotor().setVoltage(volts);
-        swerve.getModules()[3].getDriveMotor().setVoltage(volts);
+        for(SwerveModule module: swerve.getModules()){
+            module.getDriveMotor().setVoltage(volts);
+        }
     }
 
     public Command getAuto(String name) {
@@ -173,8 +173,6 @@ public class Swerve extends SubsystemBase {
     public void zeroGyro() {
         swerve.zeroGyro();
     }
-
-    
 
     public ChassisSpeeds getRobotVelocity() {
         return swerve.getRobotVelocity();
@@ -220,7 +218,7 @@ public class Swerve extends SubsystemBase {
         double distanceToPose = PhotonUtils.getDistanceToPose(swerve.getPose(), targetPose);
         return distanceToPose;
     }
-    
+
     public void driveToTarget(Translation2d translationToTarget){
        
         Translation2d translation = translationToTarget; 
