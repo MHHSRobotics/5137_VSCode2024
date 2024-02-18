@@ -34,16 +34,12 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class Arm extends ProfiledPIDSubsystem {
-    private CANSparkMax leftMotor;
-    private CANSparkMax rightMotor;
-    private DutyCycleEncoder encoder;
-    private boolean encoderInverted;
-    private ArmFeedforward feedForward;
+    
+    /* 
+    
 
     private RelativeEncoder leftEncoder;
     private RelativeEncoder rightEncoder;
-
-    private ArmTrajectoryAlignment align;
 
     private Timer timer;
 
@@ -74,6 +70,13 @@ public class Arm extends ProfiledPIDSubsystem {
             },
             this
         ));
+     */
+
+    private ArmTrajectoryAlignment align;
+    private CANSparkMax leftMotor;
+    private CANSparkMax rightMotor;
+    private DutyCycleEncoder encoder;
+    private ArmFeedforward feedForward;
 
     public Arm(File RobotConstants) {
         super(
@@ -101,9 +104,12 @@ public class Arm extends ProfiledPIDSubsystem {
         leftMotor.setInverted(false);
         rightMotor.setInverted(true);
 
+        /* 
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
-
+        timer = new Timer();
+        timer.reset();
+        */
         feedForward = new ArmFeedforward(
             Arm_Constants.kS,
             Arm_Constants.kG,
@@ -114,8 +120,7 @@ public class Arm extends ProfiledPIDSubsystem {
         encoder.setDistancePerRotation(-2*Math.PI);
         encoder.setPositionOffset(Arm_Constants.encoderOffset);
 
-        timer = new Timer();
-        timer.reset();
+        
 
         align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 4.5, 30.0);
 
@@ -180,6 +185,7 @@ public class Arm extends ProfiledPIDSubsystem {
         }
     }
 
+    /* 
     public Command sysIdQuasisttatic(SysIdRoutine.Direction direction) {
         timer.restart();
         return routine.quasistatic(direction);
@@ -189,4 +195,5 @@ public class Arm extends ProfiledPIDSubsystem {
         timer.restart();
         return routine.dynamic(direction);
     }
+    */
 }
