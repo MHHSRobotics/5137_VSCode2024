@@ -36,8 +36,6 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 public class Arm extends ProfiledPIDSubsystem {
     
     /* 
-    
-
     private RelativeEncoder leftEncoder;
     private RelativeEncoder rightEncoder;
 

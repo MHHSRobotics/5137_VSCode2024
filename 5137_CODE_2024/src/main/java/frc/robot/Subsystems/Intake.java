@@ -41,8 +41,7 @@ public class Intake extends SubsystemBase {
     
     public boolean objectInRange()
     {
-        if(getDistance() <= 5)
-        {
+        if(getDistance() <= 5){
             return true;
         }
         return false;
