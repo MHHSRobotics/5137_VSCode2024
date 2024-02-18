@@ -67,7 +67,19 @@ public class RobotContainer {
 
     //Swerve Bindings
 
+    driver.x()
+    .onTrue(swerve.sysIdQuasisttatic(Direction.kForward));
+
+    driver.y()
+    .onTrue(swerve.sysIdQuasisttatic(Direction.kReverse));
+
+    driver.a()
+    .onTrue(swerve.sysIdDynamic(Direction.kForward));
+
+    driver.b()
+    .onTrue(swerve.sysIdDynamic(Direction.kReverse));
     
+    /* 
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> -MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
@@ -80,6 +92,7 @@ public class RobotContainer {
 
     driver.y()
     .onTrue(swerve_Commands.zeroGyro());
+    */
 
     // Arm Bindings
 

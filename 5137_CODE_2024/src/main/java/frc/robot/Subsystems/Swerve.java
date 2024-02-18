@@ -1,6 +1,11 @@
 package frc.robot.Subsystems;
 
+import frc.robot.Constants.Arm_Constants;
 import frc.robot.Constants.Swerve_Constants;
+
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,13 +19,23 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import static edu.wpi.first.units.MutableMeasure.mutable;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import swervelib.SwerveDrive;
+import swervelib.motors.SwerveMotor;
 import swervelib.parser.SwerveParser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -28,6 +43,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 
 public class Swerve extends SubsystemBase {
 
@@ -35,7 +52,44 @@ public class Swerve extends SubsystemBase {
 
     AprilTagFieldLayout aprilTagFieldLayout;
     
+    private Timer timer;
+
+    private SwerveMotor leftFrontMotor;
+    private SwerveMotor rightFrontMotor;
+    private SwerveMotor leftBackMotor;
+    private SwerveMotor rightBackMotor;
+
+    private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
+    private final MutableMeasure<Distance> m_distance = mutable(Meters.of(0));
+    private final MutableMeasure<Velocity<Distance>> m_velocity = mutable(MetersPerSecond.of(0));
+
+    SysIdRoutine routine = new SysIdRoutine(
+        new SysIdRoutine.Config(),
+        new SysIdRoutine.Mechanism(
+            (Measure<Voltage> volts) -> {
+                setVoltage(volts.in(Volts));
+            },
+            log -> {
+                log.motor("swerve-left")
+                .voltage(
+                    m_appliedVoltage.mut_replace(
+                        RobotController.getBatteryVoltage()*leftFrontMotor.getAppliedOutput(), Volts))
+                        .linearPosition(m_distance.mut_replace(leftFrontMotor.getPosition(), Meters))
+                        .linearVelocity(m_velocity.mut_replace(leftFrontMotor.getVelocity(), MetersPerSecond));
+                log.motor("swerve-right")
+                .voltage(
+                    m_appliedVoltage.mut_replace(
+                        RobotController.getBatteryVoltage()*rightFrontMotor.getAppliedOutput(), Volts))
+                        .linearPosition(m_distance.mut_replace(rightFrontMotor.getPosition(), Meters))
+                        .linearVelocity(m_velocity.mut_replace(rightFrontMotor.getVelocity(), MetersPerSecond));
+            },
+            this
+        ));
     public Swerve(File directory) {
+
+       
+
+
         try {
             swerve = new SwerveParser(directory).createSwerveDrive(Swerve_Constants.maxVelocity);
         } catch (IOException e) {
@@ -49,6 +103,13 @@ public class Swerve extends SubsystemBase {
         }
 
         setUpPathPlanner();
+        
+        leftFrontMotor = swerve.getModules()[0].getDriveMotor();
+        rightFrontMotor = swerve.getModules()[1].getDriveMotor();
+        leftBackMotor = swerve.getModules()[2].getDriveMotor();
+        rightBackMotor = swerve.getModules()[3].getDriveMotor();
+        timer = new Timer();
+        timer.reset();  
     }
 
     public void setUpPathPlanner() {
@@ -75,6 +136,14 @@ public class Swerve extends SubsystemBase {
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
         swerve.drive(translation, rotation, fieldRelative, false);
+    }
+
+    public void setVoltage(double volts)
+    {
+        swerve.getModules()[0].getDriveMotor().setVoltage(volts);
+        swerve.getModules()[1].getDriveMotor().setVoltage(volts);
+        swerve.getModules()[2].getDriveMotor().setVoltage(volts);
+        swerve.getModules()[3].getDriveMotor().setVoltage(volts);
     }
 
     public Command getAuto(String name) {
@@ -158,5 +227,15 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putString("TargetPose", aprilTagFieldLayout.getTagPose(4).get().toPose2d().toString());
         SmartDashboard.putString("SwervePose", swerve.getPose().toString());
 
+    }
+    
+     public Command sysIdQuasisttatic(SysIdRoutine.Direction direction) {
+        timer.restart();
+        return routine.quasistatic(direction);
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        timer.restart();
+        return routine.dynamic(direction);
     }
 }
