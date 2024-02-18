@@ -13,34 +13,31 @@ import frc.robot.Constants.Intake_Constants;
 
 public class Intake extends SubsystemBase {  
 
-    TalonSRX intakeMotor= new TalonSRX(20);
-
-    private final Ultrasonic ultrasonic = new Ultrasonic(2, 0);
-    // Ultrasonic sensors tend to be quite noisy and susceptible to sudden outliers,
-    // so measurements are filtered with a 5-sample median filter
-    private final MedianFilter m_filter = new MedianFilter(5);
-
+    private TalonSRX intakeMotor;
+    private Ultrasonic ultrasonic;
+    private MedianFilter m_filter;  // Ultrasonic sensors tend to be quite noisy and susceptible to sudden outliers, so measurements are filtered with a 5-sample median filter
 
     public Intake() {
         SmartDashboard.putNumber("Object Distance", 1000.0);
+
+        ultrasonic = new Ultrasonic(2, 0);
         ultrasonic.setEnabled(true);
         Ultrasonic.setAutomaticMode(true);
+        m_filter = new MedianFilter(5);
+
+        intakeMotor= new TalonSRX(20);
         intakeMotor.setInverted(true);
         intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, Intake_Constants.maxSupplyCurrent, Intake_Constants.maxSupplyCurrent, 0));
         //TODO: if intake not working/cutting out adjust current limit above
     }
 
-    
-    public double getDistance()
-    {
+    public double getDistance(){
         double measurement = ultrasonic.getRangeInches();
         double filteredMeasurement = m_filter.calculate(measurement);
         return filteredMeasurement;
     }
 
-    
-    public boolean objectInRange()
-    {
+    public boolean objectInRange(){
         if(getDistance() <= 5){
             return true;
         }
@@ -50,6 +47,7 @@ public class Intake extends SubsystemBase {
     public void set (double speed) {
         intakeMotor.set(TalonSRXControlMode.PercentOutput, speed);        
     }
+
     public void stop () {
         intakeMotor.set(TalonSRXControlMode.PercentOutput, 0.0);
         intakeMotor.setNeutralMode(NeutralMode.Brake);

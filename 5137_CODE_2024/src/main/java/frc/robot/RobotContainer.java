@@ -29,14 +29,13 @@ public class RobotContainer {
   private Intake intake; 
   private Shooter shooter;
   private Vision vision;
-  public LED led;
+  private LED led;
 
   private Swerve_Commands swerve_Commands;
   private Arm_Commands arm_Commands;
   private Intake_Commands intake_Commands;
   private Shooter_Commands shooter_Commands;
-
-  public LED_Commands led_Commands;
+  private LED_Commands led_Commands;
 
   public RobotContainer() {
     driver = new CommandXboxController(0);
@@ -47,15 +46,14 @@ public class RobotContainer {
     intake = new Intake();
     shooter = new Shooter();
     vision = new Vision();
+    led = new LED();
+
 
     swerve_Commands = new Swerve_Commands(swerve, vision);
     arm_Commands = new Arm_Commands(arm);
     intake_Commands = new Intake_Commands(intake);
     shooter_Commands = new Shooter_Commands(shooter);
     vision.setDefaultCommand(new AddVisionMeasurement(vision, swerve));
-
-    led = new LED();
-
     led_Commands = new LED_Commands();
 
     configureBindings();
@@ -143,8 +141,6 @@ public class RobotContainer {
     })
     .onTrue(intake_Commands.stop());
         
-    
-    
     operator.cross()
     .onTrue(new ParallelCommandGroup(shooter_Commands.shoot(new DoubleSupplier() {
       @Override
