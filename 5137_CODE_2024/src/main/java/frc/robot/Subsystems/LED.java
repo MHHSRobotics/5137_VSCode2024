@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LED_Constants;
 public class LED extends SubsystemBase {
 
-     AddressableLED m_led = new AddressableLED(0);
+     AddressableLED m_led = new AddressableLED(8);
 
         AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(60);
         
