@@ -57,8 +57,7 @@ public class Swerve extends SubsystemBase {
 
     private AprilTagFieldLayout aprilTagFieldLayout;
     private PIDController turnController;
-    private PIDController xController;
-    private PIDController yController;
+    private PIDController driveController;
     
     private Timer timer;
 
@@ -96,11 +95,9 @@ public class Swerve extends SubsystemBase {
     public Swerve(File directory) {
 
         turnController = new PIDController(Swerve_Constants.turnKP, Swerve_Constants.turnKI, Swerve_Constants.turnKD);
-        xController = new PIDController(Swerve_Constants.driveKP, Swerve_Constants.driveKI, Swerve_Constants.driveKD);
-        yController = new PIDController(Swerve_Constants.driveKP, Swerve_Constants.driveKI, Swerve_Constants.driveKD);
+        driveController = new PIDController(Swerve_Constants.driveKP, Swerve_Constants.driveKI, Swerve_Constants.driveKD);
         turnController.setTolerance(0.02, 0.01);
-        xController.setTolerance(0.05, 0.01);
-        yController.setTolerance(0.05, 0.01);
+        driveController.setTolerance(0.05, 0.01);
 
         try {
             swerve = new SwerveParser(directory).createSwerveDrive(Swerve_Constants.maxVelocity);
@@ -179,7 +176,7 @@ public class Swerve extends SubsystemBase {
         swerve.addVisionMeasurement(pose, timestamp);
     }
 
-    public void aimAtTarget() {
+    public void aimAtSpeaker() {
         double turnVelocity = turnController.calculate(getRadiansToTarget(),0);
         drive(new Translation2d(0,0),turnVelocity, true);
     }
@@ -212,21 +209,24 @@ public class Swerve extends SubsystemBase {
         return distanceToPose;
     }
 
-    public void driveToTarget(Translation2d translationToTarget){
+    public void turnToNote(Translation2d translationToTarget){
        
-        Translation2d translation = translationToTarget; 
+        Translation2d translation = translationToTarget;  
         double turnVelocity = turnController.calculate(translation.getAngle().getRadians(),0);
-        double xVelocity = turnController.calculate(translation.getX(),0);
-        double yVelocity = turnController.calculate(translation.getY(),0);
-        drive(new Translation2d(xVelocity, yVelocity), turnVelocity, true);
+        drive(new Translation2d(0, 0), turnVelocity, false);
     }
 
-    public boolean robotAligned(){
-        if(turnController.atSetpoint() && xController.atSetpoint()&& yController.atSetpoint())
-        {
-            return true;
-        }
-        return false;
+    public void driveToNote(Translation2d translationToTarget, double metersToNote){
+       
+        Translation2d translation = translationToTarget;  
+        double distance = metersToNote;
+        double turnVelocity = turnController.calculate(translation.getAngle().getRadians(),0);
+        double driveVelocity = turnController.calculate(metersToNote, Vision_Constants.notePickupDistance);
+        drive(new Translation2d(driveVelocity, 0), turnVelocity, false);
+    }
+
+    public boolean driveComplete(){
+        return driveController.atSetpoint();
     }
 
     @Override

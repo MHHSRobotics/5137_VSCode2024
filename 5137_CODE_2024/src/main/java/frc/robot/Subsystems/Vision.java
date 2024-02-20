@@ -54,7 +54,20 @@ public class Vision extends SubsystemBase{
       ar2PoseEstimator.setReferencePose(referencePose);
       return ar2PoseEstimator.update();
     }
-   
+
+    public double getMetersToNote()
+    {
+      Transform3d robotToCamera = Vision_Constants.robotToOBJ;
+      var result = objCamera.getLatestResult();
+      if(result.hasTargets()){
+        var target = result.getBestTarget();
+        double distance = PhotonUtils.calculateDistanceToTargetMeters(robotToCamera.getZ(), Vision_Constants.noteDetectionHeight, robotToCamera.getRotation().getY(), Units.degreesToRadians(target.getPitch()));
+        return distance;
+      
+      }
+      return -1.0;
+    }
+
     public Translation2d getTranslationToNote(){
       Transform3d robotToCamera = Vision_Constants.robotToOBJ;
       var result = objCamera.getLatestResult();
@@ -70,8 +83,8 @@ public class Vision extends SubsystemBase{
 
     @Override
     public void periodic() {
-      SmartDashboard.putString("Camera to Note",getTranslationToNote().toString());
-      System.out.println(getTranslationToNote());
+      SmartDashboard.putString("Translation to Note",getTranslationToNote().toString());
+      SmartDashboard.putNumber("Distance to Note", getMetersToNote());
     }
 } 
 
