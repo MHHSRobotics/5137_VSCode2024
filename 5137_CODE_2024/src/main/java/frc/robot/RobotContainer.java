@@ -24,7 +24,7 @@ public class RobotContainer {
   private CommandXboxController driver;
   private CommandPS4Controller operator;
 
-  private Swerve swerve;
+  //private Swerve swerve;
   private Arm arm;
   private Intake intake; 
   private Shooter shooter;
@@ -41,7 +41,7 @@ public class RobotContainer {
     driver = new CommandXboxController(0);
     operator = new CommandPS4Controller(1);
 
-    swerve = new Swerve(new File(Filesystem.getDeployDirectory(),"swerve"));
+    //swerve = new Swerve(new File(Filesystem.getDeployDirectory(),"swerve"));
     arm = new Arm(new File(Filesystem.getDeployDirectory(), "RobotConstants.json"));
     intake = new Intake();
     shooter = new Shooter();
@@ -49,11 +49,11 @@ public class RobotContainer {
     led = new LED();
 
 
-    swerve_Commands = new Swerve_Commands(swerve, vision);
+    //swerve_Commands = new Swerve_Commands(swerve, vision);
     arm_Commands = new Arm_Commands(arm);
     intake_Commands = new Intake_Commands(intake);
     shooter_Commands = new Shooter_Commands(shooter);
-    vision.setDefaultCommand(new AddVisionMeasurement(vision, swerve));
+    //vision.setDefaultCommand(new AddVisionMeasurement(vision, swerve));
     led_Commands = new LED_Commands();
 
     configureBindings();
@@ -65,17 +65,7 @@ public class RobotContainer {
 
     //Swerve Bindings
 
-    driver.x()
-    .onTrue(swerve.sysIdQuasisttatic(Direction.kForward));
-
-    driver.y()
-    .onTrue(swerve.sysIdQuasisttatic(Direction.kReverse));
-
-    driver.a()
-    .onTrue(swerve.sysIdDynamic(Direction.kForward));
-
-    driver.b()
-    .onTrue(swerve.sysIdDynamic(Direction.kReverse));
+   
     
     /* 
     swerve.setDefaultCommand(swerve_Commands.drive(
@@ -112,6 +102,7 @@ public class RobotContainer {
     operator.circle()
     .onTrue(arm_Commands.moveToAmp());
     
+    /* 
     operator.square()
     .onTrue(arm_Commands.moveToSpeaker(new DoubleSupplier() {
       @Override
@@ -119,6 +110,7 @@ public class RobotContainer {
         return swerve.getDistanceToTarget();
       }
     }));
+    */
 
     operator.triangle()
     .onTrue(arm_Commands.moveToIntake());

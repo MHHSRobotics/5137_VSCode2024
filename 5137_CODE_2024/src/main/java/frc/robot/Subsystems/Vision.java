@@ -26,7 +26,7 @@ import frc.robot.Constants.Vision_Constants;
 
 public class Vision extends SubsystemBase{
     
-    private AprilTagFieldLayout aprilTagFieldLayout;
+  private AprilTagFieldLayout aprilTagFieldLayout;
 
     private final PhotonCamera ar1Camera = new PhotonCamera("AR1");
     private final PhotonCamera ar2Camera = new PhotonCamera("AR2");
@@ -63,12 +63,15 @@ public class Vision extends SubsystemBase{
         double distance = PhotonUtils.calculateDistanceToTargetMeters(robotToCamera.getZ(), Vision_Constants.noteDetectionHeight, robotToCamera.getRotation().getY(), Units.degreesToRadians(target.getPitch()));
         Translation2d translation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(-target.getYaw()));
         return translation;
+      
       }
       return new Translation2d();
     }
 
     @Override
     public void periodic() {
+      SmartDashboard.putString("Camera to Note",getTranslationToNote().toString());
+      System.out.println(getTranslationToNote());
     }
 } 
 

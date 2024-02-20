@@ -23,7 +23,7 @@ public class Vision_Constants {
     public static final double offsetYOBJ = 0;
     public static final double offsetZOBJ = 0;
     public static final double rollOBJ = 0;
-    public static final double pitchOBJ = 0;
+    public static final double pitchOBJ = 9;
     public static final double yawOBJ= 0;
 
     public static final Transform3d robotToAR1 = new Transform3d(offsetXAR1, offsetYAR1, offsetZAR1, new Rotation3d(rollAR1,pitchAR1, yawAR1));
