@@ -87,7 +87,7 @@ public class Swerve extends SubsystemBase {
                 log.motor("swerve-right")
                 .voltage(
                     m_appliedVoltage.mut_replace(
-                        RobotController.getBatteryVoltage()*rightFrontMotor.getAppliedOutput(), Volts))
+                        RobotController.getBatteryVoltage()*-rightFrontMotor.getAppliedOutput(), Volts))
                         .linearPosition(m_distance.mut_replace(rightFrontMotor.getPosition(), Meters))
                         .linearVelocity(m_velocity.mut_replace(rightFrontMotor.getVelocity(), MetersPerSecond));
             },
@@ -248,8 +248,8 @@ public class Swerve extends SubsystemBase {
 
     public void setVoltage(double volts){
         leftFrontMotor.setVoltage(volts);
-        rightFrontMotor.setVoltage(volts);
+        rightFrontMotor.setVoltage(-volts);
         leftBackMotor.setVoltage(volts);
-        rightBackMotor.setVoltage(volts);
+        rightBackMotor.setVoltage(-volts);
     }
 }

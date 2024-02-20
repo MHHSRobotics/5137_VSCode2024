@@ -48,13 +48,12 @@ public class RobotContainer {
     vision = new Vision();
     led = new LED();
 
-
     swerve_Commands = new Swerve_Commands(swerve, vision);
     arm_Commands = new Arm_Commands(arm);
     intake_Commands = new Intake_Commands(intake);
     shooter_Commands = new Shooter_Commands(shooter);
     vision.setDefaultCommand(new AddVisionMeasurement(vision, swerve));
-    led_Commands = new LED_Commands();
+    led_Commands = new LED_Commands(led);
 
     configureBindings();
   }
@@ -65,6 +64,7 @@ public class RobotContainer {
 
     //Swerve Bindings
 
+    /*
     driver.x()
     .onTrue(swerve.sysIdQuasisttatic(Direction.kForward));
 
@@ -75,9 +75,9 @@ public class RobotContainer {
     .onTrue(swerve.sysIdDynamic(Direction.kForward));
 
     driver.b()
-    .onTrue(swerve.sysIdDynamic(Direction.kReverse));
+    .onTrue(swerve.sysIdDynamic(Direction.kReverse));*/
     
-    /* 
+    
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> -MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
@@ -90,7 +90,7 @@ public class RobotContainer {
 
     driver.y()
     .onTrue(swerve_Commands.zeroGyro());
-    */
+    
 
     // Arm Bindings
 
