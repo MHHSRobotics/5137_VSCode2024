@@ -105,6 +105,10 @@ public class Swerve extends SubsystemBase {
         turnController.setTolerance(0.02, 0.01);
         xController.setTolerance(0.05, 0.01);
         yController.setTolerance(0.05, 0.01);
+        swerve.getGyro().factoryDefault();
+        swerve.getGyro().clearStickyFaults();
+
+
 
         try {
             swerve = new SwerveParser(directory).createSwerveDrive(Swerve_Constants.maxVelocity);
@@ -168,9 +172,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro() {
-        swerve.getGyro().clearStickyFaults();
         swerve.zeroGyro();
-        swerve.setGyro(new Rotation3d(0,0,-Math.PI));
+        //swerve.setGyro(new Rotation3d(0,0,-Math.PI));
     }
 
     public ChassisSpeeds getRobotVelocity() {
