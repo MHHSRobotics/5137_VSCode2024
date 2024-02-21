@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase {
     public Intake() {
         SmartDashboard.putNumber("Object Distance", 1000.0);
 
-        ultrasonic = new Ultrasonic(2, 0);
+        ultrasonic = new Ultrasonic(1, 0);
         ultrasonic.setEnabled(true);
         Ultrasonic.setAutomaticMode(true);
         m_filter = new MedianFilter(5);
