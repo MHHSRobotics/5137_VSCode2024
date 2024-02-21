@@ -105,8 +105,7 @@ public class Swerve extends SubsystemBase {
         turnController.setTolerance(0.02, 0.01);
         xController.setTolerance(0.05, 0.01);
         yController.setTolerance(0.05, 0.01);
-        swerve.getGyro().factoryDefault();
-        swerve.getGyro().clearStickyFaults();
+       
 
 
 
@@ -130,6 +129,8 @@ public class Swerve extends SubsystemBase {
         rightBackMotor = swerve.getModules()[3].getDriveMotor();
         timer = new Timer();
         timer.reset();  
+         swerve.getGyro().factoryDefault();
+        swerve.getGyro().clearStickyFaults();
     }
 
     public void setUpPathPlanner() {
@@ -172,7 +173,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro() {
-        swerve.zeroGyro();
+        swerve.setGyroOffset(swerve.getGyro().getRawRotation3d());
+        //swerve.zeroGyro();
         //swerve.setGyro(new Rotation3d(0,0,-Math.PI));
     }
 
