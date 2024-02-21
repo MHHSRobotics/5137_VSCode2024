@@ -57,7 +57,7 @@ public class LED extends SubsystemBase {
     public void AllianceColorChasingUp() {
         for (int i = 0; i < length; i++) {
             var x = (double) i%12;
-            if (DriverStation.getAlliance().equals(Alliance.Red) || Robot.isSimulation()) {
+            if (DriverStation.getAlliance().equals(Alliance.Red)) {
                 buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), 0, 0);
             } else if (DriverStation.getAlliance().equals(Alliance.Blue)) {
                 buffer.setRGB((i+(int)Math.floor(offset))%length, 0, 0, (int)((x/11)*255));
@@ -73,7 +73,7 @@ public class LED extends SubsystemBase {
     public void AllianceColorChasingDown() {
         for (int i = 0; i < length; i++) {
             var x = (double) -i%-12;
-            if (DriverStation.getAlliance().equals(Alliance.Red) || Robot.isSimulation()) {
+            if (DriverStation.getAlliance().equals(Alliance.Red)) {
                 buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), 0, 0);
             } else if (DriverStation.getAlliance().equals(Alliance.Blue)) {
                 buffer.setRGB((i+(int)Math.floor(offset))%length, 0, 0, (int)((x/11)*255));
