@@ -86,31 +86,22 @@ public class RobotContainer {
     ));
 
     driver.a()
-    .onTrue(swerve_Commands.aimAtTarget());
+    .onTrue(swerve_Commands.aimAtSpeaker());
 
     driver.y()
     .onTrue(swerve_Commands.zeroGyro());
+    
     
 
     // Arm Bindings
 
     arm.setDefaultCommand(arm_Commands.manualMove(() -> -operator.getLeftY()));
 
-    /*
-    operator.square()
-    .onTrue(arm.sysIdQuasisttatic(Direction.kForward));
 
-    operator.triangle()
-    .onTrue(arm.sysIdQuasisttatic(Direction.kReverse));
-
-    operator.cross()
-    .onTrue(arm.sysIdDynamic(Direction.kForward));
-
-    operator.circle()
-    .onTrue(arm.sysIdDynamic(Direction.kReverse));*/
 
     operator.circle()
     .onTrue(arm_Commands.moveToAmp());
+    
     
     operator.square()
     .onTrue(arm_Commands.moveToSpeaker(new DoubleSupplier() {
@@ -119,6 +110,7 @@ public class RobotContainer {
         return swerve.getDistanceToTarget();
       }
     }));
+  
 
     operator.triangle()
     .onTrue(arm_Commands.moveToIntake());

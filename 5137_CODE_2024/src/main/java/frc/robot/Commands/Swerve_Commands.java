@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class Swerve_Commands {
     private Swerve swerve;
@@ -30,12 +31,21 @@ public class Swerve_Commands {
             swerve);
     }
 
-    public FunctionalCommand aimAtTarget() {
-        return new FunctionalCommand(() -> {}, () -> swerve.aimAtTarget(), (Boolean x) -> {}, () -> swerve.turnAligned(), swerve);
+    public FunctionalCommand aimAtSpeaker() {
+        return new FunctionalCommand(() -> {}, () -> swerve.aimAtSpeaker(), (Boolean x) -> {}, () -> swerve.turnAligned(), swerve);
     }
 
+    public FunctionalCommand aimAtNote() {
+        return new FunctionalCommand(() -> {}, () -> swerve.turnToNote(vision.getTranslationToNote()), (Boolean x) -> {}, () -> swerve.turnAligned(), swerve);
+    }
+     
     public FunctionalCommand driveToNote() {
-        return new FunctionalCommand(() -> {}, () -> swerve.driveToTarget(vision.getTranslationToNote()), (Boolean x) -> {}, () -> swerve.robotAligned(), swerve);
+        return new FunctionalCommand(() -> {}, () -> swerve.driveToNote(vision.getTranslationToNote(), vision.getMetersToNote()), (Boolean x) -> {}, () -> swerve.driveComplete(), swerve);
+    }
+
+    public SequentialCommandGroup autoNote()
+    {
+        return new SequentialCommandGroup(aimAtNote(), driveToNote());
     }
 
     public InstantCommand zeroGyro() {

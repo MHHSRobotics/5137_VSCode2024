@@ -22,9 +22,9 @@ public class Vision_Constants {
     
     public static final double offsetXOBJ = 0;
     public static final double offsetYOBJ = 0;
-    public static final double offsetZOBJ = 0;
+    public static final double offsetZOBJ = Units.inchesToMeters(9.5);
     public static final double rollOBJ = 0;
-    public static final double pitchOBJ = 0;
+    public static final double pitchOBJ = -11;
     public static final double yawOBJ= 0;
 
     public static final Transform3d robotToAR1 = new Transform3d(offsetXAR1, offsetYAR1, offsetZAR1, new Rotation3d(rollAR1,pitchAR1, yawAR1));
@@ -32,6 +32,7 @@ public class Vision_Constants {
     public static final Transform3d robotToOBJ = new Transform3d(offsetXOBJ, offsetYOBJ, offsetZOBJ, new Rotation3d(rollOBJ, pitchOBJ, yawOBJ));
 
     public static final double noteDetectionHeight = 0.0; 
+    public static final double notePickupDistance = Units.inchesToMeters(25.0);
 
 
     
