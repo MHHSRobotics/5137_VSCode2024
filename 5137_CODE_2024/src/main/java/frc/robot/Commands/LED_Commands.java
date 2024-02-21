@@ -13,8 +13,17 @@ public class LED_Commands {
     }
     
     public InstantCommand rbow() {
-        return new InstantCommand(() ->led.rainbow(),led);
+        return new InstantCommand(() ->led.red2Gold(),led);
     }
-
+   
+    public InstantCommand purpleGerbert(){
+        return new InstantCommand(() ->led.LED1(), led);
+    }
     
+    public InstantCommand barbiePink() {
+        return new InstantCommand(() ->led.LED2(), led);
+    }
+    public InstantCommand deepSage() {
+        return new InstantCommand(() ->led.LED3(), led);
+    }
 }

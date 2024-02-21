@@ -19,6 +19,7 @@ public class RobotContainer {
   public CommandPS4Controller operator;
 
   public LED led;
+  
 
   public LED_Commands led_Commands;
 
@@ -38,8 +39,14 @@ public class RobotContainer {
 
     operator.square()
     .onTrue(led_Commands.rbow());
+    operator.cross()
+    .onTrue(led_Commands.purpleGerbert());
+    operator.circle()
+    .onTrue(led_Commands.barbiePink());
+    operator.triangle()
+    .onTrue(led_Commands.deepSage());
   }
-
+   
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
   }
