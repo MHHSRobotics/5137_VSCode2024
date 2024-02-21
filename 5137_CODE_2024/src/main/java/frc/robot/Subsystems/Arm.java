@@ -167,7 +167,7 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     public void alignToSpeaker(double position) {
-        System.out.println(Math.toDegrees(((-align.calculateAngle(position))+(Math.PI/3)))); 
+        setGoal((-align.calculateAngle(position))+(Math.PI/3)); 
     }
 
     public double getGoal() {

@@ -148,7 +148,7 @@ public class RobotContainer {
         return arm.getMeasurement();
       }
     }),
-    intake_Commands.intakeForward(1.5)))
+    intake_Commands.intakeForward(2)))
     .onFalse(new ParallelCommandGroup(shooter_Commands.stop(), intake_Commands.stop()));
   }
 

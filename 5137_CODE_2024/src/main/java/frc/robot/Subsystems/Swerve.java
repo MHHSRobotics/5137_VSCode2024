@@ -21,6 +21,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -167,7 +168,9 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro() {
+        swerve.getGyro().clearStickyFaults();
         swerve.zeroGyro();
+        swerve.setGyro(new Rotation3d(0,0,-Math.PI));
     }
 
     public ChassisSpeeds getRobotVelocity() {
@@ -183,7 +186,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void aimAtTarget() {
-        double turnVelocity = turnController.calculate(getRadiansToTarget(),0);
+        double turnVelocity = turnController.calculate(getRadiansToTarget(),Math.PI);
         drive(new Translation2d(0,0),turnVelocity, true);
     }
 
@@ -245,6 +248,7 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("Distance to Target", getDistanceToTarget());
         SmartDashboard.putString("TargetPose", aprilTagFieldLayout.getTagPose(4).get().toPose2d().toString());
         SmartDashboard.putString("SwervePose", swerve.getPose().toString());
+        SmartDashboard.putNumber("Gyro Reading", Units.radiansToDegrees(swerve.getGyro().getRotation3d().getAngle()));
     }
     
      public Command sysIdQuasisttatic(SysIdRoutine.Direction direction) {
