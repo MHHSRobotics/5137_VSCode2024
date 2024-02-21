@@ -127,6 +127,7 @@ public class Arm extends ProfiledPIDSubsystem {
         manualControlChoice = new SendableChooser<Boolean>();
         manualControlChoice.addOption("Enabled", true);
         manualControlChoice.setDefaultOption("Disabled", false);
+        SmartDashboard.putData("Arm Manual Control", manualControlChoice);
 
         manualControl = false;
 

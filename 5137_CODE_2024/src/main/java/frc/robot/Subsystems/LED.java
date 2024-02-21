@@ -1,5 +1,7 @@
 package frc.robot.Subsystems;
 
+import java.util.Optional;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -9,6 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.Constants.LED_Constants;
 
 public class LED extends SubsystemBase {
 
@@ -20,7 +23,7 @@ public class LED extends SubsystemBase {
     private Timer timer;
     
     public LED() {
-        leds = new AddressableLED(8);
+        leds = new AddressableLED(LED_Constants.LEDport);
         leds.setLength(144);
         buffer = new AddressableLEDBuffer(144);
         offset = 0;
@@ -57,12 +60,13 @@ public class LED extends SubsystemBase {
     public void AllianceColorChasingUp() {
         for (int i = 0; i < length; i++) {
             var x = (double) i%12;
-            if (DriverStation.getAlliance().equals(Alliance.Red)) {
-                buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), 0, 0);
-            } else if (DriverStation.getAlliance().equals(Alliance.Blue)) {
-                buffer.setRGB((i+(int)Math.floor(offset))%length, 0, 0, (int)((x/11)*255));
-            } else {
-                buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), (int)((x/11)*90), 0);
+            Optional<Alliance> ally = DriverStation.getAlliance();
+            if (ally.isPresent()) {
+                if (ally.get() == Alliance.Red) {
+                    buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), 0, 0);
+                } else {
+                    buffer.setRGB((i+(int)Math.floor(offset))%length, 0, 0, (int)((x/11)*255));
+                }
             }
         }
         leds.setData(buffer);
@@ -73,12 +77,13 @@ public class LED extends SubsystemBase {
     public void AllianceColorChasingDown() {
         for (int i = 0; i < length; i++) {
             var x = (double) -i%-12;
-            if (DriverStation.getAlliance().equals(Alliance.Red)) {
-                buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), 0, 0);
-            } else if (DriverStation.getAlliance().equals(Alliance.Blue)) {
-                buffer.setRGB((i+(int)Math.floor(offset))%length, 0, 0, (int)((x/11)*255));
-            } else {
-                buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), (int)((x/11)*90), 0);
+            Optional<Alliance> ally = DriverStation.getAlliance();
+            if (ally.isPresent()) {
+                if (ally.get() == Alliance.Red) {
+                    buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), 0, 0);
+                } else {
+                    buffer.setRGB((i+(int)Math.floor(offset))%length, 0, 0, (int)((x/11)*255));
+                }
             }
         }
         leds.setData(buffer);
@@ -111,6 +116,5 @@ public class LED extends SubsystemBase {
                 }
             }
         }
-        System.out.println(offset);
     }
 }

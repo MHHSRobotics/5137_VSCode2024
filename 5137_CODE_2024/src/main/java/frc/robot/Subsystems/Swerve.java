@@ -10,6 +10,8 @@ import static edu.wpi.first.units.Units.Volts;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
@@ -93,6 +95,7 @@ public class Swerve extends SubsystemBase {
             },
             this
         ));
+
     public Swerve(File directory) {
 
         turnController = new PIDController(Swerve_Constants.turnKP, Swerve_Constants.turnKI, Swerve_Constants.turnKD);
@@ -190,11 +193,15 @@ public class Swerve extends SubsystemBase {
 
     public double getRadiansToTarget() {
         Pose2d targetPose;
-        if(DriverStation.getAlliance().equals(Alliance.Red)){
-            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
-        }
-        else{
-            targetPose = aprilTagFieldLayout.getTagPose(8).get().toPose2d(); 
+        Optional<Alliance> ally = DriverStation.getAlliance();
+        if (ally.isPresent()) {
+            if (ally.get() == Alliance.Red) {
+                targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d(); 
+            } else {
+                targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
+            }
+        } else {
+            return 0.0;
         }
         double radiansToPose = PhotonUtils.getYawToPose(swerve.getPose(), targetPose).getRadians();
         return radiansToPose;
@@ -202,11 +209,15 @@ public class Swerve extends SubsystemBase {
 
     public double getDistanceToTarget() {
         Pose2d targetPose;
-        if(DriverStation.getAlliance().equals(Alliance.Red)){
-            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
-        }
-        else{
-            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d(); 
+        Optional<Alliance> ally = DriverStation.getAlliance();
+        if (ally.isPresent()) {
+            if (ally.get() == Alliance.Red) {
+                targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d(); 
+            } else {
+                targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
+            }
+        } else {
+            return 0.0;
         }
         double distanceToPose = PhotonUtils.getDistanceToPose(swerve.getPose(), targetPose);
         return distanceToPose;
