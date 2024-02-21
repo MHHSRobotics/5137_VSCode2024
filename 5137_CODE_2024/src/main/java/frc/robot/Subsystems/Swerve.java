@@ -173,8 +173,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro() {
-        swerve.setGyroOffset(swerve.getGyro().getRawRotation3d());
-        //swerve.zeroGyro();
+        //swerve.setGyroOffset(swerve.getGyro().getRawRotation3d());
+        swerve.zeroGyro();
         //swerve.setGyro(new Rotation3d(0,0,-Math.PI));
     }
 
