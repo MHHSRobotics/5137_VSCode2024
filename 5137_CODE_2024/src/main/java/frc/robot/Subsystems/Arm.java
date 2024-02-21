@@ -14,6 +14,7 @@ import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
@@ -76,6 +77,9 @@ public class Arm extends ProfiledPIDSubsystem {
     private DutyCycleEncoder encoder;
     private ArmFeedforward feedForward;
 
+    private SendableChooser<Boolean> manualControlChoice;
+    private boolean manualControl;
+
     public Arm(File RobotConstants) {
         super(
             new ProfiledPIDController(
@@ -120,6 +124,12 @@ public class Arm extends ProfiledPIDSubsystem {
 
         align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 4.5, 30.0);
 
+        manualControlChoice = new SendableChooser<Boolean>();
+        manualControlChoice.addOption("Enabled", true);
+        manualControlChoice.setDefaultOption("Disabled", false);
+
+        manualControl = false;
+
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -149,7 +159,7 @@ public class Arm extends ProfiledPIDSubsystem {
         }
 
     public void runManual(double output) {
-        if (!encoder.isConnected()) {
+        if (!encoder.isConnected() || manualControl) {
             leftMotor.set(0.3*output);
             rightMotor.set(0.3*output);
         }
@@ -168,6 +178,10 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     private void updateDashboard() {
+        if (manualControl && !manualControlChoice.getSelected()) {
+            setGoal(this.getMeasurement());
+        }
+        manualControl = manualControlChoice.getSelected();
         SmartDashboard.putBoolean("Encoder", encoder.isConnected());
         SmartDashboard.putNumber("Arm Position", Math.toDegrees(this.getMeasurement()));
         SmartDashboard.putNumber("Arm Goal", Math.toDegrees(this.getGoal()));
@@ -176,7 +190,7 @@ public class Arm extends ProfiledPIDSubsystem {
     @Override
     public void periodic() {
         updateDashboard();
-        if (encoder.isConnected()) {
+        if (encoder.isConnected() && !manualControl) {
             useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
         }
     }
