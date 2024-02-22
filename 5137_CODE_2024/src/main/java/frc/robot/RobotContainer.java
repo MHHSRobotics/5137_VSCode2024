@@ -98,7 +98,17 @@ public class RobotContainer {
     arm.setDefaultCommand(arm_Commands.manualMove(() -> -operator.getLeftY()));
 
     operator.triangle()
-    .onTrue(arm_Commands.moveToDefault());
+    .onTrue(
+      new ParallelCommandGroup(
+        arm_Commands.moveToIntake(),
+        intake_Commands.intakeForward()
+      )
+    )
+    .onFalse(new ParallelCommandGroup(
+        arm_Commands.moveToDefault(),
+        intake_Commands.stop()
+      )
+    );
 
     // Shooting Bindings
 

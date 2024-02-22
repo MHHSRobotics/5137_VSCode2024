@@ -180,7 +180,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
     private void updateDashboard() {
         if (manualControl && !manualControlChoice.getSelected()) {
-            setGoal(this.getMeasurement());
+            setGoal(Arm_Constants.defaultPosition);
         }
         manualControl = manualControlChoice.getSelected();
         SmartDashboard.putBoolean("Encoder", encoder.isConnected());
