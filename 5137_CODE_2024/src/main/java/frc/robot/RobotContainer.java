@@ -14,6 +14,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -58,8 +60,6 @@ public class RobotContainer {
     configureBindings();
   }
 
-
-
   private void configureBindings() {
 
     //Swerve Bindings
@@ -97,25 +97,63 @@ public class RobotContainer {
 
     arm.setDefaultCommand(arm_Commands.manualMove(() -> -operator.getLeftY()));
 
+    operator.triangle()
+    .onTrue(arm_Commands.moveToDefault());
 
+    // Shooting Bindings
+
+    operator.cross()
+
+    .onTrue(
+      new SequentialCommandGroup(
+        shooter_Commands.shootSpeaker(),
+        new WaitCommand(1),
+        new ParallelCommandGroup(
+          swerve_Commands.aimAtSpeaker(),
+          arm_Commands.moveToSpeaker(
+            new DoubleSupplier() {
+              @Override
+                public double getAsDouble() {
+                return swerve.getDistanceToTarget();
+              }
+            }
+          )
+        ),
+        new WaitCommand(1),
+        intake_Commands.intakeForward()
+      )
+    )
+
+    .onFalse(
+      new ParallelCommandGroup(
+        shooter_Commands.stop(),
+        arm_Commands.moveToDefault(),
+        intake_Commands.stop()
+      )
+    );
 
     operator.circle()
-    .onTrue(arm_Commands.moveToAmp());
-    
-    
-    operator.square()
-    .onTrue(arm_Commands.moveToSpeaker(new DoubleSupplier() {
-      @Override
-      public double getAsDouble() {
-        return swerve.getDistanceToTarget();
-      }
-    }));
-  
 
-    operator.triangle()
-    .onTrue(arm_Commands.moveToIntake());
+    .onTrue(
+      new SequentialCommandGroup(
+        arm_Commands.moveToAmp(),
+        new WaitCommand(1),
+        new ParallelCommandGroup(
+          shooter_Commands.shootIntake(),
+          intake_Commands.intakeForward()
+        )
+      )
+    )
 
-    // Intake/Shooter Bindings
+    .onFalse(
+      new ParallelCommandGroup(
+        shooter_Commands.stop(),
+        arm_Commands.moveToDefault(),
+        intake_Commands.stop()
+      )
+    );
+
+    // Intake Bindings
 
     operator.R2()
     .onTrue(intake_Commands.intakeForward())
@@ -132,16 +170,6 @@ public class RobotContainer {
       }
     })
     .onTrue(intake_Commands.stop());
-        
-    operator.cross()
-    .onTrue(new ParallelCommandGroup(shooter_Commands.shoot(new DoubleSupplier() {
-      @Override
-      public double getAsDouble() {
-        return arm.getMeasurement();
-      }
-    }),
-    intake_Commands.intakeForward(2)))
-    .onFalse(new ParallelCommandGroup(shooter_Commands.stop(), intake_Commands.stop()));
   }
 
   public Command getAutonomousCommand() {

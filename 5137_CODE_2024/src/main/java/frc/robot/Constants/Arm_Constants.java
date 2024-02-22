@@ -4,8 +4,7 @@ public class Arm_Constants {
     
     // Positions
     public static final double intakePosition = Math.toRadians(-3.0);
-    public static final double speakerPosition = Math.toRadians(30);
-    public static final double defaultPosition = Math.toRadians(75);
+    public static final double defaultPosition = Math.toRadians(10);
     public static final double ampPosition = Math.toRadians(90);
 
     // Hardware IDS

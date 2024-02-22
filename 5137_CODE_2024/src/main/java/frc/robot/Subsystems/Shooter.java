@@ -19,14 +19,9 @@ public class Shooter extends SubsystemBase {
         upperMotor.setIdleMode(IdleMode.kCoast);
     }
 
-    public void shoot(double armAngle) {
-        if (armAngle > Math.PI/3) {
-            lowerMotor.set(Shooter_Constants.ampShooterSpeed);
-            upperMotor.set(Shooter_Constants.ampShooterSpeed);
-        } else {
-            lowerMotor.set(Shooter_Constants.defaultShooterSpeed);
-            upperMotor.set(Shooter_Constants.defaultShooterSpeed);
-        }
+    public void shoot(double speed) {
+        lowerMotor.set(speed);
+        upperMotor.set(speed);
     }
 
     public void stop() {
