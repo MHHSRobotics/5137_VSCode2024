@@ -9,7 +9,7 @@ public class Swerve_Constants {
     // Physics
     public static final double maxVelocity = 4.5;
     public static final double maxAngularSpeed = 10.0;
-    public static final double maxModuleSpeed = 4.6;
+    public static final double maxModuleSpeed = 4.5;
 
     //Constants
     public static final double aimToleranceRadians = 0.05;
