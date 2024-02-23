@@ -135,10 +135,7 @@ public class Swerve extends SubsystemBase {
             this::setChassisSpeeds,
             new HolonomicPathFollowerConfig(
                 new PIDConstants(.02065, 0.0, 0.0),
-                new PIDConstants(
-                    swerve.swerveController.config.headingPIDF.p,
-                    swerve.swerveController.config.headingPIDF.i,
-                    swerve.swerveController.config.headingPIDF.d),
+                new PIDConstants(.01, 0, 0),
                 Swerve_Constants.maxModuleSpeed,
                 swerve.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
                 new ReplanningConfig()),
@@ -147,6 +144,7 @@ public class Swerve extends SubsystemBase {
                 return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
             },
             this);
+
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
