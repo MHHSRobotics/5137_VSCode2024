@@ -152,7 +152,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command getAuto(String name) {
-        PathPlannerPath path = PathPlannerPath.fromPathFile("StartToMid");
+        PathPlannerPath path = PathPlannerPath.fromPathFile("startToAmp");
         return AutoBuilder.followPath(path);
     }
 
