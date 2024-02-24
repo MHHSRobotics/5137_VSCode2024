@@ -138,7 +138,7 @@ public class Swerve extends SubsystemBase {
         timer.reset();  
          swerve.getGyro().factoryDefault();
         swerve.getGyro().clearStickyFaults();
-        autoChooser = AutoBuilder.buildAutoChooser("midTop");
+        autoChooser = AutoBuilder.buildAutoChooser("middleTop");
         swerveField = new Field2d();
     }
 
