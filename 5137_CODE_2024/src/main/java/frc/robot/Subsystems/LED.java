@@ -60,14 +60,12 @@ public class LED extends SubsystemBase {
     public void AllianceColorChasingUp() {
         for (int i = 0; i < length; i++) {
             var x = (double) i%12;
-            Optional<Alliance> ally = DriverStation.getAlliance();
-            if (ally.isPresent()) {
-                if (ally.get() == Alliance.Red) {
-                    buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), 0, 0);
-                } else {
-                    buffer.setRGB((i+(int)Math.floor(offset))%length, 0, 0, (int)((x/11)*255));
-                }
+            if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
+                buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), 0, 0);
+            } else {
+                buffer.setRGB((i+(int)Math.floor(offset))%length, 0, 0, (int)((x/11)*255));
             }
+            
         }
         leds.setData(buffer);
 
@@ -77,13 +75,10 @@ public class LED extends SubsystemBase {
     public void AllianceColorChasingDown() {
         for (int i = 0; i < length; i++) {
             var x = (double) -i%-12;
-            Optional<Alliance> ally = DriverStation.getAlliance();
-            if (ally.isPresent()) {
-                if (ally.get() == Alliance.Red) {
-                    buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), 0, 0);
-                } else {
-                    buffer.setRGB((i+(int)Math.floor(offset))%length, 0, 0, (int)((x/11)*255));
-                }
+            if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
+                buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), 0, 0);
+            } else {
+                buffer.setRGB((i+(int)Math.floor(offset))%length, 0, 0, (int)((x/11)*255));
             }
         }
         leds.setData(buffer);

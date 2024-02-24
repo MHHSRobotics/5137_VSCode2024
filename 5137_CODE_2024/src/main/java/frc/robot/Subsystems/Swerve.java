@@ -26,6 +26,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -40,6 +41,7 @@ import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -66,7 +68,7 @@ public class Swerve extends SubsystemBase {
 
     private SwerveDrive swerve;
     private  SendableChooser<Command> autoChooser;
-    private Field2d autoPathDisplay;
+    private Field2d swerveField;
 
 
     private AprilTagFieldLayout aprilTagFieldLayout;
@@ -137,7 +139,7 @@ public class Swerve extends SubsystemBase {
          swerve.getGyro().factoryDefault();
         swerve.getGyro().clearStickyFaults();
         autoChooser = AutoBuilder.buildAutoChooser("New Auto");
-        autoPathDisplay = new Field2d();
+        swerveField = new Field2d();
     }
 
     public void setUpPathPlanner() {
@@ -205,15 +207,10 @@ public class Swerve extends SubsystemBase {
 
     public double getRadiansToTarget() {
         Pose2d targetPose;
-        Optional<Alliance> ally = DriverStation.getAlliance();
-        if (ally.isPresent()) {
-            if (ally.get() == Alliance.Red) {
-                targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d(); 
-            } else {
-                targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
-            }
+        if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
+            targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d(); 
         } else {
-            return 0.0;
+            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
         }
         double radiansToPose = PhotonUtils.getYawToPose(swerve.getPose(), targetPose).getRadians();
         return radiansToPose;
@@ -221,15 +218,10 @@ public class Swerve extends SubsystemBase {
 
     public double getDistanceToTarget() {
         Pose2d targetPose;
-        Optional<Alliance> ally = DriverStation.getAlliance();
-        if (ally.isPresent()) {
-            if (ally.get() == Alliance.Red) {
-                targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d(); 
-            } else {
-                targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
-            }
+        if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
+            targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d(); 
         } else {
-            return 0.0;
+            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
         }
         double distanceToPose = PhotonUtils.getDistanceToPose(swerve.getPose(), targetPose);
         return distanceToPose;
@@ -260,22 +252,26 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putString("TargetPose", aprilTagFieldLayout.getTagPose(4).get().toPose2d().toString());
         SmartDashboard.putString("SwervePose", swerve.getPose().toString());
         SmartDashboard.putData("Auto Selection", autoChooser);
+        updateSwerveField();
+    }
 
-
-        
+    public void updateSwerveField(){
+        if(!DriverStation.isTeleopEnabled()){
         List<Pose2d> poses = new ArrayList<>();
-
         List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(autoChooser.getSelected().getName());
-        for(PathPlannerPath path: paths)
-        {
-            poses.addAll(path.getAllPathPoints().stream()
+        for(PathPlannerPath path: paths){
+            PathPlannerPath autoPath = path;
+            poses.addAll(autoPath.getAllPathPoints().stream()
             .map(point -> new Pose2d(point.position, new Rotation2d(0,0)))
             .collect(Collectors.toList()));
         }
-
-        autoPathDisplay.getObject("path").setPoses(poses); //Displays selected autopath on field2d
-        autoPathDisplay.setRobotPose(swerve.getPose());
-        SmartDashboard.putData("Auto Path", autoPathDisplay);
+        swerveField.getObject("path").setPoses(poses); //Displays selected autopath on field2d
+        }
+        else{
+            swerveField.getObject("path").close();
+        }
+        swerveField.setRobotPose(swerve.getPose());
+        SmartDashboard.putData("Swerve Field", swerveField);
     }
     
      public Command sysIdQuasisttatic(SysIdRoutine.Direction direction) {
