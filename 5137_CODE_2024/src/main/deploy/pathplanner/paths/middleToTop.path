@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 2.441064652022244,
+        "y": 5.57470477585631
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0,
-        "y": 6.5
+        "x": 2.3056608470711155,
+        "y": 5.997757229166079
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "middleNote"
     },
     {
       "anchor": {
-        "x": 2.9002404369102717,
-        "y": 7.0
+        "x": 2.586231619873541,
+        "y": 6.7547261843655635
       },
       "prevControl": {
-        "x": 1.7732529895036644,
-        "y": 7.487247797376092
-      },
-      "nextControl": {
-        "x": 4.198327477257591,
-        "y": 6.438778086954605
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.480169742674555,
-        "y": 5.53547907446654
-      },
-      "prevControl": {
-        "x": 1.230169742674555,
-        "y": 7.03547907446654
+        "x": 1.601092110315008,
+        "y": 6.401503264450395
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "topNote"
     }
   ],
   "rotationTargets": [],
@@ -55,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 36.2711403151775,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "sus autos",
+  "folder": null,
   "previewStartingState": null,
   "useDefaultConstraints": false
 }
