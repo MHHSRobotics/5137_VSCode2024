@@ -52,8 +52,8 @@ public class Swerve_Commands {
         return new InstantCommand(() -> swerve.zeroGyro(), swerve);
     }
 
-    public Command runAuto(String name) {
-        return swerve.getAuto(name);
+    public Command runAuto() {
+        return swerve.getAuto();
     }
 
 }

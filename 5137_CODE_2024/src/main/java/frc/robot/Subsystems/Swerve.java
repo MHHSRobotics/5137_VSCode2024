@@ -10,14 +10,18 @@ import static edu.wpi.first.units.Units.Volts;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.hal.can.CANStatus;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -37,6 +41,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -46,7 +52,9 @@ import swervelib.SwerveModule;
 import swervelib.motors.SwerveMotor;
 import swervelib.parser.SwerveParser;
 
+import com.ctre.phoenix.led.CANdle;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -57,6 +65,9 @@ import com.revrobotics.RelativeEncoder;
 public class Swerve extends SubsystemBase {
 
     private SwerveDrive swerve;
+    private  SendableChooser<Command> autoChooser;
+    private Field2d autoPathDisplay;
+
 
     private AprilTagFieldLayout aprilTagFieldLayout;
     private PIDController turnController;
@@ -125,6 +136,8 @@ public class Swerve extends SubsystemBase {
         timer.reset();  
          swerve.getGyro().factoryDefault();
         swerve.getGyro().clearStickyFaults();
+        autoChooser = AutoBuilder.buildAutoChooser("New Auto");
+        autoPathDisplay = new Field2d();
     }
 
     public void setUpPathPlanner() {
@@ -151,9 +164,8 @@ public class Swerve extends SubsystemBase {
         swerve.drive(translation, rotation, fieldRelative, false);
     }
 
-    public Command getAuto(String name) {
-        PathPlannerPath path = PathPlannerPath.fromPathFile("startToAmp");
-        return AutoBuilder.followPath(path);
+    public Command getAuto() {
+        return autoChooser.getSelected();
     }
 
     public void setChassisSpeeds(ChassisSpeeds velocity) {
@@ -245,10 +257,25 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Distance to Target", getDistanceToTarget());
         SmartDashboard.putString("TargetPose", aprilTagFieldLayout.getTagPose(4).get().toPose2d().toString());
         SmartDashboard.putString("SwervePose", swerve.getPose().toString());
-        SmartDashboard.putNumber("Gyro Reading", Units.radiansToDegrees(swerve.getGyro().getRotation3d().getAngle()));
+        SmartDashboard.putData("Auto Selection", autoChooser);
+
+
+        
+        List<Pose2d> poses = new ArrayList<>();
+
+        List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(autoChooser.getSelected().getName());
+        for(PathPlannerPath path: paths)
+        {
+            poses.addAll(path.getAllPathPoints().stream()
+            .map(point -> new Pose2d(point.position, new Rotation2d(0,0)))
+            .collect(Collectors.toList()));
+        }
+
+        autoPathDisplay.getObject("path").setPoses(poses); //Displays selected autopath on field2d
+        autoPathDisplay.setRobotPose(swerve.getPose());
+        SmartDashboard.putData("Auto Path", autoPathDisplay);
     }
     
      public Command sysIdQuasisttatic(SysIdRoutine.Direction direction) {

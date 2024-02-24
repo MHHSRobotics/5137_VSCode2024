@@ -183,6 +183,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return swerve_Commands.runAuto("startToAmp");
+    return swerve_Commands.runAuto();
   }
 }
