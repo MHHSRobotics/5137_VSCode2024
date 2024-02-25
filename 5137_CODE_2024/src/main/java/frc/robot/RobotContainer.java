@@ -105,12 +105,14 @@ public class RobotContainer {
     arm.setDefaultCommand(arm_Commands.manualMove(() -> -operator.getLeftY()));
 
     operator.triangle()
+
     .onTrue(
       new ParallelCommandGroup(
         arm_Commands.moveToIntake(),
         intake_Commands.intakeForward()
       )
     )
+    
     .onFalse(new ParallelCommandGroup(
         arm_Commands.moveToDefault(),
         intake_Commands.stop()
@@ -126,7 +128,7 @@ public class RobotContainer {
         shooter_Commands.shootSpeaker(),
         new WaitCommand(1),
         new ParallelCommandGroup(
-          swerve_Commands.aimAtSpeaker(),
+          //swerve_Commands.aimAtSpeaker(),
           arm_Commands.moveToSpeaker(
             new DoubleSupplier() {
               @Override
@@ -187,6 +189,7 @@ public class RobotContainer {
       }
     })
     .onTrue(intake_Commands.stop());
+    
   }
 
   public Command getAutonomousCommand() {

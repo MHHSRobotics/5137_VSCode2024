@@ -6,19 +6,19 @@ import edu.wpi.first.math.util.Units;
 
 public class Vision_Constants {
 
-    public static final double offsetXAR1 = Units.inchesToMeters(-0.9);
-    public static final double offsetYAR1 = Units.inchesToMeters(-4);
-    public static final double offsetZAR1 = Units.inchesToMeters(11.0);
-    public static final double rollAR1 = Units.degreesToRadians(0);
-    public static final double pitchAR1 = Units.degreesToRadians(-60);
-    public static final double yawAR1 = Units.degreesToRadians(180);
+    public static final double offsetXAR2 = Units.inchesToMeters(-0.9);
+    public static final double offsetYAR2 = Units.inchesToMeters(-4);
+    public static final double offsetZAR2 = Units.inchesToMeters(11.0);
+    public static final double rollAR2= Units.degreesToRadians(0);
+    public static final double pitchAR2 = Units.degreesToRadians(-60);
+    public static final double yawAR2 = Units.degreesToRadians(5);
 
-    public static final double offsetXAR2 = Units.inchesToMeters(6);
-    public static final double offsetYAR2 = Units.inchesToMeters(-12.5);
-    public static final double offsetZAR2 = Units.inchesToMeters(8.0);
-    public static final double rollAR2 = Units.degreesToRadians(0);
-    public static final double pitchAR2 = Units.degreesToRadians(53);
-    public static final double yawAR2 = Units.degreesToRadians(0);
+    public static final double offsetXAR1 = Units.inchesToMeters(6);
+    public static final double offsetYAR1 = Units.inchesToMeters(-12.5);
+    public static final double offsetZAR1 = Units.inchesToMeters(8.0);
+    public static final double rollAR1 = Units.degreesToRadians(0);
+    public static final double pitchAR1 = Units.degreesToRadians(53);
+    public static final double yawAR1 = Units.degreesToRadians(0);
     
     public static final double offsetXOBJ = 0;
     public static final double offsetYOBJ = 0;

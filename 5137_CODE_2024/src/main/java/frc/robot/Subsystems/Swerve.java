@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.apache.commons.math3.util.MathUtils;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 
@@ -202,7 +203,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public boolean turnAligned() {
-        return turnController.atSetpoint();
+        return (turnController.atSetpoint());
     }
 
     public double getRadiansToTarget() {
@@ -212,7 +213,7 @@ public class Swerve extends SubsystemBase {
         } else {
             targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
         }
-        double radiansToPose = PhotonUtils.getYawToPose(swerve.getPose(), targetPose).getRadians();
+        double radiansToPose = MathUtils.normalizeAngle(PhotonUtils.getYawToPose(swerve.getPose(), targetPose).getRadians(),0);
         return radiansToPose;
     }
 
@@ -244,7 +245,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public boolean driveComplete(){
-        return driveController.atSetpoint();
+        return driveController.atSetpoint(); 
     }
 
     @Override
