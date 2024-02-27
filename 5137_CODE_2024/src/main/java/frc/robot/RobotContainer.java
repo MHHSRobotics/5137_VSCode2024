@@ -29,14 +29,14 @@ public class RobotContainer {
   private CommandXboxController driver;
   private CommandPS4Controller operator;
 
-  private Swerve swerve;
+  //private Swerve swerve;
   private Arm arm;
   private Intake intake; 
   private Shooter shooter;
-  private Vision vision;
+  //private Vision vision;
   private LED led;
 
-  private Swerve_Commands swerve_Commands;
+  //private Swerve_Commands swerve_Commands;
   private Arm_Commands arm_Commands;
   private Intake_Commands intake_Commands;
   private Shooter_Commands shooter_Commands;
@@ -46,18 +46,18 @@ public class RobotContainer {
     driver = new CommandXboxController(0);
     operator = new CommandPS4Controller(1);
 
-    swerve = new Swerve(new File(Filesystem.getDeployDirectory(),"swerve"));
+    //swerve = new Swerve(new File(Filesystem.getDeployDirectory(),"swerve"));
     arm = new Arm(new File(Filesystem.getDeployDirectory(), "RobotConstants.json"));
     intake = new Intake();
     shooter = new Shooter();
-    vision = new Vision();
+    //vision = new Vision();
     led = new LED();
 
-    swerve_Commands = new Swerve_Commands(swerve, vision);
+    //swerve_Commands = new Swerve_Commands(swerve, vision);
     arm_Commands = new Arm_Commands(arm);
     intake_Commands = new Intake_Commands(intake);
     shooter_Commands = new Shooter_Commands(shooter);
-    vision.setDefaultCommand(new AddVisionMeasurement(vision, swerve));
+    //vision.setDefaultCommand(new AddVisionMeasurement(vision, swerve));
     led_Commands = new LED_Commands(led);
     NamedCommands.registerCommand("intake", new InstantCommand());
     NamedCommands.registerCommand("shoot", new InstantCommand());
@@ -84,7 +84,7 @@ public class RobotContainer {
     driver.b()
     .onTrue(swerve.sysIdDynamic(Direction.kReverse));*/
     
-    
+    /*
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
       () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
@@ -96,7 +96,7 @@ public class RobotContainer {
     .onTrue(swerve_Commands.aimAtSpeaker());
 
     driver.y()
-    .onTrue(swerve_Commands.zeroGyro());
+    .onTrue(swerve_Commands.zeroGyro());*/
     
     
 
@@ -127,7 +127,7 @@ public class RobotContainer {
       new SequentialCommandGroup(
         shooter_Commands.shootSpeaker(),
         new WaitCommand(1),
-        new ParallelCommandGroup(
+        /*new ParallelCommandGroup(
           //swerve_Commands.aimAtSpeaker(),
           arm_Commands.moveToSpeaker(
             new DoubleSupplier() {
@@ -137,7 +137,7 @@ public class RobotContainer {
               }
             }
           )
-        ),
+        ),*/
         new WaitCommand(1),
         intake_Commands.intakeForward()
       )
@@ -193,6 +193,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return swerve_Commands.runAuto();
+    //return swerve_Commands.runAuto();
+    return null;
   }
 }

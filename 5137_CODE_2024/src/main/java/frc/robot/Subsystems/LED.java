@@ -22,10 +22,10 @@ public class LED extends SubsystemBase {
     private int length;
     private Timer timer;
     
-    public LED() {
+    public LED() { // FIRST STRIP: 0-41 SECOND STRIP: 42-101 THIRD STRIP: 102 - 145
         leds = new AddressableLED(LED_Constants.LEDport);
-        leds.setLength(144);
-        buffer = new AddressableLEDBuffer(144);
+        leds.setLength(146);
+        buffer = new AddressableLEDBuffer(146);
         offset = 0;
         length = buffer.getLength();
         leds.start();
@@ -45,11 +45,22 @@ public class LED extends SubsystemBase {
 
     public void CGChasing() {
         for (int i = 0; i < length; i++) {
-            var x = (double) i%24;
-            if (x < 12) {
-                buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), 0, 0);
+            var n = (i+(int)Math.floor(offset))%length;
+            if (n < 42 || n > 101) {
+                var x = (double) i%24;
+                if (x < 12) {
+                    buffer.setRGB(n, (int)((x/11)*255), 0, 0);
+                } else {
+                    buffer.setRGB(n, (int)(((x-12)/11)*255), (int)(((x-12)/11)*90), 0);
+                }
             } else {
-                buffer.setRGB((i+(int)Math.floor(offset))%length, (int)(((x-12)/11)*255), (int)(((x-12)/11)*90), 0);
+                if (timer.hasElapsed(2)) {
+                    timer.restart();
+                } else if (timer.hasElapsed(1)) {
+                    buffer.setRGB(n, 255, 90, 0);
+                } else {
+                    buffer.setRGB(n, 255, 0, 0);
+                }
             }
         }
         leds.setData(buffer);
@@ -59,13 +70,21 @@ public class LED extends SubsystemBase {
 
     public void AllianceColorChasingUp() {
         for (int i = 0; i < length; i++) {
-            var x = (double) i%12;
-            if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
-                buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), 0, 0);
+            var n = (i+(int)Math.floor(offset))%length;
+            if (n < 42 || n > 101) {
+                var x = (double) i%12;
+                if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
+                    buffer.setRGB(n, (int)((x/11)*255), 0, 0);
+                } else {
+                    buffer.setRGB(n, 0, 0, (int)((x/11)*255));
+                }
             } else {
-                buffer.setRGB((i+(int)Math.floor(offset))%length, 0, 0, (int)((x/11)*255));
+                if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
+                    buffer.setRGB(n, 255, 0, 0);
+                } else {
+                    buffer.setRGB(n, 0, 0, 255);
+                }    
             }
-            
         }
         leds.setData(buffer);
 
@@ -74,11 +93,20 @@ public class LED extends SubsystemBase {
 
     public void AllianceColorChasingDown() {
         for (int i = 0; i < length; i++) {
-            var x = (double) -i%-12;
-            if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
-                buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), 0, 0);
+            var n = (i+(int)Math.floor(offset))%length;
+            if (n < 42 || n > 101) {
+                var x = (double) -i%-12;
+                if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
+                    buffer.setRGB((i+(int)Math.floor(offset))%length, (int)((x/11)*255), 0, 0);
+                } else {
+                    buffer.setRGB((i+(int)Math.floor(offset))%length, 0, 0, (int)((x/11)*255));
+                }
             } else {
-                buffer.setRGB((i+(int)Math.floor(offset))%length, 0, 0, (int)((x/11)*255));
+                if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
+                    buffer.setRGB(n, 255, 0, 0);
+                } else {
+                    buffer.setRGB(n, 0, 0, 255);
+                }    
             }
         }
         leds.setData(buffer);
