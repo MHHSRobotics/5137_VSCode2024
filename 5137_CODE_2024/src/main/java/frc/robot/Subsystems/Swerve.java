@@ -240,7 +240,7 @@ public class Swerve extends SubsystemBase {
         Translation2d translation = translationToTarget;  
         double distance = metersToNote;
         double turnVelocity = turnController.calculate(translation.getAngle().getRadians(),0);
-        double driveVelocity = turnController.calculate(metersToNote, Vision_Constants.notePickupDistance);
+        double driveVelocity = turnController.calculate(distance, Vision_Constants.notePickupDistance);
         drive(new Translation2d(driveVelocity, 0), turnVelocity, false);
     }
 
