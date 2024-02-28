@@ -164,7 +164,9 @@ public class Swerve extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         swerve.resetOdometry(pose);
-    }
+        zeroGyro();
+        //TODO: Check if zero gyro should be called here
+      }
 
     public void zeroGyro() {
         swerve.setGyroOffset(
