@@ -111,7 +111,6 @@ public class Swerve extends SubsystemBase {
         ));
 
     public Swerve(File directory) {
-
         turnController = new PIDController(Swerve_Constants.turnKP, Swerve_Constants.turnKI, Swerve_Constants.turnKD);
         driveController = new PIDController(Swerve_Constants.driveKP, Swerve_Constants.driveKI, Swerve_Constants.driveKD);
         turnController.setTolerance(0.02, 0.01);
@@ -128,8 +127,6 @@ public class Swerve extends SubsystemBase {
         } catch (IOException e) {
           e.printStackTrace();
         }
-
-        setUpPathPlanner();
         
         leftFrontMotor = swerve.getModules()[0].getDriveMotor();
         rightFrontMotor = swerve.getModules()[1].getDriveMotor();
@@ -139,8 +136,13 @@ public class Swerve extends SubsystemBase {
         timer.reset();  
          swerve.getGyro().factoryDefault();
         swerve.getGyro().clearStickyFaults();
-        autoChooser = AutoBuilder.buildAutoChooser("middleTop");
         swerveField = new Field2d();
+
+        
+            for(int i = 0; i <= 3; i++)
+            {
+            swerve.getModules()[i].getDriveMotor().setInverted(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false);
+            }
     }
 
     public void setUpPathPlanner() {
@@ -151,15 +153,15 @@ public class Swerve extends SubsystemBase {
             this::setChassisSpeeds,
             new HolonomicPathFollowerConfig(
                 new PIDConstants(.02065, 0.0, 0.0),
-                new PIDConstants(.01, 0, 0),
+                new PIDConstants(.001, 0, 0),
                 Swerve_Constants.maxModuleSpeed,
                 swerve.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
                 new ReplanningConfig()),
             () -> {
-                var alliance = DriverStation.getAlliance();
-                return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
+                return DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false;
             },
             this);
+            autoChooser = AutoBuilder.buildAutoChooser("middleTop");
 
     }
 
@@ -209,20 +211,20 @@ public class Swerve extends SubsystemBase {
     public double getRadiansToTarget() {
         Pose2d targetPose;
         if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
-            targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d(); 
+            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d(); 
         } else {
-            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
+            targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d();
         }
-        double radiansToPose = MathUtils.normalizeAngle(PhotonUtils.getYawToPose(swerve.getPose(), targetPose).getRadians(),0);
+        double radiansToPose = MathUtils.normalizeAngle(PhotonUtils.getYawToPose(swerve.getPose(), targetPose).rotateBy(new Rotation2d(Math.PI)).getRadians(),0);
         return radiansToPose;
     }
 
     public double getDistanceToTarget() {
         Pose2d targetPose;
         if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
-            targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d(); 
+            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d(); 
         } else {
-            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d();
+            targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d();
         }
         double distanceToPose = PhotonUtils.getDistanceToPose(swerve.getPose(), targetPose);
         return distanceToPose;
