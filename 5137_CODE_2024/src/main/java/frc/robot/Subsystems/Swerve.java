@@ -244,7 +244,6 @@ public class Swerve extends SubsystemBase {
     }
 
     public void updateSwerveField(){
-        if(!DriverStation.isTeleopEnabled()){
         List<Pose2d> poses = new ArrayList<>();
         List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(autoChooser.getSelected().getName());
         for(PathPlannerPath path: paths){
@@ -254,10 +253,6 @@ public class Swerve extends SubsystemBase {
             .collect(Collectors.toList()));
         }
         swerveField.getObject("path").setPoses(poses); //Displays selected autopath on field2d
-        }
-        else{
-            swerveField.getObject("path").close();
-        }
         swerveField.setRobotPose(swerve.getPose());
         SmartDashboard.putData("Swerve Field", swerveField);
     }
