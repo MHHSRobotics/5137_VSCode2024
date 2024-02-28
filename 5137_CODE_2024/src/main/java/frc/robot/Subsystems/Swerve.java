@@ -1,6 +1,5 @@
 package frc.robot.Subsystems;
 
-import frc.robot.Constants.Arm_Constants;
 import frc.robot.Constants.Swerve_Constants;
 import frc.robot.Constants.Vision_Constants;
 
@@ -12,27 +11,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.commons.math3.util.MathUtils;
-import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.hal.can.CANStatus;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
@@ -41,8 +32,6 @@ import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -51,19 +40,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import swervelib.SwerveDrive;
-import swervelib.SwerveModule;
 import swervelib.motors.SwerveMotor;
 import swervelib.parser.SwerveParser;
 
-import com.ctre.phoenix.led.CANdle;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 
 public class Swerve extends SubsystemBase {
 
@@ -180,9 +165,10 @@ public class Swerve extends SubsystemBase {
     public void zeroGyro() {
         //swerve.setGyroOffset(swerve.getGyro().getRawRotation3d());
         
-        swerve.setGyroOffset(swerve.getGyro().getRawRotation3d().rotateBy(new Rotation3d(0,0,swerve.getPose().getRotation().getRadians())));
+        swerve.setGyroOffset(swerve.getGyro().getRawRotation3d().rotateBy(new Rotation3d(0,0,-swerve.getPose().getRotation().getRadians())));
+        //TODO: CHECK IF YAW IN ROTATEBY SHOULD BE POSITIVE+ or NEGATIVE-.  Zeroing the gyro should make 0 always towards blue alliance. If red alliance controls will be inverted so we won't notice that
       
-        //swerve.zeroGyro();
+        swerve.zeroGyro();
         //swerve.setGyro(new Rotation3d(0,0,-Math.PI));
     }
 

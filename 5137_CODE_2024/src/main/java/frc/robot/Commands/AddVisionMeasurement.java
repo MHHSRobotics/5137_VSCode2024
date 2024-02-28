@@ -43,7 +43,6 @@ public class AddVisionMeasurement extends Command {
       double timestamp = ar2Pose.get().timestampSeconds;
       swerve.addVisionMeasurement(pose, timestamp);
     }
-    //TODO: Add result from vision system to swerve pose estimator. See off-season 2023 robot code
     }
     
     

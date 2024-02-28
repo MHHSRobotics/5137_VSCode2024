@@ -1,16 +1,13 @@
 package frc.robot.Subsystems;
 
-import java.util.Optional;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 import frc.robot.Constants.LED_Constants;
 
 public class LED extends SubsystemBase {
@@ -19,7 +16,6 @@ public class LED extends SubsystemBase {
     private AddressableLEDBuffer buffer;
 
     private double offset;
-    private double offset2;
     private int length;
     private Timer timer;
     
@@ -28,7 +24,6 @@ public class LED extends SubsystemBase {
         leds.setLength(146);
         buffer = new AddressableLEDBuffer(146);
         offset = 0;
-        offset2 = 0;
         length = buffer.getLength();
         leds.start();
         timer = new Timer();

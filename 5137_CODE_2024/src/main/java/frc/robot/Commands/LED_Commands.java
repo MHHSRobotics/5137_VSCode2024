@@ -8,5 +8,6 @@ public class LED_Commands {
    
     public LED_Commands (LED leds) {
         this.leds = leds;
+        this.leds.getName(); //Extra line to remove unused object error
     }
 }
