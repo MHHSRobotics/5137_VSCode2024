@@ -119,10 +119,14 @@ public class Swerve extends SubsystemBase {
         rightBackMotor = swerve.getModules()[3].getDriveMotor();
         timer = new Timer();
         timer.reset();  
-         swerve.getGyro().factoryDefault();
+        swerve.getGyro().factoryDefault();
         swerve.getGyro().clearStickyFaults();
         swerveField = new Field2d();
         swerve.getPose();
+        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false){
+            resetOdometry(new Pose2d(0,0, new Rotation2d(Math.PI)));
+        }
+        zeroGyro();
     }
 
     public void setUpPathPlanner() {
