@@ -163,13 +163,11 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro() {
-        //swerve.setGyroOffset(swerve.getGyro().getRawRotation3d());
-        
-        swerve.setGyroOffset(swerve.getGyro().getRawRotation3d().rotateBy(new Rotation3d(0,0,-swerve.getPose().getRotation().getRadians())));
-        //TODO: CHECK IF YAW IN ROTATEBY SHOULD BE POSITIVE+ or NEGATIVE-.  Zeroing the gyro should make 0 always towards blue alliance. If red alliance controls will be inverted so we won't notice that
-      
-        swerve.zeroGyro();
-        //swerve.setGyro(new Rotation3d(0,0,-Math.PI));
+        swerve.setGyroOffset(
+        swerve.getGyro().getRawRotation3d().rotateBy(
+        new Rotation3d(0,0,-swerve.getPose().getRotation().getRadians())));
+        //TODO: CHECK IF YAW IN ROTATEBY METHOD SHOULD BE POSITIVE+ or NEGATIVE-.
+        //TODO: Zeroing the gyro should make 0 always towards blue alliance. If red alliance controls will be inverted so we won't notice that
     }
 
     public ChassisSpeeds getRobotVelocity() {
