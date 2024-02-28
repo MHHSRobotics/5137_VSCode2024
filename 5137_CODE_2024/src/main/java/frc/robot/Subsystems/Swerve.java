@@ -179,11 +179,10 @@ public class Swerve extends SubsystemBase {
 
     public void zeroGyro() {
         //swerve.setGyroOffset(swerve.getGyro().getRawRotation3d());
-        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false)
-        {
-            swerve.setGyroOffset(swerve.getGyro().getRawRotation3d().rotateBy(new Rotation3d(0,0,Math.PI)));
-        }
-        swerve.zeroGyro();
+        
+        swerve.setGyroOffset(swerve.getGyro().getRawRotation3d().rotateBy(new Rotation3d(0,0,swerve.getPose().getRotation().getRadians())));
+      
+        //swerve.zeroGyro();
         //swerve.setGyro(new Rotation3d(0,0,-Math.PI));
     }
 
