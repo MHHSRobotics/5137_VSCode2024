@@ -138,11 +138,6 @@ public class Swerve extends SubsystemBase {
         swerve.getGyro().clearStickyFaults();
         swerveField = new Field2d();
 
-        
-            for(int i = 0; i <= 3; i++)
-            {
-            swerve.getModules()[i].getDriveMotor().setInverted(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false);
-            }
     }
 
     public void setUpPathPlanner() {
@@ -165,8 +160,9 @@ public class Swerve extends SubsystemBase {
 
     }
 
-    public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
-        swerve.drive(translation, rotation, fieldRelative, false);
+    public void drive(Translation2d translation2d, double rotationSpeed, boolean fieldRelative) {
+
+        swerve.drive(translation2d, rotationSpeed, true, true);
     }
 
     public Command getAuto() {

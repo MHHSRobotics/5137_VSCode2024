@@ -25,8 +25,10 @@ public class Swerve_Commands {
     public InstantCommand drive(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier rotation, BooleanSupplier fieldRelative) {
         return new InstantCommand(
             () -> swerve.drive(
-                new Translation2d(translationX.getAsDouble(), translationY.getAsDouble()).times(Swerve_Constants.maxModuleSpeed), 
-                rotation.getAsDouble()*Swerve_Constants.maxAngularSpeed, 
+                new Translation2d(
+                Math.pow(translationX.getAsDouble(), 3)*Swerve_Constants.maxVelocity,
+                Math.pow(translationY.getAsDouble(), 3)*Swerve_Constants.maxVelocity), 
+                Math.pow(rotation.getAsDouble(), 3)*Swerve_Constants.maxAngularSpeed, 
                 fieldRelative.getAsBoolean()),
             swerve);
     }

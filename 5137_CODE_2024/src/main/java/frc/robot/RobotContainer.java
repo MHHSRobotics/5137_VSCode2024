@@ -234,12 +234,4 @@ public class RobotContainer {
     return swerve_Commands.runAuto();
   }
 
-  public double invertForAlliance()
-  {
-    if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false)
-    {
-      return -1;
-    }
-    return 1;
-  }
 }
