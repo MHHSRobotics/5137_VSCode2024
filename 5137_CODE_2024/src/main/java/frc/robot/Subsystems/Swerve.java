@@ -137,7 +137,7 @@ public class Swerve extends SubsystemBase {
          swerve.getGyro().factoryDefault();
         swerve.getGyro().clearStickyFaults();
         swerveField = new Field2d();
-
+        swerve.getPose();
     }
 
     public void setUpPathPlanner() {
@@ -148,7 +148,7 @@ public class Swerve extends SubsystemBase {
             this::setChassisSpeeds,
             new HolonomicPathFollowerConfig(
                 new PIDConstants(.02065, 0.0, 0.0),
-                new PIDConstants(.001, 0, 0),
+                new PIDConstants(.01, 0, 0),
                 Swerve_Constants.maxModuleSpeed,
                 swerve.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
                 new ReplanningConfig()),
@@ -179,6 +179,10 @@ public class Swerve extends SubsystemBase {
 
     public void zeroGyro() {
         //swerve.setGyroOffset(swerve.getGyro().getRawRotation3d());
+        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false)
+        {
+            swerve.setGyroOffset(swerve.getGyro().getRawRotation3d().rotateBy(new Rotation3d(0,0,Math.PI)));
+        }
         swerve.zeroGyro();
         //swerve.setGyro(new Rotation3d(0,0,-Math.PI));
     }

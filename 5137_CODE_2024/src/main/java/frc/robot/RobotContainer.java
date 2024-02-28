@@ -125,8 +125,8 @@ public class RobotContainer {
     
     
     swerve.setDefaultCommand(swerve_Commands.drive(
-      () -> MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
-      () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
+      () -> MathUtil.applyDeadband(getAllianceInvert()*driver.getLeftY(), Swerve_Constants.LY_Deadband),
+      () -> MathUtil.applyDeadband(getAllianceInvert()*driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> MathUtil.applyDeadband(driver.getRightX(), Swerve_Constants.RX_Deadband),
       () -> !driver.leftBumper().getAsBoolean()
     ));
@@ -232,6 +232,15 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return swerve_Commands.runAuto();
+  }
+  
+  private double getAllianceInvert()
+  {
+    if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false)
+    {
+      return -1;
+    }
+    return 1;
   }
 
 }
