@@ -96,6 +96,13 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command getAuto() {
+        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false)
+        {
+            swerve.resetOdometry(PathPlannerAuto.getPathGroupFromAutoFile(autoChooser.getSelected().getName()).get(0).flipPath().getPreviewStartingHolonomicPose());
+        }
+        else{
+            swerve.resetOdometry(PathPlannerAuto.getPathGroupFromAutoFile(autoChooser.getSelected().getName()).get(0).getPreviewStartingHolonomicPose());
+        }
         return autoChooser.getSelected();
     }
 
