@@ -1,7 +1,6 @@
 package frc.robot.Subsystems;
 
 import frc.robot.Constants.Swerve_Constants;
-import frc.robot.Constants.Vision_Constants;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +37,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 public class Swerve extends SubsystemBase {
 
     private SwerveDrive swerve;
-    private  SendableChooser<Command> autoChooser;
+    private SendableChooser<Command> autoChooser;
     private Field2d swerveField;
 
     private AprilTagFieldLayout aprilTagFieldLayout;
@@ -46,11 +45,6 @@ public class Swerve extends SubsystemBase {
     private PIDController driveController;
 
     public Swerve(File directory) {
-        turnController = new PIDController(Swerve_Constants.turnKP, Swerve_Constants.turnKI, Swerve_Constants.turnKD);
-        driveController = new PIDController(Swerve_Constants.driveKP, Swerve_Constants.driveKI, Swerve_Constants.driveKD);
-        turnController.setTolerance(0.02, 0.01);
-        driveController.setTolerance(0.05, 0.01);
-
         try {
             swerve = new SwerveParser(directory).createSwerveDrive(Swerve_Constants.maxVelocity);
         } catch (IOException e) {
@@ -63,12 +57,13 @@ public class Swerve extends SubsystemBase {
           e.printStackTrace();
         }
 
-        swerve.getGyro().factoryDefault();
-        swerve.getGyro().clearStickyFaults();
+        turnController = new PIDController(Swerve_Constants.turnKP, Swerve_Constants.turnKI, Swerve_Constants.turnKD);
+        driveController = new PIDController(Swerve_Constants.driveKP, Swerve_Constants.driveKI, Swerve_Constants.driveKD);
+        turnController.setTolerance(0.02, 0.01);
+        driveController.setTolerance(0.05, 0.01);
         swerveField = new Field2d();
-        swerve.getPose();
         motorInvert();
-        
+        setUpPathPlanner();
     }
 
     public void setUpPathPlanner() {
@@ -93,7 +88,6 @@ public class Swerve extends SubsystemBase {
             },
             this);
             autoChooser = AutoBuilder.buildAutoChooser("middleTop");
-
     }
 
     public void drive(Translation2d translation2d, double rotationSpeed, boolean fieldRelative) {
@@ -146,6 +140,7 @@ public class Swerve extends SubsystemBase {
             targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d();
         }
         double radiansToPose = MathUtils.normalizeAngle(PhotonUtils.getYawToPose(swerve.getPose(), targetPose).rotateBy(new Rotation2d(Math.PI)).getRadians(),0);
+        //TODO: Check if inverting motors screwed this control up
         return radiansToPose;
     }
 
@@ -160,29 +155,8 @@ public class Swerve extends SubsystemBase {
         return distanceToPose;
     }
 
-    public void turnToNote(Translation2d translationToTarget){
-       
-        Translation2d translation = translationToTarget;  
-        double turnVelocity = turnController.calculate(translation.getAngle().getRadians(),0);
-        drive(new Translation2d(0, 0), turnVelocity, false);
-    }
-
-    public void driveToNote(Translation2d translationToTarget, double metersToNote){
-       
-        Translation2d translation = translationToTarget;  
-        double distance = metersToNote;
-        double turnVelocity = turnController.calculate(translation.getAngle().getRadians(),0);
-        double driveVelocity = turnController.calculate(distance, Vision_Constants.notePickupDistance);
-        drive(new Translation2d(driveVelocity, 0), turnVelocity, false);
-    }
-
-    public boolean driveComplete(){
-        return driveController.atSetpoint(); 
-    }
-
     @Override
     public void periodic() {
-        SmartDashboard.putString("TargetPose", aprilTagFieldLayout.getTagPose(4).get().toPose2d().toString());
         SmartDashboard.putString("SwervePose", swerve.getPose().toString());
         SmartDashboard.putData("Auto Selection", autoChooser);
         updateSwerveField();

@@ -26,10 +26,6 @@ public class Vision extends SubsystemBase{
 
     private final PhotonCamera ar1Camera = new PhotonCamera("AR1");
     private final PhotonCamera ar2Camera = new PhotonCamera("AR2");
-    private final PhotonCamera objCamera = new PhotonCamera("OBJ");
-
-
-
 
     private PhotonPoseEstimator ar1PoseEstimator;
     private PhotonPoseEstimator ar2PoseEstimator;
@@ -54,35 +50,6 @@ public class Vision extends SubsystemBase{
       return ar2PoseEstimator.update();
     }
 
-    public double getMetersToNote()
-    {
-      Transform3d robotToCamera = Vision_Constants.robotToOBJ;
-      var result = objCamera.getLatestResult();
-      if(result.hasTargets()){
-        var target = result.getBestTarget();
-        double distance = PhotonUtils.calculateDistanceToTargetMeters(robotToCamera.getZ(), Vision_Constants.noteDetectionHeight, robotToCamera.getRotation().getY(), Units.degreesToRadians(target.getPitch()));
-        return distance;
-      
-      }
-      return -1.0;
-    }
-
-    public Translation2d getTranslationToNote(){
-      Transform3d robotToCamera = Vision_Constants.robotToOBJ;
-      var result = objCamera.getLatestResult();
-      if(result.hasTargets()){
-        var target = result.getBestTarget();
-        double distance = PhotonUtils.calculateDistanceToTargetMeters(robotToCamera.getZ(), Vision_Constants.noteDetectionHeight, robotToCamera.getRotation().getY(), Units.degreesToRadians(target.getPitch()));
-        Translation2d translation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(-target.getYaw()));
-        return translation;
-      
-      }
-      return new Translation2d();
-    }
-
     @Override
-    public void periodic() {
-      SmartDashboard.putString("Translation to Note",getTranslationToNote().toString());
-      SmartDashboard.putNumber("Distance to Note", getMetersToNote());
-} 
+    public void periodic() {} 
 }

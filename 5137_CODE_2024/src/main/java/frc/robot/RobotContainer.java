@@ -53,7 +53,7 @@ public class RobotContainer {
     vision = new Vision();
     led = new LED();
 
-    swerve_Commands = new Swerve_Commands(swerve, vision);
+    swerve_Commands = new Swerve_Commands(swerve);
     arm_Commands = new Arm_Commands(arm);
     intake_Commands = new Intake_Commands(intake);
     shooter_Commands = new Shooter_Commands(shooter);
@@ -99,8 +99,6 @@ public class RobotContainer {
         )
       )
     );
-
-    swerve.setUpPathPlanner();
 
     configureBindings();
   }
