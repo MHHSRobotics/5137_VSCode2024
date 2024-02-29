@@ -16,15 +16,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "middleNote"
+                  "name": "intakeOn"
                 }
               },
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "intake"
+                  "pathName": "middleNote"
                 }
               }
             ]
@@ -41,15 +41,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "middleToTop"
+                  "name": "intakeOn"
                 }
               },
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "intake"
+                  "pathName": "middleToTop"
                 }
               }
             ]

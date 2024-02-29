@@ -60,19 +60,19 @@ public class RobotContainer {
     led_Commands = new LED_Commands(led);
     led_Commands.getClass(); //Extra line to remove unused object errors
 
-    NamedCommands.registerCommand("intake", 
-      new SequentialCommandGroup(
-        new ParallelCommandGroup(
-          arm_Commands.moveToIntake(),
-          intake_Commands.intakeForward()
-        ),
-        new WaitCommand(1),
+    NamedCommands.registerCommand("intakeOn", 
+      new ParallelCommandGroup(
+        arm_Commands.moveToIntake(),
+        intake_Commands.intakeForward()
+      )
+    );
+    
+    NamedCommands.registerCommand("intakeOff", 
         new ParallelCommandGroup(
           arm_Commands.moveToDefault(),
           intake_Commands.stop()
         )
-      )
-    );
+      );
 
     NamedCommands.registerCommand("shoot",
       new SequentialCommandGroup(
@@ -123,9 +123,9 @@ public class RobotContainer {
     
     
     swerve.setDefaultCommand(swerve_Commands.drive(
-      () -> MathUtil.applyDeadband(getAllianceInvert()*driver.getLeftY(), Swerve_Constants.LY_Deadband),
-      () -> MathUtil.applyDeadband(getAllianceInvert()*driver.getLeftX(), Swerve_Constants.LX_Deadband),
-      () -> MathUtil.applyDeadband(driver.getRightX(), Swerve_Constants.RX_Deadband),
+      () -> MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
+      () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
+      () -> MathUtil.applyDeadband(getAllianceInvert()*driver.getRightX(), Swerve_Constants.RX_Deadband),
       () -> !driver.leftBumper().getAsBoolean()
     ));
 

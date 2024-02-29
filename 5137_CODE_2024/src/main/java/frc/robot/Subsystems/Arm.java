@@ -158,8 +158,8 @@ public class Arm extends ProfiledPIDSubsystem {
 
     public void runManual(double output) {
         if (!encoder.isConnected() || manualControl) {
-            leftMotor.set(0.3*output);
-            rightMotor.set(0.3*output);
+            leftMotor.set(1.0*output);
+            rightMotor.set(1.0*output);
         }
     }
 

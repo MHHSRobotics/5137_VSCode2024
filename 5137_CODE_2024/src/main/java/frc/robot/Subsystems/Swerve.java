@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.math3.util.MathUtils;
+import org.opencv.core.Mat;
 import org.photonvision.PhotonUtils;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -123,10 +124,20 @@ public class Swerve extends SubsystemBase {
         swerve.getGyro().clearStickyFaults();
         swerveField = new Field2d();
         swerve.getPose();
-        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false){
-            resetOdometry(new Pose2d(0,0, new Rotation2d(Math.PI)));
+        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false)
+        {
+            for(int i = 0; i <4; i++)
+            {
+                swerve.getModules()[i].getDriveMotor().setInverted(true);
+            }
         }
-        zeroGyro();
+        else{
+            for(int i = 0; i <4; i++)
+            {
+                swerve.getModules()[i].getDriveMotor().setInverted(false);
+            }
+        }
+        
     }
 
     public void setUpPathPlanner() {
@@ -142,7 +153,12 @@ public class Swerve extends SubsystemBase {
                 swerve.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
                 new ReplanningConfig()),
             () -> {
-                return DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false;
+                var alliance = DriverStation.getAlliance();
+                if(alliance.isPresent())
+                {
+                return alliance.get() == DriverStation.Alliance.Red;
+                }
+                return false;
             },
             this);
             autoChooser = AutoBuilder.buildAutoChooser("middleTop");
@@ -151,7 +167,7 @@ public class Swerve extends SubsystemBase {
 
     public void drive(Translation2d translation2d, double rotationSpeed, boolean fieldRelative) {
 
-        swerve.drive(translation2d, rotationSpeed, true, true);
+        swerve.drive(translation2d, rotationSpeed, fieldRelative, true);
     }
 
     public Command getAuto() {
@@ -164,14 +180,20 @@ public class Swerve extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         swerve.resetOdometry(pose);
-        zeroGyro();
         //TODO: Check if zero gyro should be called here
       }
 
     public void zeroGyro() {
-        swerve.setGyroOffset(
-        swerve.getGyro().getRawRotation3d().rotateBy(
-        new Rotation3d(0,0,-swerve.getPose().getRotation().getRadians())));
+    
+        
+        swerve.zeroGyro();        
+        /* 
+            swerve.setGyroOffset(
+            swerve.getGyro().getRawRotation3d().plus(new Rotation3d(0,0,0)));
+            */
+        
+        
+        
         //TODO: CHECK IF YAW IN ROTATEBY METHOD SHOULD BE POSITIVE+ or NEGATIVE-.
         //TODO: Zeroing the gyro should make 0 always towards blue alliance. If red alliance controls will be inverted so we won't notice that
     }
