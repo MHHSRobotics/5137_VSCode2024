@@ -124,7 +124,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void aimAtSpeaker() {
-        double turnVelocity = turnController.calculate(getRadiansToTarget(),0);
+        double turnVelocity = getAllianceInvert()*turnController.calculate(getRadiansToTarget(),0);
         drive(new Translation2d(0,0),turnVelocity, true);
     }
 
@@ -188,4 +188,11 @@ public class Swerve extends SubsystemBase {
         swerveField.setRobotPose(swerve.getPose());
         SmartDashboard.putData("Swerve Field", swerveField);
     }
+    private double getAllianceInvert(){
+        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false)
+        {
+          return -1;
+        }
+        return 1;
+      }
 }

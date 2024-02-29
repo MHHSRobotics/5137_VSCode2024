@@ -28,7 +28,7 @@ public class LED extends SubsystemBase {
         leds.start();
         timer = new Timer();
         timer.restart();
-    }
+        }
 
     public void solidColor(Color color, int brightness) {
         for (int i = 0; i < length; i++) {
