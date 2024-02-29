@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.math3.util.MathUtils;
-import org.opencv.core.Mat;
 import org.photonvision.PhotonUtils;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -22,7 +21,6 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Distance;
@@ -124,19 +122,6 @@ public class Swerve extends SubsystemBase {
         swerve.getGyro().clearStickyFaults();
         swerveField = new Field2d();
         swerve.getPose();
-        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false)
-        {
-            for(int i = 0; i <4; i++)
-            {
-                swerve.getModules()[i].getDriveMotor().setInverted(true);
-            }
-        }
-        else{
-            for(int i = 0; i <4; i++)
-            {
-                swerve.getModules()[i].getDriveMotor().setInverted(false);
-            }
-        }
         
     }
 
@@ -180,22 +165,10 @@ public class Swerve extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         swerve.resetOdometry(pose);
-        //TODO: Check if zero gyro should be called here
       }
 
     public void zeroGyro() {
-    
-        
         swerve.zeroGyro();        
-        /* 
-            swerve.setGyroOffset(
-            swerve.getGyro().getRawRotation3d().plus(new Rotation3d(0,0,0)));
-            */
-        
-        
-        
-        //TODO: CHECK IF YAW IN ROTATEBY METHOD SHOULD BE POSITIVE+ or NEGATIVE-.
-        //TODO: Zeroing the gyro should make 0 always towards blue alliance. If red alliance controls will be inverted so we won't notice that
     }
 
     public ChassisSpeeds getRobotVelocity() {
@@ -267,6 +240,20 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putString("SwervePose", swerve.getPose().toString());
         SmartDashboard.putData("Auto Selection", autoChooser);
         updateSwerveField();
+        motorInvert();
+    }
+
+    public void motorInvert(){
+        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false){
+            for(int i = 0; i <4; i++){
+                swerve.getModules()[i].getDriveMotor().setInverted(true);
+            }
+        }
+        else{
+            for(int i = 0; i <4; i++){
+                swerve.getModules()[i].getDriveMotor().setInverted(false);
+            }
+        }
     }
 
     public void updateSwerveField(){
