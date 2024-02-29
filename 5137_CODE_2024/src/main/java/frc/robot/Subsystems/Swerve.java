@@ -241,6 +241,7 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putData("Auto Selection", autoChooser);
         updateSwerveField();
         motorInvert();
+        //TODO: Check if you can periodicially call invert
     }
 
     public void motorInvert(){
