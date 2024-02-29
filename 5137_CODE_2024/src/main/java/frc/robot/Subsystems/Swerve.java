@@ -125,6 +125,7 @@ public class Swerve extends SubsystemBase {
 
     public void aimAtSpeaker() {
         double turnVelocity = getAllianceInvert()*turnController.calculate(getRadiansToTarget(),0);
+        //TODO: Check if getAllianceInvert is needed here
         drive(new Translation2d(0,0),turnVelocity, true);
     }
 
@@ -140,7 +141,6 @@ public class Swerve extends SubsystemBase {
             targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d();
         }
         double radiansToPose = MathUtils.normalizeAngle(PhotonUtils.getYawToPose(swerve.getPose(), targetPose).rotateBy(new Rotation2d(Math.PI)).getRadians(),0);
-        //TODO: Check if inverting motors screwed this control up
         return radiansToPose;
     }
 
