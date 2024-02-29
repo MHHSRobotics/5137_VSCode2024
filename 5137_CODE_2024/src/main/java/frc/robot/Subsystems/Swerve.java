@@ -3,10 +3,6 @@ package frc.robot.Subsystems;
 import frc.robot.Constants.Swerve_Constants;
 import frc.robot.Constants.Vision_Constants;
 
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Volts;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,23 +19,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.units.Distance;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.MutableMeasure;
-import static edu.wpi.first.units.MutableMeasure.mutable;
-import edu.wpi.first.units.Velocity;
-import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import swervelib.SwerveDrive;
-import swervelib.motors.SwerveMotor;
 import swervelib.parser.SwerveParser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -55,44 +41,9 @@ public class Swerve extends SubsystemBase {
     private  SendableChooser<Command> autoChooser;
     private Field2d swerveField;
 
-
     private AprilTagFieldLayout aprilTagFieldLayout;
     private PIDController turnController;
     private PIDController driveController;
-    
-    private Timer timer;
-
-    private SwerveMotor leftFrontMotor;
-    private SwerveMotor rightFrontMotor;
-    private SwerveMotor leftBackMotor;
-    private SwerveMotor rightBackMotor;
-
-    private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
-    private final MutableMeasure<Distance> m_distance = mutable(Meters.of(0));
-    private final MutableMeasure<Velocity<Distance>> m_velocity = mutable(MetersPerSecond.of(0));
-
-    SysIdRoutine routine = new SysIdRoutine(
-        new SysIdRoutine.Config(),
-        new SysIdRoutine.Mechanism(
-            (Measure<Voltage> volts) -> {
-                setVoltage(volts.in(Volts));
-            },
-            log -> {
-                log.motor("swerve-left")
-                .voltage(
-                    m_appliedVoltage.mut_replace(
-                        RobotController.getBatteryVoltage()*leftFrontMotor.getAppliedOutput(), Volts))
-                        .linearPosition(m_distance.mut_replace(leftFrontMotor.getPosition(), Meters))
-                        .linearVelocity(m_velocity.mut_replace(leftFrontMotor.getVelocity(), MetersPerSecond));
-                log.motor("swerve-right")
-                .voltage(
-                    m_appliedVoltage.mut_replace(
-                        RobotController.getBatteryVoltage()*-rightFrontMotor.getAppliedOutput(), Volts))
-                        .linearPosition(m_distance.mut_replace(rightFrontMotor.getPosition(), Meters))
-                        .linearVelocity(m_velocity.mut_replace(rightFrontMotor.getVelocity(), MetersPerSecond));
-            },
-            this
-        ));
 
     public Swerve(File directory) {
         turnController = new PIDController(Swerve_Constants.turnKP, Swerve_Constants.turnKI, Swerve_Constants.turnKD);
@@ -111,13 +62,7 @@ public class Swerve extends SubsystemBase {
         } catch (IOException e) {
           e.printStackTrace();
         }
-        
-        leftFrontMotor = swerve.getModules()[0].getDriveMotor();
-        rightFrontMotor = swerve.getModules()[1].getDriveMotor();
-        leftBackMotor = swerve.getModules()[2].getDriveMotor();
-        rightBackMotor = swerve.getModules()[3].getDriveMotor();
-        timer = new Timer();
-        timer.reset();  
+
         swerve.getGyro().factoryDefault();
         swerve.getGyro().clearStickyFaults();
         swerveField = new Field2d();
@@ -268,22 +213,5 @@ public class Swerve extends SubsystemBase {
         swerveField.getObject("path").setPoses(poses); //Displays selected autopath on field2d
         swerveField.setRobotPose(swerve.getPose());
         SmartDashboard.putData("Swerve Field", swerveField);
-    }
-    
-     public Command sysIdQuasisttatic(SysIdRoutine.Direction direction) {
-        timer.restart();
-        return routine.quasistatic(direction);
-    }
-
-    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-        timer.restart();
-        return routine.dynamic(direction);
-    }
-
-    public void setVoltage(double volts){
-        leftFrontMotor.setVoltage(volts);
-        rightFrontMotor.setVoltage(-volts);
-        leftBackMotor.setVoltage(volts);
-        rightBackMotor.setVoltage(-volts);
     }
 }

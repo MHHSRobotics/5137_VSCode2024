@@ -109,20 +109,6 @@ public class RobotContainer {
 
     //Swerve Bindings
 
-    /*
-    driver.x()
-    .onTrue(swerve.sysIdQuasisttatic(Direction.kForward));
-
-    driver.y()
-    .onTrue(swerve.sysIdQuasisttatic(Direction.kReverse));
-
-    driver.a()
-    .onTrue(swerve.sysIdDynamic(Direction.kForward));
-
-    driver.b()
-    .onTrue(swerve.sysIdDynamic(Direction.kReverse));*/
-    
-    
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
       () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
@@ -136,14 +122,11 @@ public class RobotContainer {
     driver.y()
     .onTrue(swerve_Commands.zeroGyro());
     
-    
-
     // Arm Bindings
 
     arm.setDefaultCommand(arm_Commands.manualMove(() -> -operator.getLeftY()));
 
     operator.triangle()
-
     .onTrue(
       new ParallelCommandGroup(
         arm_Commands.moveToIntake(),
@@ -189,7 +172,6 @@ public class RobotContainer {
     );
 
     operator.circle()
-
     .onTrue(
       new SequentialCommandGroup(
         arm_Commands.moveToAmp(),
@@ -200,7 +182,6 @@ public class RobotContainer {
         )
       )
     )
-
     .onFalse(
       new ParallelCommandGroup(
         shooter_Commands.stop(),
@@ -209,7 +190,7 @@ public class RobotContainer {
       )
     );
 
-    // Intake Bindings
+    // Intake Bindings & Stop Command
 
     operator.R2()
     .onTrue(intake_Commands.intakeForward())
@@ -227,6 +208,8 @@ public class RobotContainer {
     })
     .onTrue(intake_Commands.stop());
 
+    //Swerve Invert
+
     new Trigger(new BooleanSupplier() {
       @Override
       public boolean getAsBoolean() {
@@ -234,22 +217,17 @@ public class RobotContainer {
       }
     })
     .onTrue(new InstantCommand(() -> swerve.motorInvert()));
-
-
-    
   }
 
   public Command getAutonomousCommand() {
     return swerve_Commands.runAuto();
   }
   
-  private double getAllianceInvert()
-  {
+  private double getAllianceInvert(){
     if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false)
     {
       return -1;
     }
     return 1;
   }
-
 }
