@@ -122,6 +122,7 @@ public class Swerve extends SubsystemBase {
         swerve.getGyro().clearStickyFaults();
         swerveField = new Field2d();
         swerve.getPose();
+        motorInvert();
         
     }
 
@@ -240,8 +241,6 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putString("SwervePose", swerve.getPose().toString());
         SmartDashboard.putData("Auto Selection", autoChooser);
         updateSwerveField();
-        motorInvert();
-        //TODO: Check if you can periodicially call invert
     }
 
     public void motorInvert(){
