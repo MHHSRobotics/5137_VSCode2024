@@ -16,6 +16,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -77,21 +78,20 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("shoot",
       new SequentialCommandGroup(
-        shooter_Commands.shootSpeaker(),
-        new WaitCommand(1),
         new ParallelCommandGroup(
           arm_Commands.moveToSpeaker(
             new DoubleSupplier() {
               @Override
-                public double getAsDouble() {
+              public double getAsDouble() {
                 return swerve.getDistanceToTarget();
               }
             }
-          )
+          ),
+          shooter_Commands.shootSpeaker()
         ),
-        new WaitCommand(1),
+        new WaitCommand(2),
         intake_Commands.intakeForward(),
-        new WaitCommand(1.5),
+        new WaitCommand(1),
         new ParallelCommandGroup(
           shooter_Commands.stop(),
           arm_Commands.moveToDefault(),
@@ -99,6 +99,8 @@ public class RobotContainer {
         )
       )
     );
+
+    swerve.setUpPathPlanner();
 
     configureBindings();
   }
@@ -119,6 +121,9 @@ public class RobotContainer {
 
     driver.y()
     .onTrue(swerve_Commands.zeroGyro());
+
+    driver.b()
+    .onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
     
     // Arm Bindings
 
@@ -215,7 +220,24 @@ public class RobotContainer {
       }
     })
     .onTrue(new InstantCommand(() -> swerve.motorInvert()));
+
+    new Trigger(new BooleanSupplier() {
+      @Override
+      public boolean getAsBoolean() {
+        return (DriverStation.getAlliance().isPresent() ? true : false);
+      }
+    })
+    .onTrue(new InstantCommand(() -> swerve.motorInvert()));
+
+    new Trigger(new BooleanSupplier() {
+      @Override
+      public boolean getAsBoolean() {
+        return (DriverStation.isEnabled());
+      }
+    })
+    .onTrue(new InstantCommand(() -> swerve.motorInvert()));
   }
+  
 
   public Command getAutonomousCommand() {
     return swerve_Commands.runAuto();
@@ -227,5 +249,9 @@ public class RobotContainer {
       return -1;
     }
     return 1;
+  }
+
+  public void autonomousInit() {
+    swerve.autonomousInit();
   }
 }

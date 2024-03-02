@@ -63,7 +63,6 @@ public class Swerve extends SubsystemBase {
         driveController.setTolerance(0.05, 0.01);
         swerveField = new Field2d();
         motorInvert();
-        setUpPathPlanner();
     }
 
     public void setUpPathPlanner() {
@@ -131,7 +130,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void aimAtSpeaker() {
-        double turnVelocity = getAllianceInvert()*turnController.calculate(getRadiansToTarget(),0);
+        double turnVelocity = turnController.calculate(getRadiansToTarget(),0);
         //TODO: Check if getAllianceInvert is needed here
         drive(new Translation2d(0,0),turnVelocity, true);
     }
@@ -166,7 +165,11 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putString("SwervePose", swerve.getPose().toString());
         SmartDashboard.putData("Auto Selection", autoChooser);
-        updateSwerveField();
+        motorInvert();
+    }
+
+    public void autonomousInit(){
+        motorInvert();
     }
 
     public void motorInvert(){
