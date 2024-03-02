@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7174443101723887,
-      "y": 6.68286694361059
+      "x": 0.6771395131099415,
+      "y": 6.682632174802691
     },
     "rotation": -120.28449842511881
   },
@@ -14,12 +14,12 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shoot_Delay"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "High",
   "choreoAuto": false
 }

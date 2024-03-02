@@ -62,19 +62,14 @@ public class RobotContainer {
     led_Commands = new LED_Commands(led);
     led_Commands.getClass(); //Extra line to remove unused object errors
 
-    NamedCommands.registerCommand("intakeOn", 
+    NamedCommands.registerCommand("intake", 
       new ParallelCommandGroup(
         arm_Commands.moveToIntake(),
         intake_Commands.intakeForward()
       )
     );
-    
-    NamedCommands.registerCommand("intakeOff", 
-        new ParallelCommandGroup(
-          arm_Commands.moveToDefault(),
-          intake_Commands.stop()
-        )
-      );
+
+    NamedCommands.registerCommand("default", arm_Commands.moveToLowered());
 
     NamedCommands.registerCommand("shoot",
       new SequentialCommandGroup(
@@ -89,12 +84,34 @@ public class RobotContainer {
           ),
           shooter_Commands.shootSpeaker()
         ),
+        new WaitCommand(1),
+        intake_Commands.intakeForward(),
+        new WaitCommand(0.5),
+        new ParallelCommandGroup(
+          shooter_Commands.rest(),
+          intake_Commands.stop()
+        )
+      )
+    );
+
+    NamedCommands.registerCommand("shoot_Delay",
+      new SequentialCommandGroup(
+        new ParallelCommandGroup(
+          arm_Commands.moveToSpeaker(
+            new DoubleSupplier() {
+              @Override
+              public double getAsDouble() {
+                return swerve.getDistanceToTarget();
+              }
+            }
+          ),
+          shooter_Commands.shootSpeaker()
+        ),
         new WaitCommand(2),
         intake_Commands.intakeForward(),
-        new WaitCommand(1),
+        new WaitCommand(0.5),
         new ParallelCommandGroup(
-          shooter_Commands.stop(),
-          arm_Commands.moveToDefault(),
+          shooter_Commands.rest(),
           intake_Commands.stop()
         )
       )

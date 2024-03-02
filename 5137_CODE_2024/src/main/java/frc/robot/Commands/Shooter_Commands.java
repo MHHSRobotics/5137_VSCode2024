@@ -20,6 +20,10 @@ public class Shooter_Commands {
         return new InstantCommand(() -> shooter.shoot(Shooter_Constants.ampShooterSpeed), shooter);
     }
 
+    public InstantCommand rest() {
+        return new InstantCommand(() -> shooter.shoot(Shooter_Constants.restSpeed), shooter);
+    }
+
     public InstantCommand stop() {
         return new InstantCommand(() -> shooter.stop(), shooter);
     }

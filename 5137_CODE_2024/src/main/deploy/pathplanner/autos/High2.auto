@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.6625156966069848,
+      "y": 6.715633705250393
+    },
+    "rotation": 59.66102349053188
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,42 +14,23 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shoot_Delay"
           }
         },
         {
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "middleNote"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
+                  "pathName": "H-1H"
                 }
               }
             ]
@@ -58,6 +45,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "High",
   "choreoAuto": false
 }
