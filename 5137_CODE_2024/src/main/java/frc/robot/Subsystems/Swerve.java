@@ -18,18 +18,21 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPoint;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -86,7 +89,9 @@ public class Swerve extends SubsystemBase {
                 return false;
             },
             this);
-            autoChooser = AutoBuilder.buildAutoChooser("middleTop");
+            autoChooser = AutoBuilder.buildAutoChooser("Mid2");
+
+        SmartDashboard.putData("Auto Selection", autoChooser);
     }
 
     public void drive(Translation2d translation2d, double rotationSpeed, boolean fieldRelative) {
@@ -95,14 +100,20 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command getAuto() {
-        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false)
-        {
-            swerve.resetOdometry(PathPlannerAuto.getPathGroupFromAutoFile(autoChooser.getSelected().getName()).get(0).flipPath().getPreviewStartingHolonomicPose());
-        }
-        else{
-            swerve.resetOdometry(PathPlannerAuto.getPathGroupFromAutoFile(autoChooser.getSelected().getName()).get(0).getPreviewStartingHolonomicPose());
-        }
-        return autoChooser.getSelected();
+            if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false)
+            {
+                swerve.resetOdometry(flipPose(PathPlannerAuto.getStaringPoseFromAutoFile(autoChooser.getSelected().getName())));
+            }
+            else{
+                swerve.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(autoChooser.getSelected().getName()));
+            }
+
+            return autoChooser.getSelected();
+    }
+    
+    private double fieldLength = Units.inchesToMeters(651.25);
+    public Pose2d flipPose(Pose2d pose) {
+        return new Pose2d(fieldLength - pose.getX(), pose.getY(), new Rotation2d(Math.PI).minus(pose.getRotation()));
     }
 
     public void setChassisSpeeds(ChassisSpeeds velocity) {
@@ -164,8 +175,6 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putString("SwervePose", swerve.getPose().toString());
-        SmartDashboard.putData("Auto Selection", autoChooser);
-        motorInvert();
     }
 
     public void autonomousInit(){

@@ -139,6 +139,10 @@ public class RobotContainer {
     driver.y()
     .onTrue(swerve_Commands.zeroGyro());
 
+    driver.x()
+    .onTrue(arm_Commands.moveToLowered())
+    .onFalse(arm_Commands.moveToDefault());
+
     driver.b()
     .onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
     

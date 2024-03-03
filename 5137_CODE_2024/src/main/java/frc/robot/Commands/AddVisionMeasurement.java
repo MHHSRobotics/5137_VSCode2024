@@ -28,15 +28,20 @@ public class AddVisionMeasurement extends Command {
   
   @Override
   public void execute() {
-    Optional<EstimatedRobotPose> ar1Pose = vision.getEstimatedAR1Pose(swerve.getPose());
     Optional<EstimatedRobotPose> ar2Pose = vision.getEstimatedAR2Pose(swerve.getPose());
 
+ 
+     /* 
+    Optional<EstimatedRobotPose> ar1Pose = vision.getEstimatedAR1Pose(swerve.getPose());
     if(ar1Pose.isPresent())
     {
       Pose2d pose = ar1Pose.get().estimatedPose.toPose2d();
       double timestamp = ar1Pose.get().timestampSeconds;
       swerve.addVisionMeasurement(pose, timestamp);
     }
+
+    */
+  
     if(ar2Pose.isPresent())
     {
       Pose2d pose = ar2Pose.get().estimatedPose.toPose2d();

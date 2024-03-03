@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    SmartDashboard.updateValues();
+    //SmartDashboard.updateValues();
     CommandScheduler.getInstance().run();
   }
 

@@ -24,10 +24,13 @@ public class Vision extends SubsystemBase{
     
   private AprilTagFieldLayout aprilTagFieldLayout;
 
+  /* 
     private final PhotonCamera ar1Camera = new PhotonCamera("AR1");
+    */
+
     private final PhotonCamera ar2Camera = new PhotonCamera("AR2");
 
-    private PhotonPoseEstimator ar1PoseEstimator;
+    //private PhotonPoseEstimator ar1PoseEstimator;
     private PhotonPoseEstimator ar2PoseEstimator;
 
     public Vision(){
@@ -36,14 +39,18 @@ public class Vision extends SubsystemBase{
         } 
         catch (IOException e) {
         }
+        /* 
         ar1PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, ar1Camera, Vision_Constants.robotToAR1);
+        */
         ar2PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, ar2Camera, Vision_Constants.robotToAR2);
     }
 
+    /* 
      public Optional<EstimatedRobotPose> getEstimatedAR1Pose(Pose2d referencePose) {
       ar1PoseEstimator.setReferencePose(referencePose);
       return ar1PoseEstimator.update();
     }
+    */
 
     public Optional<EstimatedRobotPose> getEstimatedAR2Pose(Pose2d referencePose) {      
       ar2PoseEstimator.setReferencePose(referencePose);
