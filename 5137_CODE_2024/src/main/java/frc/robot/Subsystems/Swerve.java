@@ -25,14 +25,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.PathPoint;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -142,7 +140,6 @@ public class Swerve extends SubsystemBase {
 
     public void aimAtSpeaker() {
         double turnVelocity = turnController.calculate(getRadiansToTarget(),0);
-        //TODO: Check if getAllianceInvert is needed here
         drive(new Translation2d(0,0),turnVelocity, true);
     }
 
@@ -207,11 +204,4 @@ public class Swerve extends SubsystemBase {
         swerveField.setRobotPose(swerve.getPose());
         SmartDashboard.putData("Swerve Field", swerveField);
     }
-    private double getAllianceInvert(){
-        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false)
-        {
-          return -1;
-        }
-        return 1;
-      }
 }
