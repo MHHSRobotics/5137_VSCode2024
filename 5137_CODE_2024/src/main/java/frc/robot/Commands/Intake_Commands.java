@@ -18,7 +18,7 @@ public class Intake_Commands {
     }
     
     public InstantCommand stop() {
-        return new InstantCommand(() -> intake.stop(), intake);
+        return new InstantCommand(() -> intake.stop());
     }
     
     public InstantCommand intakeForward() {

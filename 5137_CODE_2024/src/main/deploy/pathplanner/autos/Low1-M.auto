@@ -5,7 +5,7 @@
       "x": 0.6856427795446332,
       "y": 4.42334502413814
     },
-    "rotation": -58.141220232983706
+    "rotation": -61.68841042312293
   },
   "command": {
     "type": "sequential",
@@ -15,6 +15,18 @@
           "type": "named",
           "data": {
             "name": "shoot_Delay"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L-ML"
           }
         }
       ]

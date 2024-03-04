@@ -15,8 +15,10 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -63,10 +65,10 @@ public class RobotContainer {
     led_Commands.getClass(); //Extra line to remove unused object errors
 
     NamedCommands.registerCommand("intake", 
-      new ParallelCommandGroup(
-        arm_Commands.moveToIntake(),
-        intake_Commands.intakeForward()
-      )
+        new ParallelCommandGroup(
+          arm_Commands.moveToIntake(),
+          intake_Commands.intakeForward()
+        )
     );
 
     NamedCommands.registerCommand("default", arm_Commands.moveToLowered());
@@ -139,7 +141,7 @@ public class RobotContainer {
     driver.y()
     .onTrue(swerve_Commands.zeroGyro());
 
-    driver.x()
+    driver.rightBumper()
     .onTrue(arm_Commands.moveToLowered())
     .onFalse(arm_Commands.moveToDefault());
 
@@ -230,7 +232,12 @@ public class RobotContainer {
         return intake.objectInRange();
       }
     })
-    .onTrue(intake_Commands.stop());
+    .onTrue(
+      new ParallelCommandGroup(
+        intake_Commands.stop(),
+        led_Commands.greenLedsOn()
+      ))
+    .onFalse(led_Commands.greenLedsOff());
 
     //Swerve Invert
 

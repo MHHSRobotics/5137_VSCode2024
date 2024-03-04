@@ -1,5 +1,6 @@
 package frc.robot.Commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Subsystems.LED;
 
 public class LED_Commands {
@@ -8,6 +9,13 @@ public class LED_Commands {
    
     public LED_Commands (LED leds) {
         this.leds = leds;
-        this.leds.getName(); //Extra line to remove unused object error
+    }
+
+    public InstantCommand greenLedsOn() {
+        return new InstantCommand(() -> leds.setObjectIn(true), leds);
+    }
+
+    public InstantCommand greenLedsOff() {
+        return new InstantCommand(() -> leds.setObjectIn(false), leds);
     }
 }
