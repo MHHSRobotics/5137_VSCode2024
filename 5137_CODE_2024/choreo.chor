@@ -1,5 +1,5 @@
 {
-    "version": "v0.2.2",
+    "version": "v0.3",
     "robotConfiguration": {
         "mass": 62.72782052928451,
         "rotationalInertia": 5.093413234479845,
@@ -117,6 +117,7 @@
                     "timestamp": 0.7300425648573458
                 }
             ],
+            "trajectoryWaypoints": [],
             "constraints": [
                 {
                     "scope": [
@@ -141,7 +142,9 @@
             "usesControlIntervalGuessing": true,
             "defaultControlIntervalCount": 40,
             "usesDefaultFieldObstacles": true,
-            "circleObstacles": []
+            "circleObstacles": [],
+            "eventMarkers": [],
+            "isTrajectoryStale": true
         },
         "1M-1L": {
             "waypoints": [
@@ -652,6 +655,7 @@
                     "timestamp": 2.040843756774334
                 }
             ],
+            "trajectoryWaypoints": [],
             "constraints": [
                 {
                     "scope": [
@@ -664,31 +668,14 @@
                         "last"
                     ],
                     "type": "StopPoint"
-                },
-                {
-                    "scope": [
-                        2
-                    ],
-                    "type": "WptZeroVelocity"
-                },
-                {
-                    "scope": [
-                        2
-                    ],
-                    "type": "WptVelocityDirection",
-                    "direction": 0
-                },
-                {
-                    "scope": [
-                        2
-                    ],
-                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
             "defaultControlIntervalCount": 40,
             "usesDefaultFieldObstacles": true,
-            "circleObstacles": []
+            "circleObstacles": [],
+            "eventMarkers": [],
+            "isTrajectoryStale": true
         },
         "1M-1H": {
             "waypoints": [
@@ -1190,6 +1177,7 @@
                     "timestamp": 1.9645193379318306
                 }
             ],
+            "trajectoryWaypoints": [],
             "constraints": [
                 {
                     "scope": [
@@ -1207,7 +1195,9 @@
             "usesControlIntervalGuessing": true,
             "defaultControlIntervalCount": 40,
             "usesDefaultFieldObstacles": true,
-            "circleObstacles": []
+            "circleObstacles": [],
+            "eventMarkers": [],
+            "isTrajectoryStale": true
         }
     },
     "splitTrajectoriesAtStopPoints": false,
