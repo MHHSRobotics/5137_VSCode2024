@@ -32,7 +32,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot_Delay"
+            "name": "shoot"
           }
         },
         {
@@ -50,7 +50,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot_Delay"
+            "name": "shoot"
           }
         }
       ]
