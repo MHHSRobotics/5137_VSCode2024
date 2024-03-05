@@ -5,6 +5,8 @@ import frc.robot.Constants.Swerve_Constants;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +32,10 @@ import swervelib.parser.SwerveParser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.RotationTarget;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -98,15 +103,13 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command getAuto() {
-            if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false)
-            {
-                swerve.resetOdometry(flipPose(PathPlannerAuto.getStaringPoseFromAutoFile(autoChooser.getSelected().getName())));
-            }
-            else{
-                swerve.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(autoChooser.getSelected().getName()));
-            }
-
-            return autoChooser.getSelected();
+        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false){
+            swerve.resetOdometry(flipPose(PathPlannerAuto.getStaringPoseFromAutoFile(autoChooser.getSelected().getName())));
+        }
+        else{
+            swerve.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(autoChooser.getSelected().getName()));
+        }
+        return autoChooser.getSelected();
     }
     
     private double fieldLength = Units.inchesToMeters(651.25);
@@ -116,6 +119,30 @@ public class Swerve extends SubsystemBase {
 
     public void setChassisSpeeds(ChassisSpeeds velocity) {
         swerve.setChassisSpeeds(velocity);
+    }
+
+    public Command driveToAmp()
+    {
+        Pose2d targetPose = new Pose2d(1.83, 7.68, Rotation2d.fromDegrees(-90));
+        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false){
+            targetPose = flipPose(targetPose);
+        }
+        PathConstraints constraints = new PathConstraints(3.0, 3.0, Units.degreesToRadians(360), Units.degreesToRadians(720));
+        Command pathfindingCommand = AutoBuilder.pathfindToPose(targetPose,constraints,0.0, 0.1);
+        pathfindingCommand.addRequirements(this);
+        return pathfindingCommand;
+    }
+
+    public Command driveToTrap()
+    {
+        Pose2d targetPose = new Pose2d(4.42, 4.83, Rotation2d.fromDegrees(120));
+        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false){
+            targetPose = flipPose(targetPose);
+        }
+        PathConstraints constraints = new PathConstraints(3.0, 3.0, Units.degreesToRadians(360), Units.degreesToRadians(720));
+        Command pathfindingCommand = AutoBuilder.pathfindToPose(targetPose,constraints,0.0, 0.1);
+        pathfindingCommand.addRequirements(this);
+        return pathfindingCommand;
     }
 
     public void resetOdometry(Pose2d pose) {
@@ -172,6 +199,8 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putString("SwervePose", swerve.getPose().toString());
+        swerveField.setRobotPose(swerve.getPose());
+        SmartDashboard.putData("Swerve Field", swerveField);
     }
 
     public void autonomousInit(){

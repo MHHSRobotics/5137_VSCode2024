@@ -216,6 +216,8 @@ public class RobotContainer {
 
     // Intake Bindings & Stop Command
 
+    //operator.R1().onTrue(swerve_Commands.driveToAmp());
+    //operator.L1().onTrue(swerve_Commands.driveToTrap());
     operator.R2()
     .onTrue(intake_Commands.intakeForward())
     .onFalse(intake_Commands.stop());

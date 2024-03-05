@@ -41,4 +41,13 @@ public class Swerve_Commands {
         return swerve.getAuto();
     }
 
+    public Command driveToAmp()
+    {
+        return swerve.driveToAmp();
+    }
+    public Command driveToTrap()
+    {
+        return swerve.driveToTrap();
+    }
+
 }
