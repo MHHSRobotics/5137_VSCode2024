@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
 
-  private CommandXboxController driver;
+  private CommandPS4Controller driver;
   private CommandPS4Controller operator;
 
   private Swerve swerve;
@@ -44,7 +44,7 @@ public class RobotContainer {
   private LED_Commands led_Commands;
 
   public RobotContainer() {
-    driver = new CommandXboxController(0);
+    driver = new CommandPS4Controller(0);
     operator = new CommandPS4Controller(1);
 
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(),"swerve"));
@@ -130,20 +130,16 @@ public class RobotContainer {
       () -> MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
       () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> MathUtil.applyDeadband(getAllianceInvert()*driver.getRightX(), Swerve_Constants.RX_Deadband),
-      () -> !driver.leftBumper().getAsBoolean()
+      () -> !driver.R2().getAsBoolean()
     ));
 
-    driver.a()
+    driver.cross()
     .onTrue(swerve_Commands.aimAtSpeaker());
 
-    driver.y()
+    driver.triangle()
     .onTrue(swerve_Commands.zeroGyro());
 
-    driver.rightBumper()
-    .onTrue(arm_Commands.moveToLowered())
-    .onFalse(arm_Commands.moveToDefault());
-
-    driver.b()
+    driver.touchpad()
     .onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
     
     // Arm Bindings
@@ -200,17 +196,13 @@ public class RobotContainer {
       new SequentialCommandGroup(
         arm_Commands.moveToAmp(),
         new WaitCommand(1),
-        new ParallelCommandGroup(
-          shooter_Commands.shootIntake(),
-          intake_Commands.intakeForward()
-        )
+        shooter_Commands.shootIntake()
       )
     )
     .onFalse(
       new ParallelCommandGroup(
         shooter_Commands.stop(),
-        arm_Commands.moveToDefault(),
-        intake_Commands.stop()
+        arm_Commands.moveToDefault()
       )
     );
 
