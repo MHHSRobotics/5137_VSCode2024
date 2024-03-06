@@ -194,7 +194,7 @@ public class Swerve extends SubsystemBase {
         } else {
             targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d();
         }
-        double radiansToPose = MathUtils.normalizeAngle(PhotonUtils.getYawToPose(swerve.getPose(), targetPose).rotateBy(new Rotation2d(Math.PI)).getRadians(),0);
+        double radiansToPose = MathUtils.normalizeAngle(PhotonUtils.getYawToPose(swerve.getPose(), targetPose).getRadians(),0);
         return radiansToPose;
     }
 
