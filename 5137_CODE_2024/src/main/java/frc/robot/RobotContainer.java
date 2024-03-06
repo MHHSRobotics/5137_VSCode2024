@@ -160,7 +160,7 @@ public class RobotContainer {
     
     // Arm Bindings
 
-    arm.setDefaultCommand(arm_Commands.manualMove(() -> -operator.getLeftY()));
+    arm.setDefaultCommand(arm_Commands.manualMove(() -> -MathUtil.applyDeadband(operator.getLeftY(), 0.1)));
 
     // Shooting Bindings
 

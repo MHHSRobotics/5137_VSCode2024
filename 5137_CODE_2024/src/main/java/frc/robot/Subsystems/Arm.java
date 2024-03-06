@@ -119,7 +119,7 @@ public class Arm extends ProfiledPIDSubsystem {
         encoder.setDistancePerRotation(-2*Math.PI);
         encoder.setPositionOffset(Arm_Constants.encoderOffset);
 
-        align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 4.5, 30.0);
+        align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 4.5, Arm_Constants.defaultPosition);
 
         manualControlChoice = new SendableChooser<Boolean>();
         manualControlChoice.addOption("Enabled", true);
@@ -151,15 +151,18 @@ public class Arm extends ProfiledPIDSubsystem {
 
     @Override
     public double getMeasurement() {
-            double unfilteredAngle = encoder.getDistance();
-            double normalizedAngle = MathUtils.normalizeAngle(unfilteredAngle, Arm_Constants.normalRangeCenter);
-            return normalizedAngle;
-        }
+        double unfilteredAngle = encoder.getDistance();
+        double normalizedAngle = MathUtils.normalizeAngle(unfilteredAngle, Arm_Constants.normalRangeCenter);
+        return normalizedAngle;
+    }
 
     public void runManual(double output) {
-        if (!encoder.isConnected() || manualControl) {
-            leftMotor.set(1.0*output);
-            rightMotor.set(1.0*output);
+        if (output > 0.1) {
+            manualControl = true;
+            leftMotor.set(0.3*output);
+            rightMotor.set(0.3*output);
+        } else {
+            manualControl = false;
         }
     }
 
@@ -176,10 +179,6 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     private void updateDashboard() {
-        if (manualControl && !manualControlChoice.getSelected()) {
-            setGoal(Arm_Constants.defaultPosition);
-        }
-        manualControl = manualControlChoice.getSelected();
         SmartDashboard.putBoolean("Encoder", encoder.isConnected());
         SmartDashboard.putNumber("Arm Position", Math.toDegrees(this.getMeasurement()));
         SmartDashboard.putNumber("Arm Goal", Math.toDegrees(this.getGoal()));
@@ -188,8 +187,12 @@ public class Arm extends ProfiledPIDSubsystem {
     @Override
     public void periodic() {
         updateDashboard();
-        if (encoder.isConnected() && !manualControl) {
-            useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
+        if (encoder.isConnected()) {
+            if (manualControl) {
+                this.setGoal(this.getMeasurement());
+            } else {
+                useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
+            }
         }
     }
 
