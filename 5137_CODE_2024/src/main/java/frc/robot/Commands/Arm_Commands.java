@@ -36,7 +36,7 @@ public class Arm_Commands {
         return new InstantCommand(() -> arm.setGoal(Arm_Constants.ampPosition), arm);
     }
 
-    public InstantCommand moveToLowered() {
-        return new InstantCommand(() -> arm.setGoal(Arm_Constants.loweredPosition), arm);
+    public InstantCommand moveToTrap() {
+        return new InstantCommand(() -> arm.setGoal(Arm_Constants.trapPosition), arm);
     }
 }

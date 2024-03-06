@@ -69,7 +69,7 @@ public class RobotContainer {
         )
     );
 
-    NamedCommands.registerCommand("default", arm_Commands.moveToLowered());
+    NamedCommands.registerCommand("default", arm_Commands.moveToTrap());
 
     NamedCommands.registerCommand("shoot",
       new SequentialCommandGroup(
@@ -144,8 +144,16 @@ public class RobotContainer {
     })
     .onTrue(swerve_Commands.alignToSpeaker(false));
 
+    driver.circle()
+    .onTrue(swerve_Commands.driveToAmp());
+
+    driver.square()
+    .onTrue(swerve_Commands.driveToTrap());
+
     driver.triangle()
     .onTrue(swerve_Commands.zeroGyro());
+
+    // Other Bindings
 
     driver.touchpad()
     .onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
@@ -154,43 +162,25 @@ public class RobotContainer {
 
     arm.setDefaultCommand(arm_Commands.manualMove(() -> -operator.getLeftY()));
 
-    operator.triangle()
-    .onTrue(
-      new ParallelCommandGroup(
-        arm_Commands.moveToIntake(),
-        intake_Commands.intakeForward()
-      )
-    )
-    
-    .onFalse(new ParallelCommandGroup(
-        arm_Commands.moveToDefault(),
-        intake_Commands.stop()
-      )
-    );
-
     // Shooting Bindings
 
     operator.cross()
-
     .onTrue(
       new SequentialCommandGroup(
         shooter_Commands.shootSpeaker(),
         new WaitCommand(1),
-        new ParallelCommandGroup(
-          arm_Commands.moveToSpeaker(
-            new DoubleSupplier() {
-              @Override
-                public double getAsDouble() {
-                return swerve.getDistanceToTarget();
-              }
+        arm_Commands.moveToSpeaker(
+          new DoubleSupplier() {
+            @Override
+              public double getAsDouble() {
+              return swerve.getDistanceToTarget();
             }
-          )
+          }
         ),
         new WaitCommand(1),
         intake_Commands.intakeForward()
       )
     )
-
     .onFalse(
       new ParallelCommandGroup(
         shooter_Commands.stop(),
@@ -214,10 +204,40 @@ public class RobotContainer {
       )
     );
 
+    operator.square()
+    .onTrue(
+      new SequentialCommandGroup(
+        new ParallelCommandGroup(
+        arm_Commands.moveToTrap(),
+        shooter_Commands.shootSpeaker()
+        ),
+        new WaitCommand(1),
+        intake_Commands.intakeForward()
+      )
+    )
+    .onFalse(
+      new ParallelCommandGroup(
+        shooter_Commands.stop(),
+        arm_Commands.moveToDefault(),
+        intake_Commands.stop()
+      )
+    );
+
     // Intake Bindings & Stop Command
 
-    //operator.R1().onTrue(swerve_Commands.driveToAmp());
-    //operator.L1().onTrue(swerve_Commands.driveToTrap());
+    operator.triangle()
+    .onTrue(
+      new ParallelCommandGroup(
+        arm_Commands.moveToIntake(),
+        intake_Commands.intakeForward()
+      )
+    )
+    .onFalse(new ParallelCommandGroup(
+        arm_Commands.moveToDefault(),
+        intake_Commands.stop()
+      )
+    );
+
     operator.R2()
     .onTrue(intake_Commands.intakeForward())
     .onFalse(intake_Commands.stop());

@@ -5,7 +5,7 @@ public class Arm_Constants {
     // Positions
     public static final double intakePosition = Math.toRadians(-3.0);
     public static final double defaultPosition = Math.toRadians(30);
-    public static final double loweredPosition = Math.toRadians(10);
+    public static final double trapPosition = Math.toRadians(5);
     public static final double ampPosition = Math.toRadians(90);
 
     // Hardware IDS
