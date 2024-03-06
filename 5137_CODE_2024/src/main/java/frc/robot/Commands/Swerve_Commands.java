@@ -42,11 +42,11 @@ public class Swerve_Commands {
     }
 
     public Command driveToAmp() {
-        return swerve.driveToAmp();
+        return new InstantCommand(() -> swerve.driveToAmp());
     }
 
     public Command driveToTrap() {
-        return swerve.driveToTrap();
+        return new InstantCommand(() -> swerve.driveToTrap());
     }
 
 }

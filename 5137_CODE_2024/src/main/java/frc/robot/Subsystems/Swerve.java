@@ -103,7 +103,6 @@ public class Swerve extends SubsystemBase {
 
     public void drive(Translation2d translation2d, double rotationSpeed, boolean fieldRelative) {
         if (alignToSpeaker) {
-            System.out.println("hi");
             swerve.drive(translation2d, getSpeakerAimVelocity(), fieldRelative, true);
         } else {
            swerve.drive(translation2d, rotationSpeed, fieldRelative, true); 
@@ -129,28 +128,31 @@ public class Swerve extends SubsystemBase {
         swerve.setChassisSpeeds(velocity);
     }
 
-    public Command driveToAmp()
+    public void driveToAmp()
     {
         Pose2d targetPose = new Pose2d(1.83, 7.68, Rotation2d.fromDegrees(-90));
         if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false){
             targetPose = flipPose(targetPose);
         }
+        System.out.println(targetPose);
         PathConstraints constraints = new PathConstraints(3.0, 3.0, Units.degreesToRadians(360), Units.degreesToRadians(720));
         Command pathfindingCommand = AutoBuilder.pathfindToPose(targetPose,constraints,0.0, 0.1);
         pathfindingCommand.addRequirements(this);
-        return pathfindingCommand;
+        System.out.println(targetPose);
+        pathfindingCommand.schedule();;
     }
 
-    public Command driveToTrap()
+    public void driveToTrap()
     {
         Pose2d targetPose = new Pose2d(4.42, 4.83, Rotation2d.fromDegrees(120));
         if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false){
             targetPose = flipPose(targetPose);
         }
+        System.out.println(targetPose);
         PathConstraints constraints = new PathConstraints(3.0, 3.0, Units.degreesToRadians(360), Units.degreesToRadians(720));
         Command pathfindingCommand = AutoBuilder.pathfindToPose(targetPose,constraints,0.0, 0.1);
         pathfindingCommand.addRequirements(this);
-        return pathfindingCommand;
+        pathfindingCommand.schedule();
     }
 
     public void resetOdometry(Pose2d pose) {
