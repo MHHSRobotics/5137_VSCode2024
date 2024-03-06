@@ -50,6 +50,8 @@ public class Swerve extends SubsystemBase {
     private PIDController turnController;
     private PIDController driveController;
 
+    private boolean alignToSpeaker;
+
     public Swerve(File directory) {
         try {
             swerve = new SwerveParser(directory).createSwerveDrive(Swerve_Constants.maxVelocity);
@@ -69,6 +71,8 @@ public class Swerve extends SubsystemBase {
         driveController.setTolerance(0.05, 0.01);
         swerveField = new Field2d();
         motorInvert();
+
+        alignToSpeaker = false;
     }
 
     public void setUpPathPlanner() {
@@ -98,8 +102,12 @@ public class Swerve extends SubsystemBase {
     }
 
     public void drive(Translation2d translation2d, double rotationSpeed, boolean fieldRelative) {
-
-        swerve.drive(translation2d, rotationSpeed, fieldRelative, true);
+        if (alignToSpeaker) {
+            System.out.println("hi");
+            swerve.drive(translation2d, getSpeakerAimVelocity(), fieldRelative, true);
+        } else {
+           swerve.drive(translation2d, rotationSpeed, fieldRelative, true); 
+        }
     }
 
     public Command getAuto() {
@@ -165,9 +173,12 @@ public class Swerve extends SubsystemBase {
         swerve.addVisionMeasurement(pose, timestamp);
     }
 
-    public void aimAtSpeaker() {
-        double turnVelocity = turnController.calculate(getRadiansToTarget(),0);
-        drive(new Translation2d(0,0),turnVelocity, true);
+    public void setSpeakerAlign(boolean align) {
+        this.alignToSpeaker = align;
+    }
+
+    public double getSpeakerAimVelocity() {
+        return turnController.calculate(getRadiansToTarget(),0);
     }
 
     public boolean turnAligned() {

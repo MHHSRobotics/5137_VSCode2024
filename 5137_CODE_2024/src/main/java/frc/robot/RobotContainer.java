@@ -134,7 +134,15 @@ public class RobotContainer {
     ));
 
     driver.cross()
-    .onTrue(swerve_Commands.aimAtSpeaker());
+    .onTrue(swerve_Commands.alignToSpeaker(true));
+
+    new Trigger(new BooleanSupplier() {
+      @Override
+      public boolean getAsBoolean() {
+        return Math.abs(driver.getRightX()) > Swerve_Constants.RX_Deadband;
+      }
+    })
+    .onTrue(swerve_Commands.alignToSpeaker(false));
 
     driver.triangle()
     .onTrue(swerve_Commands.zeroGyro());

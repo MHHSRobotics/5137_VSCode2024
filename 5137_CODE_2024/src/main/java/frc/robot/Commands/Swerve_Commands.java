@@ -29,8 +29,8 @@ public class Swerve_Commands {
             swerve);
     }
 
-    public FunctionalCommand aimAtSpeaker() {
-        return new FunctionalCommand(() -> {}, () -> swerve.aimAtSpeaker(), (Boolean x) -> {}, () -> swerve.turnAligned(), swerve);
+    public InstantCommand alignToSpeaker(boolean align) {
+        return new InstantCommand(() -> swerve.setSpeakerAlign(align), swerve);
     }
 
     public InstantCommand zeroGyro() {
@@ -41,12 +41,11 @@ public class Swerve_Commands {
         return swerve.getAuto();
     }
 
-    public Command driveToAmp()
-    {
+    public Command driveToAmp() {
         return swerve.driveToAmp();
     }
-    public Command driveToTrap()
-    {
+
+    public Command driveToTrap() {
         return swerve.driveToTrap();
     }
 
