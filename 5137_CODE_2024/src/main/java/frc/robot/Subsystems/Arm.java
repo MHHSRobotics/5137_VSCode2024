@@ -75,7 +75,6 @@ public class Arm extends ProfiledPIDSubsystem {
     private ArmFeedforward feedForward;
 
     private SendableChooser<Boolean> manualControlChoice;
-    private boolean manualControl;
 
     public Arm(File RobotConstants) {
         super(
@@ -119,14 +118,12 @@ public class Arm extends ProfiledPIDSubsystem {
         encoder.setDistancePerRotation(-2*Math.PI);
         encoder.setPositionOffset(Arm_Constants.encoderOffset);
 
-        align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 4.5, 30.0);
+        align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 4.5, Arm_Constants.defaultPosition);
 
         manualControlChoice = new SendableChooser<Boolean>();
         manualControlChoice.addOption("Enabled", true);
         manualControlChoice.setDefaultOption("Disabled", false);
         SmartDashboard.putData("Arm Manual Control", manualControlChoice);
-
-        manualControl = false;
 
         try {
             Thread.sleep(2000);
@@ -151,15 +148,17 @@ public class Arm extends ProfiledPIDSubsystem {
 
     @Override
     public double getMeasurement() {
-            double unfilteredAngle = encoder.getDistance();
-            double normalizedAngle = MathUtils.normalizeAngle(unfilteredAngle, Arm_Constants.normalRangeCenter);
-            return normalizedAngle;
-        }
+        double unfilteredAngle = encoder.getDistance();
+        double normalizedAngle = MathUtils.normalizeAngle(unfilteredAngle, Arm_Constants.normalRangeCenter);
+        return normalizedAngle;
+    }
 
     public void runManual(double output) {
-        if (!encoder.isConnected() || manualControl) {
-            leftMotor.set(1.0*output);
-            rightMotor.set(1.0*output);
+        if (encoder.isConnected()) {
+            this.setGoal(this.getMeasurement()+(0.3*output*0.02));
+        } else {
+            leftMotor.set(0.3*output);
+            rightMotor.set(0.3*output);
         }
     }
 
@@ -176,10 +175,6 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     private void updateDashboard() {
-        if (manualControl && !manualControlChoice.getSelected()) {
-            setGoal(Arm_Constants.defaultPosition);
-        }
-        manualControl = manualControlChoice.getSelected();
         SmartDashboard.putBoolean("Encoder", encoder.isConnected());
         SmartDashboard.putNumber("Arm Position", Math.toDegrees(this.getMeasurement()));
         SmartDashboard.putNumber("Arm Goal", Math.toDegrees(this.getGoal()));
@@ -188,7 +183,7 @@ public class Arm extends ProfiledPIDSubsystem {
     @Override
     public void periodic() {
         updateDashboard();
-        if (encoder.isConnected() && !manualControl) {
+        if (encoder.isConnected()) {
             useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
         }
     }

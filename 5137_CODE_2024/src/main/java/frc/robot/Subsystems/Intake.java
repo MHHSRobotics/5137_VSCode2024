@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -53,6 +54,10 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if (RobotState.isAutonomous() && objectInRange()) {
+            set(0.0);
+        }
+        
         SmartDashboard.putNumber("Object Distance", getDistance());
         SmartDashboard.putBoolean("Object In Range", objectInRange());
     }

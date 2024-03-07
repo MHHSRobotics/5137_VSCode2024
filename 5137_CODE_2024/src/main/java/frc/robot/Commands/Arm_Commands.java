@@ -16,7 +16,6 @@ public class Arm_Commands {
     };
 
     public InstantCommand manualMove(DoubleSupplier translationX) {
-        //return new InstantCommand(() -> arm.setGoal(Math.max(0.0, Math.min(0.5*Math.PI, arm.getGoal() + Math.toRadians(0.02*Arm_Constants.kManualSpeed*translationX.getAsDouble())))), arm);
         return new InstantCommand(() -> arm.runManual(translationX.getAsDouble()), arm);
     }
 

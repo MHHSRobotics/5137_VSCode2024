@@ -60,7 +60,6 @@ public class RobotContainer {
     shooter_Commands = new Shooter_Commands(shooter);
     vision.setDefaultCommand(new AddVisionMeasurement(vision, swerve));
     led_Commands = new LED_Commands(led);
-    led_Commands.getClass(); //Extra line to remove unused object errors
 
     NamedCommands.registerCommand("intake", 
         new ParallelCommandGroup(
@@ -160,7 +159,7 @@ public class RobotContainer {
     
     // Arm Bindings
 
-    arm.setDefaultCommand(arm_Commands.manualMove(() -> -operator.getLeftY()));
+    arm.setDefaultCommand(arm_Commands.manualMove(() -> -MathUtil.applyDeadband(operator.getLeftY(), 0.1)));
 
     // Shooting Bindings
 
