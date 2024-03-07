@@ -75,7 +75,6 @@ public class Arm extends ProfiledPIDSubsystem {
     private ArmFeedforward feedForward;
 
     private SendableChooser<Boolean> manualControlChoice;
-    private boolean manualControl;
 
     public Arm(File RobotConstants) {
         super(
@@ -126,8 +125,6 @@ public class Arm extends ProfiledPIDSubsystem {
         manualControlChoice.setDefaultOption("Disabled", false);
         SmartDashboard.putData("Arm Manual Control", manualControlChoice);
 
-        manualControl = false;
-
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -157,12 +154,11 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     public void runManual(double output) {
-        if (output > 0.1) {
-            manualControl = true;
+        if (encoder.isConnected()) {
+            this.setGoal(this.getMeasurement()+(0.3*output*0.02));
+        } else {
             leftMotor.set(0.3*output);
             rightMotor.set(0.3*output);
-        } else {
-            manualControl = false;
         }
     }
 
@@ -188,11 +184,7 @@ public class Arm extends ProfiledPIDSubsystem {
     public void periodic() {
         updateDashboard();
         if (encoder.isConnected()) {
-            if (manualControl) {
-                this.setGoal(this.getMeasurement());
-            } else {
-                useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
-            }
+            useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
         }
     }
 

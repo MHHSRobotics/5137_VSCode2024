@@ -60,7 +60,6 @@ public class RobotContainer {
     shooter_Commands = new Shooter_Commands(shooter);
     vision.setDefaultCommand(new AddVisionMeasurement(vision, swerve));
     led_Commands = new LED_Commands(led);
-    led_Commands.getClass(); //Extra line to remove unused object errors
 
     NamedCommands.registerCommand("intake", 
         new ParallelCommandGroup(
