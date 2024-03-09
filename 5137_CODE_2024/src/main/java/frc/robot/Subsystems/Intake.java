@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -44,20 +45,18 @@ public class Intake extends SubsystemBase {
     }
 
     public void set (double speed) {
+        System.out.println(Timer.getFPGATimestamp()+" Setting intake: "+speed);
         intakeMotor.set(TalonSRXControlMode.PercentOutput, speed);        
     }
 
     public void stop () {
+        System.out.println(Timer.getFPGATimestamp()+" Stopping intake");
         intakeMotor.set(TalonSRXControlMode.PercentOutput, 0.0);
         intakeMotor.setNeutralMode(NeutralMode.Brake);
     }
 
     @Override
-    public void periodic() {
-        if (RobotState.isAutonomous() && objectInRange()) {
-            set(0.0);
-        }
-        
+    public void periodic() {     
         SmartDashboard.putNumber("Object Distance", getDistance());
         SmartDashboard.putBoolean("Object In Range", objectInRange());
     }

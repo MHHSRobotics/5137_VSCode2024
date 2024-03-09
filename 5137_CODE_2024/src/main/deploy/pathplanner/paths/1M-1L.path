@@ -3,48 +3,70 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9134214042208546,
-        "y": 5.57470477585631
+        "x": 1.9167851101659648,
+        "y": 5.534431869732182
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.788487572979523,
-        "y": 5.5801152606813105
+        "x": 1.7712302091270848,
+        "y": 5.174476731932187
       },
       "isLocked": false,
-      "linkedName": "1M"
+      "linkedName": "1M-way"
     },
     {
       "anchor": {
-        "x": 2.472210023852944,
-        "y": 4.107444009536689
+        "x": 1.9167851101659648,
+        "y": 3.667983506179778
       },
       "prevControl": {
-        "x": 1.330329710326681,
-        "y": 4.151859526090597
+        "x": 1.0871221742443482,
+        "y": 3.609761545764226
       },
       "nextControl": {
-        "x": 3.137287859811315,
-        "y": 4.0815745946052555
+        "x": 2.1774344079367625,
+        "y": 3.6862746849707113
       },
       "isLocked": false,
-      "linkedName": "1L"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.7708635904063512,
-        "y": 4.6719507814248145
+        "x": 3.1176130437367258,
+        "y": 3.8353716423744904
       },
       "prevControl": {
-        "x": 2.0754636604444454,
-        "y": 4.601173919028455
+        "x": 2.6518373604123098,
+        "y": 3.7262054665953306
+      },
+      "nextControl": {
+        "x": 3.137654518306767,
+        "y": 3.8400688629768434
+      },
+      "isLocked": false,
+      "linkedName": "L1"
+    },
+    {
+      "anchor": {
+        "x": 1.7275637388154208,
+        "y": 5.720307610827987
+      },
+      "prevControl": {
+        "x": 2.28795010781511,
+        "y": 5.749418591035763
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 2,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -55,7 +77,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -16.94991454468398,
+    "rotation": 0.006861296164386192,
     "rotateFast": false
   },
   "reversed": false,
