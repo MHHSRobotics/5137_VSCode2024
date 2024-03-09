@@ -155,7 +155,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
     public void runManual(double output) {
         if (encoder.isConnected()) {
-            this.setGoal(this.getMeasurement()+(0.3*output*0.02));
+            this.setGoal(this.getGoal()+(output*0.02));
         } else {
             leftMotor.set(0.3*output);
             rightMotor.set(0.3*output);
@@ -163,7 +163,7 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     public void alignToSpeaker(double position) {
-        setGoal((-align.calculateAngle(position))+(Math.PI/3)); 
+        setGoal((-align.calculateAngle(position))+(Math.PI/3)+Math.toRadians(1)); 
     }
 
     public double getGoal() {

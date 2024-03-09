@@ -18,7 +18,7 @@ public class Arm_Constants {
 
     // Feedforward Constants
     public static final double kS = 0.15803; // 0.15803 Volts to overcome static friction
-    public static final double kG = 0.50797; // 0.50797 Volts to overcome gravity
+    public static final double kG = 0.6; // 0.50797 Volts to overcome gravity
     public static final double kV = 4.6682; // 4.6682 
     public static final double kA = 0.35139; // 0.35139
 

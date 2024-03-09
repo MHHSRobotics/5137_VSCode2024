@@ -72,6 +72,8 @@ public class Swerve extends SubsystemBase {
         swerveField = new Field2d();
         motorInvert();
 
+        swerve.chassisVelocityCorrection = true;
+
         alignToSpeaker = false;
     }
 
@@ -82,8 +84,8 @@ public class Swerve extends SubsystemBase {
             this::getRobotVelocity,
             this::setChassisSpeeds,
             new HolonomicPathFollowerConfig(
-                new PIDConstants(.02065, 0.0, 0.0),
-                new PIDConstants(.01, 0, 0),
+                new PIDConstants(.05, 0, 0.035),
+                new PIDConstants(.035, 0, 0.035),
                 Swerve_Constants.maxModuleSpeed,
                 swerve.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
                 new ReplanningConfig()),
