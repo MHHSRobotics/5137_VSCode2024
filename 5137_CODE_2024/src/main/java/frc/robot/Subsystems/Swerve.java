@@ -71,9 +71,7 @@ public class Swerve extends SubsystemBase {
         driveController.setTolerance(0.05, 0.01);
         swerveField = new Field2d();
         motorInvert();
-
         swerve.chassisVelocityCorrection = true;
-
         alignToSpeaker = false;
     }
 
@@ -112,49 +110,30 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command getAuto() {
-        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false){
-            swerve.resetOdometry(flipPose(PathPlannerAuto.getStaringPoseFromAutoFile(autoChooser.getSelected().getName())));
-        }
-        else{
-            swerve.resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(autoChooser.getSelected().getName()));
-        }
+        Pose2d autoStartingPose = PathPlannerAuto.getStaringPoseFromAutoFile(autoChooser.getSelected().getName()); 
+        if(isRedAlliance()) autoStartingPose = flipPose(autoStartingPose);
+        swerve.resetOdometry(autoStartingPose);
         return autoChooser.getSelected();
     }
-    
-    private double fieldLength = Units.inchesToMeters(651.25);
-    public Pose2d flipPose(Pose2d pose) {
-        return new Pose2d(fieldLength - pose.getX(), pose.getY(), new Rotation2d(Math.PI).minus(pose.getRotation()));
-    }
 
-    public void setChassisSpeeds(ChassisSpeeds velocity) {
-        swerve.setChassisSpeeds(velocity);
-    }
-
-    public void driveToAmp()
-    {
-        Pose2d targetPose = new Pose2d(1.83, 7.68, Rotation2d.fromDegrees(-90));
-        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false){
-            targetPose = flipPose(targetPose);
-        }
-        System.out.println(targetPose);
+    public void driveToAmp(){
+        Pose2d targetPose = isRedAlliance() ? flipPose(Swerve_Constants.ampAlignPose) : Swerve_Constants.ampAlignPose;       
         PathConstraints constraints = new PathConstraints(3.0, 3.0, Units.degreesToRadians(360), Units.degreesToRadians(720));
         Command pathfindingCommand = AutoBuilder.pathfindToPose(targetPose,constraints,0.0, 0.1);
         pathfindingCommand.addRequirements(this);
-        System.out.println(targetPose);
         pathfindingCommand.schedule();;
     }
 
-    public void driveToTrap()
-    {
-        Pose2d targetPose = new Pose2d(4.42, 4.83, Rotation2d.fromDegrees(120));
-        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false){
-            targetPose = flipPose(targetPose);
-        }
-        System.out.println(targetPose);
+    public void driveToTrap(){
+        Pose2d targetPose = isRedAlliance() ? flipPose(Swerve_Constants.trapAlignPose) : Swerve_Constants.trapAlignPose;       
         PathConstraints constraints = new PathConstraints(3.0, 3.0, Units.degreesToRadians(360), Units.degreesToRadians(720));
         Command pathfindingCommand = AutoBuilder.pathfindToPose(targetPose,constraints,0.0, 0.1);
         pathfindingCommand.addRequirements(this);
         pathfindingCommand.schedule();
+    }
+
+    public void setChassisSpeeds(ChassisSpeeds velocity) {
+        swerve.setChassisSpeeds(velocity);
     }
 
     public void resetOdometry(Pose2d pose) {
@@ -190,32 +169,15 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getRadiansToTarget() {
-        Pose2d targetPose;
-        if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
-            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d(); 
-        } else {
-            targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d();
-        }
+        Pose2d targetPose = isRedAlliance() ? aprilTagFieldLayout.getTagPose(4).get().toPose2d() : aprilTagFieldLayout.getTagPose(7).get().toPose2d();
         double radiansToPose = MathUtils.normalizeAngle(PhotonUtils.getYawToPose(swerve.getPose(), targetPose).getRadians(),0);
         return radiansToPose;
     }
 
     public double getDistanceToTarget() {
-        Pose2d targetPose;
-        if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
-            targetPose = aprilTagFieldLayout.getTagPose(4).get().toPose2d(); 
-        } else {
-            targetPose = aprilTagFieldLayout.getTagPose(7).get().toPose2d();
-        }
+        Pose2d targetPose = isRedAlliance() ? aprilTagFieldLayout.getTagPose(4).get().toPose2d() : aprilTagFieldLayout.getTagPose(7).get().toPose2d();
         double distanceToPose = PhotonUtils.getDistanceToPose(swerve.getPose(), targetPose);
         return distanceToPose;
-    }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putString("SwervePose", swerve.getPose().toString());
-        swerveField.setRobotPose(swerve.getPose());
-        SmartDashboard.putData("Swerve Field", swerveField);
     }
 
     public void autonomousInit(){
@@ -223,28 +185,24 @@ public class Swerve extends SubsystemBase {
     }
 
     public void motorInvert(){
-        if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false){
-            for(int i = 0; i <4; i++){
-                swerve.getModules()[i].getDriveMotor().setInverted(true);
-            }
-        }
-        else{
-            for(int i = 0; i <4; i++){
-                swerve.getModules()[i].getDriveMotor().setInverted(false);
-            }
-        }
+        boolean invert = isRedAlliance(); 
+        for(int i = 0; i < 4; i++){
+            swerve.getModules()[i].getDriveMotor().setInverted(invert);
+        } 
+        //TODO: Check if redesigned method actually inverts properly
     }
 
-    public void updateSwerveField(){
-        List<Pose2d> poses = new ArrayList<>();
-        List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(autoChooser.getSelected().getName());
-        for(PathPlannerPath path: paths){
-            PathPlannerPath autoPath = path;
-            poses.addAll(autoPath.getAllPathPoints().stream()
-            .map(point -> new Pose2d(point.position, new Rotation2d(0,0)))
-            .collect(Collectors.toList()));
-        }
-        swerveField.getObject("path").setPoses(poses); //Displays selected autopath on field2d
+    public boolean isRedAlliance(){
+        return DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false; 
+    }
+
+    public Pose2d flipPose(Pose2d pose) {
+        return new Pose2d(Swerve_Constants.fieldLengthMeters - pose.getX(), pose.getY(), new Rotation2d(Math.PI).minus(pose.getRotation()));
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putString("SwervePose", swerve.getPose().toString());
         swerveField.setRobotPose(swerve.getPose());
         SmartDashboard.putData("Swerve Field", swerveField);
     }
