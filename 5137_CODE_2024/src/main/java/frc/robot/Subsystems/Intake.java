@@ -45,12 +45,10 @@ public class Intake extends SubsystemBase {
     }
 
     public void set (double speed) {
-        System.out.println(Timer.getFPGATimestamp()+" Setting intake: "+speed);
         intakeMotor.set(TalonSRXControlMode.PercentOutput, speed);        
     }
 
     public void stop () {
-        System.out.println(Timer.getFPGATimestamp()+" Stopping intake");
         intakeMotor.set(TalonSRXControlMode.PercentOutput, 0.0);
         intakeMotor.setNeutralMode(NeutralMode.Brake);
     }

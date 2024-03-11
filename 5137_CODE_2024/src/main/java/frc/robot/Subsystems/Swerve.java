@@ -84,8 +84,8 @@ public class Swerve extends SubsystemBase {
             this::getRobotVelocity,
             this::setChassisSpeeds,
             new HolonomicPathFollowerConfig(
-                new PIDConstants(.05, 0, 0.035),
-                new PIDConstants(.035, 0, 0.035),
+                new PIDConstants(1, 0.0, 0.4),
+                new PIDConstants(2, 0.0, 0.4),
                 Swerve_Constants.maxModuleSpeed,
                 swerve.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
                 new ReplanningConfig()),
@@ -132,7 +132,7 @@ public class Swerve extends SubsystemBase {
 
     public void driveToAmp()
     {
-        Pose2d targetPose = new Pose2d(1.83, 7.68, Rotation2d.fromDegrees(-90));
+        Pose2d targetPose = new Pose2d(2.15, 7.81, Rotation2d.fromDegrees(-90));
         if(DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false){
             targetPose = flipPose(targetPose);
         }
