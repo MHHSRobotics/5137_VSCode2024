@@ -3,14 +3,14 @@
     "front": -10.6,
     "left": -10.6
   },
-  "absoluteEncoderOffset": 204.0822,
+  "absoluteEncoderOffset": 0.0,
   "drive": {
-    "type": "sparkmax",
+    "type": "talonfx",
     "id": 4,
     "canbus": "rio"
   },
   "angle": {
-    "type": "sparkmax",
+    "type": "talonfx",
     "id": 8,
     "canbus": "rio"
   },
