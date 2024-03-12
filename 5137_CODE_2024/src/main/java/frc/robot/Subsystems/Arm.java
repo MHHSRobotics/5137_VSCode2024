@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import java.io.File;
 
 import org.apache.commons.math3.util.MathUtils;
+import org.opencv.core.Mat;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -118,7 +119,7 @@ public class Arm extends ProfiledPIDSubsystem {
         encoder.setDistancePerRotation(-2*Math.PI);
         encoder.setPositionOffset(Arm_Constants.encoderOffset);
 
-        align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 4.5, Arm_Constants.defaultPosition);
+        align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 5.5, Arm_Constants.defaultPosition);
 
         manualControlChoice = new SendableChooser<Boolean>();
         manualControlChoice.addOption("Enabled", true);
@@ -163,7 +164,7 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     public void alignToSpeaker(double position) {
-        setGoal((-align.calculateAngle(position))+(Math.PI/3)); 
+        setGoal((align.calculateAngle(position))); 
     }
 
     public double getGoal() {
@@ -186,8 +187,6 @@ public class Arm extends ProfiledPIDSubsystem {
         if (encoder.isConnected()) {
             useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
         }
-
-
     }
 
     /* 

@@ -83,34 +83,31 @@ public class ArmTrajectoryAlignment {
 
     public double calculateAngle(double position) {
         if (position > minRange && position < maxRange) {
-            if (position <= 1.52){
-                return Math.toRadians((10*position) - 0.6);
-            }
-            else{
+            if (position >= 1.57){
                 return Math.toRadians(Math.sqrt(position - 1.5)*16.9 + 12.26);
             }
-            /* 
-            double x = position;
-            double x2 = Math.pow(x,2);
-            double x3 = Math.pow(x,3);
-            double x4 = Math.pow(x,4);
+            else{    
+                double x = position;
+                double x2 = Math.pow(x,2);
+                double x3 = Math.pow(x,3);
+                double x4 = Math.pow(x,4);
 
-            return Math.acos(solver.solve(
-            100,
-            new PolynomialFunction(
-                new double[]{
-                    (x4 - (4*x3*xo) + (6*x2*xo2) - (4*x*xo3) + (E_2*x2) + (E_1*x*xo) + E_0),
-                    ((D_3*(x3 - (3*x2*xo) + (3*x*xo2))) + (D_2*(2*x*xo - x2)) + (D_1*x) + D_0),
-                    ((C_2*(x2 - 2*x*xo)) + C_0),
-                    ((B_2*(x2 - 2*x*xo)) + (B_1*x) + B_0),
-                    ((A_2*(x2 - 2*x*xo)) + (A_1*x) + A_0)
-                }
-            ),
-            0.5,
-            1.0));
-            */ 
-
-        } else {
+                return -Math.acos(solver.solve(
+                100,
+                new PolynomialFunction(
+                    new double[]{
+                        (x4 - (4*x3*xo) + (6*x2*xo2) - (4*x*xo3) + (E_2*x2) + (E_1*x*xo) + E_0),
+                        ((D_3*(x3 - (3*x2*xo) + (3*x*xo2))) + (D_2*(2*x*xo - x2)) + (D_1*x) + D_0),
+                        ((C_2*(x2 - 2*x*xo)) + C_0),
+                        ((B_2*(x2 - 2*x*xo)) + (B_1*x) + B_0),
+                        ((A_2*(x2 - 2*x*xo)) + (A_1*x) + A_0)
+                    }
+                ),
+                0.5,
+                1.0)) + (Math.PI/3);
+            }
+        }
+        else {
             return defaultAngle;
         }
     }
