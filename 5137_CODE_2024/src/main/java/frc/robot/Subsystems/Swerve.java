@@ -70,6 +70,7 @@ public class Swerve extends SubsystemBase {
         turnController.setTolerance(0.02, 0.01);
         driveController.setTolerance(0.05, 0.01);
         swerveField = new Field2d();
+        SmartDashboard.putData("Swerve Field", swerveField);
         motorInvert();
         swerve.chassisVelocityCorrection = true;
         alignToSpeaker = false;
@@ -202,9 +203,8 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("SwervePose", swerve.getPose().toString());
-        swerveField.setRobotPose(swerve.getPose());
-        SmartDashboard.putData("Swerve Field", swerveField);
-        SmartDashboard.putNumber("Distance to Speaker", getDistanceToTarget());
+        //SmartDashboard.putString("SwervePose", swerve.getPose().toString());
+       //swerveField.setRobotPose(swerve.getPose());
+        //SmartDashboard.putNumber("Distance to Speaker", getDistanceToTarget());
     }
 }
