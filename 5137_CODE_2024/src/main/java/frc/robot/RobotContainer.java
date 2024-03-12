@@ -123,13 +123,21 @@ public class RobotContainer {
 
   private void configureBindings() {
 
+    Trigger fieldRelativeTrigger = new Trigger(new BooleanSupplier() {
+      @Override
+      public boolean getAsBoolean() {
+        return (!driver.R2().getAsBoolean());
+      }
+    });
+
+    //TODO: Check if the fieldRelativeTrigger fixes loop ovverrun
     //Swerve Bindings
 
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
       () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> MathUtil.applyDeadband(getAllianceInvert()*driver.getRightX(), Swerve_Constants.RX_Deadband),
-      () -> !driver.R2().getAsBoolean()
+      () -> fieldRelativeTrigger.getAsBoolean()
     ));
 
     driver.cross()
