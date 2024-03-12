@@ -29,7 +29,7 @@ public class Swerve_Constants {
 
     //Align Positions
     public static final Pose2d trapAlignPose = new Pose2d(4.45, 4.85, Rotation2d.fromDegrees(120));
-    public static final Pose2d ampAlignPose = new Pose2d(1.83, 7.68, Rotation2d.fromDegrees(-90));
+    public static final Pose2d ampAlignPose = new Pose2d(2.15, 7.81, Rotation2d.fromDegrees(-90));
     public static final double fieldLengthMeters = Units.inchesToMeters(651.25);
 
 }

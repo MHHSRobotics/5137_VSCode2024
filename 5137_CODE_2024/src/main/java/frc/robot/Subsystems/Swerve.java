@@ -205,5 +205,6 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putString("SwervePose", swerve.getPose().toString());
         swerveField.setRobotPose(swerve.getPose());
         SmartDashboard.putData("Swerve Field", swerveField);
+        SmartDashboard.putNumber("Distance to Speaker", getDistanceToTarget());
     }
 }
