@@ -186,6 +186,11 @@ public class Arm extends ProfiledPIDSubsystem {
         if (encoder.isConnected()) {
             useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
         }
+
+        System.out.println("2.0 " + Math.toDegrees(align.calculateAngle(2.5)));
+        System.out.println("2.5 " + Math.toDegrees(align.calculateAngle(2.0)));
+
+
     }
 
     /* 
