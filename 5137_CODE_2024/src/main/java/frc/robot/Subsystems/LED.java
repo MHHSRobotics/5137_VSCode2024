@@ -20,10 +20,10 @@ public class LED extends SubsystemBase {
     private Timer timer;
     private boolean objectIn;
 
-    public LED() { // FIRST STRIP: 0-43 SECOND STRIP: 44-103 THIRD STRIP: 104 - 145
+    public LED() { // FIRST STRIP: 0-43 SECOND STRIP: 44-98 THIRD STRIP: 99 - 140
         leds = new AddressableLED(LED_Constants.LEDport);
-        leds.setLength(146);
-        buffer = new AddressableLEDBuffer(146);
+        leds.setLength(140);
+        buffer = new AddressableLEDBuffer(140);
         offset = 0;
         length = buffer.getLength();
         leds.start();
@@ -44,7 +44,7 @@ public class LED extends SubsystemBase {
 
     public void CGChasing() {
         for (int i = 0; i < length; i++) {
-            if (i < 44 || i > 103) {
+            if (i < 44 || i > 98) {
                 var x = (double) (i+Math.floor(length-(offset%length)))%24;
                 if (x < 12) {
                     buffer.setRGB(i, (int)((x/11)*255), 0, 0);
@@ -75,7 +75,7 @@ public class LED extends SubsystemBase {
                 } else {
                     buffer.setRGB(i, 0, 0, (int)((x/11)*255));
                 }
-            } else if (i < 104) {
+            } else if (i < 99) {
                 if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
                     buffer.setRGB(i, 255, 0, 0);
                 } else {
@@ -104,7 +104,7 @@ public class LED extends SubsystemBase {
                 } else {
                     buffer.setRGB(i, 0, 0, (int)((x/11)*255));
                 }
-            } else if (i < 104) {
+            } else if (i < 99) {
                 if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
                     buffer.setRGB(i, 255, 0, 0);
                 } else {
@@ -133,7 +133,7 @@ public class LED extends SubsystemBase {
                 } else {
                     buffer.setRGB(i, 0, 0, (int)((x/11)*255));
                 }
-            } else if (i < 104) {
+            } else if (i < 99) {
                 if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
                     buffer.setRGB(i, 255, 0, 0);
                 } else {
@@ -162,7 +162,7 @@ public class LED extends SubsystemBase {
                 } else {
                     buffer.setRGB(i, 0, 0, (int)((x/11)*255));
                 }
-            } else if (i < 104) {
+            } else if (i < 99) {
                 if (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false) {
                     buffer.setRGB(i, 255, 0, 0);
                 } else {

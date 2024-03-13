@@ -83,9 +83,9 @@ public class RobotContainer {
           ),
           shooter_Commands.shootSpeaker()
         ),
-        new WaitCommand(1),
+        new WaitCommand(0.65),
         intake_Commands.intakeForward(),
-        new WaitCommand(0.5),
+        new WaitCommand(0.3),
         new ParallelCommandGroup(
           shooter_Commands.rest(),
           intake_Commands.stop()
@@ -106,9 +106,9 @@ public class RobotContainer {
           ),
           shooter_Commands.shootSpeaker()
         ),
-        new WaitCommand(2),
+        new WaitCommand(1.5),
         intake_Commands.intakeForward(),
-        new WaitCommand(0.5),
+        new WaitCommand(0.3),
         new ParallelCommandGroup(
           shooter_Commands.rest(),
           intake_Commands.stop()
@@ -123,13 +123,16 @@ public class RobotContainer {
 
   private void configureBindings() {
 
+  
+
+    //TODO: Check if the fieldRelativeTrigger fixes loop ovverrun
     //Swerve Bindings
 
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
       () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> MathUtil.applyDeadband(getAllianceInvert()*driver.getRightX(), Swerve_Constants.RX_Deadband),
-      () -> !driver.R2().getAsBoolean()
+      () -> true
     ));
 
     driver.cross()
