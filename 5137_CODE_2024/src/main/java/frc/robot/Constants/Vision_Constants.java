@@ -11,7 +11,7 @@ public class Vision_Constants {
     public static final double offsetZAR2 = Units.inchesToMeters(11.0);
     public static final double rollAR2= Units.degreesToRadians(0);
     public static final double pitchAR2 = Units.degreesToRadians(-60);
-    public static final double yawAR2 = Units.degreesToRadians(175);
+    public static final double yawAR2 = Units.degreesToRadians(180.48);
 
     public static final double offsetXAR1 = Units.inchesToMeters(6.5);
     public static final double offsetYAR1 = Units.inchesToMeters(-11.5);

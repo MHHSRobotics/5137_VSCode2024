@@ -175,9 +175,9 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     private void updateDashboard() {
-        SmartDashboard.putBoolean("Encoder", encoder.isConnected());
-        SmartDashboard.putNumber("Arm Position", Math.toDegrees(this.getMeasurement()));
-        SmartDashboard.putNumber("Arm Goal", Math.toDegrees(this.getGoal()));
+        //SmartDashboard.putBoolean("Encoder", encoder.isConnected());
+        //SmartDashboard.putNumber("Arm Position", Math.toDegrees(this.getMeasurement()));
+       // SmartDashboard.putNumber("Arm Goal", Math.toDegrees(this.getGoal()));
     }
 
     @Override

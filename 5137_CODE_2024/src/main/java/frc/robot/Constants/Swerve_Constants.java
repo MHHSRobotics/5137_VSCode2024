@@ -20,7 +20,7 @@ public class Swerve_Constants {
     public static final double aimToleranceRadiansPerSecond = 0.02;
     public static final double driveToleranceMeters = 0.05;
     public static final double driveToleranceMetersPerSecond = 0.2;
-    public static final double turnKP = 0.1;
+    public static final double turnKP = 3.5;
     public static final double turnKI = 0.0;
     public static final double turnKD = 0.0;
     public static final double driveKP = .5;

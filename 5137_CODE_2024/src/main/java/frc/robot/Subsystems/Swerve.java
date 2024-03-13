@@ -162,7 +162,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getSpeakerAimVelocity() {
-        return turnController.calculate(getRadiansToTarget(),0);
+        return allianceInvert()*turnController.calculate(getRadiansToTarget(),0);
     }
 
     public boolean turnAligned() {
@@ -171,7 +171,7 @@ public class Swerve extends SubsystemBase {
 
     public double getRadiansToTarget() {
         Pose2d targetPose = isRedAlliance() ? aprilTagFieldLayout.getTagPose(4).get().toPose2d() : aprilTagFieldLayout.getTagPose(7).get().toPose2d();
-        double radiansToPose = MathUtils.normalizeAngle(PhotonUtils.getYawToPose(swerve.getPose(), targetPose).getRadians(),0);
+        double radiansToPose = MathUtils.normalizeAngle(PhotonUtils.getYawToPose(swerve.getPose(), targetPose).rotateBy(new Rotation2d(Math.toRadians(180))).getRadians(),0);
         return radiansToPose;
     }
 
@@ -201,9 +201,18 @@ public class Swerve extends SubsystemBase {
         return new Pose2d(Swerve_Constants.fieldLengthMeters - pose.getX(), pose.getY(), new Rotation2d(Math.PI).minus(pose.getRotation()));
     }
 
+    public double allianceInvert()
+    {
+        if(isRedAlliance())
+        {
+            return -1;
+        }
+        return 1;
+    }
+
     @Override
     public void periodic() {
-        //SmartDashboard.putString("SwervePose", swerve.getPose().toString());
+        SmartDashboard.putString("SwervePose", swerve.getPose().toString());
        //swerveField.setRobotPose(swerve.getPose());
         //SmartDashboard.putNumber("Distance to Speaker", getDistanceToTarget());
     }
