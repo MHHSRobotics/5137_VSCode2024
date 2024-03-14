@@ -9,6 +9,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 
 import org.apache.commons.math3.util.MathUtils;
 import org.photonvision.PhotonUtils;
@@ -21,13 +24,24 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import static edu.wpi.first.units.MutableMeasure.mutable;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import swervelib.SwerveDrive;
+import swervelib.SwerveModule;
+import swervelib.motors.SwerveMotor;
 import swervelib.parser.SwerveParser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -46,11 +60,48 @@ public class Swerve extends SubsystemBase {
     private SendableChooser<Command> autoChooser;
     private Field2d swerveField;
 
+      private Timer timer;
+
+    private SwerveModule module0;
+    private SwerveModule module1;
+    private SwerveModule module2;
+    private SwerveModule module3;
+
+    
+
     private AprilTagFieldLayout aprilTagFieldLayout;
     private PIDController turnController;
     private PIDController driveController;
 
     private boolean alignToSpeaker;
+    
+    private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
+    private final MutableMeasure<Distance> m_distance = mutable(Meters.of(0));
+    private final MutableMeasure<Velocity<Distance>> m_velocity = mutable(MetersPerSecond.of(0));
+
+    private PIDController angle1 = new PIDController(.01, 0, 0.0);
+    private PIDController angle2 = new PIDController(.01, 0, 0.0);
+    private PIDController angle3 = new PIDController(.01, 0, 0.0);
+    private PIDController angle4 = new PIDController(.01, 0, 0.0);
+
+    SysIdRoutine routine = new SysIdRoutine(
+        new SysIdRoutine.Config(),
+        new SysIdRoutine.Mechanism(
+            (Measure<Voltage> volts) -> {
+                setVoltage(volts.in(Volts));
+            },
+            log -> {
+                log.motor("swerve-left")
+                .voltage(
+                    m_appliedVoltage.mut_replace(
+                        RobotController.getBatteryVoltage()*module0.getDriveMotor().getAppliedOutput(), Volts))
+                        .linearPosition(m_distance.mut_replace(module0.getDriveMotor().getPosition(), Meters))
+                        .linearVelocity(m_velocity.mut_replace(module0.getDriveMotor().getVelocity(), MetersPerSecond));
+                },
+            this
+        ));
+
+  
 
     public Swerve(File directory) {
         try {
@@ -74,6 +125,10 @@ public class Swerve extends SubsystemBase {
         motorInvert();
         swerve.chassisVelocityCorrection = true;
         alignToSpeaker = false;
+        module0 = swerve.getModules()[0];
+        module1 = swerve.getModules()[1];
+        module2 = swerve.getModules()[2];
+        module3 = swerve.getModules()[3];
     }
 
     public void setUpPathPlanner() {
@@ -215,5 +270,42 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putString("SwervePose", swerve.getPose().toString());
        //swerveField.setRobotPose(swerve.getPose());
         //SmartDashboard.putNumber("Distance to Speaker", getDistanceToTarget());
+        //System.out.println(module0.getAbsolutePosition());
+        System.out.println(-angle1.calculate(module0.getAbsolutePosition(), 270));
+    }
+
+    /**
+   * Returns a command that will execute a quasistatic test in the given direction.
+   *
+   * @param direction The direction (forward or reverse) to run the test in
+   */
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return routine.quasistatic(direction);
+  }
+
+  /**
+   * Returns a command that will execute a dynamic test in the given direction.
+   *
+   * @param direction The direction (forward or reverse) to run the test in
+   */
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return routine.dynamic(direction);
+  }
+
+
+ public void setVoltage(double volts){
+    System.out.println(volts);
+        module0.getDriveMotor().setVoltage(volts);
+        module1.getDriveMotor().setVoltage(volts);
+        module2.getDriveMotor().setVoltage(volts);
+        module3.getDriveMotor().setVoltage(volts);
+
+        
+        module0.getAngleMotor().set(angle1.calculate(module0.getAbsolutePosition(), 270));
+        module1.getAngleMotor().set(angle2.calculate(module1.getAbsolutePosition(), 270));
+        module2.getAngleMotor().set(angle3.calculate(module2.getAbsolutePosition(), 270));
+        module3.getAngleMotor().set(angle4.calculate(module3.getAbsolutePosition(), 270));
+
+
     }
 }

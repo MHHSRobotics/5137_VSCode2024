@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class RobotContainer {
 
@@ -128,13 +129,26 @@ public class RobotContainer {
     //TODO: Check if the fieldRelativeTrigger fixes loop ovverrun
     //Swerve Bindings
 
-    swerve.setDefaultCommand(swerve_Commands.drive(
+    /* 
+     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
       () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> MathUtil.applyDeadband(getAllianceInvert()*driver.getRightX(), Swerve_Constants.RX_Deadband),
       () -> true
     ));
-
+    */
+    driver.touchpad()
+    .onTrue(swerve_Commands.zeroGyro());
+    
+    driver.cross()
+    .onTrue(swerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    driver.circle()
+    .onTrue(swerve.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    driver.square()
+    .onTrue(swerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    driver.triangle()
+    .onTrue(swerve.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+/* 
     driver.cross()
     .onTrue(swerve_Commands.alignToSpeaker(true));
 
@@ -146,6 +160,7 @@ public class RobotContainer {
     })
     .onTrue(swerve_Commands.alignToSpeaker(false));
 
+    
     driver.circle()
     .onTrue(swerve_Commands.driveToAmp());
 
@@ -154,7 +169,7 @@ public class RobotContainer {
 
     driver.triangle()
     .onTrue(swerve_Commands.zeroGyro());
-
+*/
     // Other Bindings
 
     driver.touchpad()
