@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
 
-  private CommandPS4Controller driver;
+  private CommandXboxController driver;
   private CommandPS4Controller operator;
 
   private Swerve swerve;
@@ -44,7 +44,7 @@ public class RobotContainer {
   private LED_Commands led_Commands;
 
   public RobotContainer() {
-    driver = new CommandPS4Controller(0);
+    driver = new CommandXboxController(0);
     operator = new CommandPS4Controller(1);
 
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(),"swerve"));
@@ -135,7 +135,7 @@ public class RobotContainer {
       () -> true
     ));
 
-    driver.cross()
+    driver.a()
     .onTrue(swerve_Commands.alignToSpeaker(true));
 
     new Trigger(new BooleanSupplier() {
@@ -146,19 +146,21 @@ public class RobotContainer {
     })
     .onTrue(swerve_Commands.alignToSpeaker(false));
 
-    driver.circle()
+    driver.b()
     .onTrue(swerve_Commands.driveToAmp());
 
-    driver.square()
+    driver.x()
     .onTrue(swerve_Commands.driveToTrap());
 
-    driver.triangle()
+    driver.y()
     .onTrue(swerve_Commands.zeroGyro());
 
     // Other Bindings
 
+    /* 
     driver.touchpad()
     .onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
+    */
     
     // Arm Bindings
 
