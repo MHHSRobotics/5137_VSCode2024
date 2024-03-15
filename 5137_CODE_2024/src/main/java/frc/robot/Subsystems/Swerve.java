@@ -46,6 +46,8 @@ import swervelib.SwerveModule;
 import swervelib.motors.SwerveMotor;
 import swervelib.parser.SwerveParser;
 
+import com.ctre.phoenix6.controls.MusicTone;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.GoalEndState;
@@ -68,8 +70,6 @@ public class Swerve extends SubsystemBase {
     private SwerveModule module1;
     private SwerveModule module2;
     private SwerveModule module3;
-
-    
 
     private AprilTagFieldLayout aprilTagFieldLayout;
     private PIDController turnController;

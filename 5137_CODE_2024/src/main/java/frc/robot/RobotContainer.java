@@ -30,6 +30,7 @@ public class RobotContainer {
 
   private CommandPS4Controller driver;
   private CommandPS4Controller operator;
+  private CommandPS4Controller musician;
 
   private Swerve swerve;
   private Arm arm;
@@ -37,16 +38,19 @@ public class RobotContainer {
   private Shooter shooter;
   private Vision vision;
   private LED led;
+  private Music music;
 
   private Swerve_Commands swerve_Commands;
   private Arm_Commands arm_Commands;
   private Intake_Commands intake_Commands;
   private Shooter_Commands shooter_Commands;
   private LED_Commands led_Commands;
+  private Music_Commands music_Commands;
 
   public RobotContainer() {
     driver = new CommandPS4Controller(0);
     operator = new CommandPS4Controller(1);
+    musician = new CommandPS4Controller(2);
 
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(),"swerve"));
     arm = new Arm(new File(Filesystem.getDeployDirectory(), "RobotConstants.json"));
@@ -54,6 +58,7 @@ public class RobotContainer {
     shooter = new Shooter();
     vision = new Vision();
     led = new LED();
+    music = new Music();
 
     swerve_Commands = new Swerve_Commands(swerve);
     arm_Commands = new Arm_Commands(arm);
@@ -61,6 +66,7 @@ public class RobotContainer {
     shooter_Commands = new Shooter_Commands(shooter);
     vision.setDefaultCommand(new AddVisionMeasurement(vision, swerve));
     led_Commands = new LED_Commands(led);
+    music_Commands = new Music_Commands(music);
 
     NamedCommands.registerCommand("intake", 
         new ParallelCommandGroup(
@@ -120,6 +126,7 @@ public class RobotContainer {
     swerve.setUpPathPlanner();
 
     configureBindings();
+    configureMusic();
   }
 
   private void configureBindings() {
@@ -306,6 +313,19 @@ public class RobotContainer {
     .onTrue(new InstantCommand(() -> swerve.motorInvert()));
   }
   
+  public void configureMusic() {
+    musician.cross()
+    .onTrue(music_Commands.tuningNote());
+
+    musician.square()
+    .onTrue(music_Commands.ConcertD());
+
+    musician.circle()
+    .onTrue(music_Commands.ConcertF());
+
+    musician.triangle()
+    .onTrue(music_Commands.ConcertA());
+  }
 
   public Command getAutonomousCommand() {
     return swerve_Commands.runAuto();
