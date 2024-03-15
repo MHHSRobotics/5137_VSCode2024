@@ -130,7 +130,7 @@ public class Swerve extends SubsystemBase {
         module2 = swerve.getModules()[2];
         module3 = swerve.getModules()[3];
     }
-    }
+    
 
     public void setUpPathPlanner() {
         AutoBuilder.configureHolonomic(
