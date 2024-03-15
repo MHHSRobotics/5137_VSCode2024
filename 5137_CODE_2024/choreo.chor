@@ -1,11 +1,11 @@
 {
     "version": "v0.3",
     "robotConfiguration": {
-        "mass": 62.72782052928451,
-        "rotationalInertia": 5.093413234479845,
-        "motorMaxTorque": 0.725,
-        "motorMaxVelocity": 4704,
-        "gearing": 6.75,
+        "mass": 24.69599233436398,
+        "rotationalInertia": 1.6886270903500746,
+        "motorMaxTorque": 0.774863387978142,
+        "motorMaxVelocity": 4800,
+        "gearing": 6.12,
         "wheelbase": 0.5206997188221518,
         "trackWidth": 0.5206997188221518,
         "bumperLength": 0.8254995542302407,
@@ -772,7 +772,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "S-M": {
             "waypoints": [
@@ -1058,7 +1058,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "M-S": {
             "waypoints": [
@@ -1362,7 +1362,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "S-P": {
             "waypoints": [
@@ -2375,7 +2375,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         }
     },
     "splitTrajectoriesAtStopPoints": false,
