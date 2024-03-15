@@ -123,6 +123,17 @@ public class RobotContainer {
 
   private void configureBindings() {
 
+    /* 
+    driver.cross()
+    .onTrue(swerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    driver.circle()
+    .onTrue(swerve.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    driver.square()
+    .onTrue(swerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    driver.triangle()
+    .onTrue(swerve.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    */
+
   
 
     //TODO: Check if the fieldRelativeTrigger fixes loop ovverrun
