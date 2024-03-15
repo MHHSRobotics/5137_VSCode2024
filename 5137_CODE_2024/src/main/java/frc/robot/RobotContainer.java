@@ -129,17 +129,18 @@ public class RobotContainer {
     //TODO: Check if the fieldRelativeTrigger fixes loop ovverrun
     //Swerve Bindings
 
-    /* 
+    
      swerve.setDefaultCommand(swerve_Commands.drive(
       () -> MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
       () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> MathUtil.applyDeadband(getAllianceInvert()*driver.getRightX(), Swerve_Constants.RX_Deadband),
       () -> true
     ));
-    */
+    
     driver.touchpad()
     .onTrue(swerve_Commands.zeroGyro());
     
+    /* 
     driver.cross()
     .onTrue(swerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
     driver.circle()
@@ -148,7 +149,9 @@ public class RobotContainer {
     .onTrue(swerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     driver.triangle()
     .onTrue(swerve.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-/* 
+    */
+
+     
     driver.cross()
     .onTrue(swerve_Commands.alignToSpeaker(true));
 
@@ -169,7 +172,7 @@ public class RobotContainer {
 
     driver.triangle()
     .onTrue(swerve_Commands.zeroGyro());
-*/
+
     // Other Bindings
 
     driver.touchpad()

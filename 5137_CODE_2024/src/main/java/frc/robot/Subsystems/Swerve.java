@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import org.apache.commons.math3.util.MathUtils;
@@ -29,7 +31,7 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import static edu.wpi.first.units.MutableMeasure.mutable;
 import edu.wpi.first.units.Velocity;
-import edu.wpi.first.units.Voltage;
+import edu.wpi.first.units.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -76,8 +78,8 @@ public class Swerve extends SubsystemBase {
     private boolean alignToSpeaker;
     
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
-    private final MutableMeasure<Distance> m_distance = mutable(Meters.of(0));
-    private final MutableMeasure<Velocity<Distance>> m_velocity = mutable(MetersPerSecond.of(0));
+    private final MutableMeasure<Angle> m_distance = mutable(Radians.of(0));
+    private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
 
     private PIDController angle1 = new PIDController(.01, 0, 0.0);
     private PIDController angle2 = new PIDController(.01, 0, 0.0);
@@ -94,9 +96,9 @@ public class Swerve extends SubsystemBase {
                 log.motor("swerve-left")
                 .voltage(
                     m_appliedVoltage.mut_replace(
-                        RobotController.getBatteryVoltage()*module0.getDriveMotor().getAppliedOutput(), Volts))
-                        .linearPosition(m_distance.mut_replace(module0.getDriveMotor().getPosition(), Meters))
-                        .linearVelocity(m_velocity.mut_replace(module0.getDriveMotor().getVelocity(), MetersPerSecond));
+                        RobotController.getBatteryVoltage()*module0.getAngleMotor().getAppliedOutput(), Volts))
+                        .angularPosition(m_distance.mut_replace(module0.getAngleMotor().getPosition(), Radians))
+                        .angularVelocity(m_velocity.mut_replace(module0.getAngleMotor().getVelocity(), RadiansPerSecond));
                 },
             this
         ));
@@ -271,7 +273,6 @@ public class Swerve extends SubsystemBase {
        //swerveField.setRobotPose(swerve.getPose());
         //SmartDashboard.putNumber("Distance to Speaker", getDistanceToTarget());
         //System.out.println(module0.getAbsolutePosition());
-        System.out.println(-angle1.calculate(module0.getAbsolutePosition(), 270));
     }
 
     /**
@@ -294,17 +295,19 @@ public class Swerve extends SubsystemBase {
 
 
  public void setVoltage(double volts){
-    System.out.println(volts);
-        module0.getDriveMotor().setVoltage(volts);
-        module1.getDriveMotor().setVoltage(volts);
-        module2.getDriveMotor().setVoltage(volts);
-        module3.getDriveMotor().setVoltage(volts);
+    //System.out.println(volts);
+        module0.getAngleMotor().setVoltage(volts);
+        //module1.getAngleMotor().setVoltage(volts);
+        //module2.getAngleMotor().setVoltage(volts);
+        //module3.getAngleMotor().setVoltage(volts);
 
         
+        /* 
         module0.getAngleMotor().set(angle1.calculate(module0.getAbsolutePosition(), 270));
         module1.getAngleMotor().set(angle2.calculate(module1.getAbsolutePosition(), 270));
         module2.getAngleMotor().set(angle3.calculate(module2.getAbsolutePosition(), 270));
         module3.getAngleMotor().set(angle4.calculate(module3.getAbsolutePosition(), 270));
+        */
 
 
     }
