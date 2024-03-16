@@ -17,15 +17,26 @@ public class RobotContainer {
 
   public static CommandPS4Controller musician;
 
-  public RobotContainer() {
+  public Music music;
 
+  public Music_Commands music_Commands;
+
+  public RobotContainer() {
     musician = new CommandPS4Controller(0);
+
+    music = new Music();
+
+    music_Commands = new Music_Commands(music);
 
     configureBindings();
   }
 
   private void configureBindings() {
+    musician.cross()
+    .onTrue(music_Commands.BbMajorScale());
 
+    musician.circle()
+    .onTrue(music_Commands.HotCrossBuns());
   }
 
   public Command getAutonomousCommand() {
