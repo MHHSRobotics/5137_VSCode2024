@@ -140,9 +140,9 @@ public class RobotContainer {
     //Swerve Bindings
 
     swerve.setDefaultCommand(swerve_Commands.drive(
-      () -> MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
-      () -> MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
-      () -> MathUtil.applyDeadband(getAllianceInvert()*driver.getRightX(), Swerve_Constants.RX_Deadband),
+      () -> getAllianceInvert()*-MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
+      () -> getAllianceInvert()*-MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
+      () -> -MathUtil.applyDeadband(driver.getRightX(), Swerve_Constants.RX_Deadband),
       () -> true
     ));
 
@@ -168,10 +168,10 @@ public class RobotContainer {
 
     // Other Bindings
 
-    /* 
-    driver.touchpad()
+    
+    driver.back()
     .onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
-    */
+    
     
     // Arm Bindings
 

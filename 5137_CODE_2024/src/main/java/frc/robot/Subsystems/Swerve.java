@@ -218,7 +218,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getSpeakerAimVelocity() {
-        return allianceInvert()*turnController.calculate(getRadiansToTarget(),0);
+        return allianceInvert()*-turnController.calculate(getRadiansToTarget(),0);
     }
 
     public boolean turnAligned() {
@@ -242,9 +242,9 @@ public class Swerve extends SubsystemBase {
     }
 
     public void motorInvert(){
-        boolean invert = isRedAlliance(); 
+        //boolean invert = isRedAlliance(); 
         for(int i = 0; i < 4; i++){
-            swerve.getModules()[i].getDriveMotor().setInverted(invert);
+            swerve.getModules()[i].getDriveMotor().setInverted(true);
         } 
         //TODO: Check if redesigned method actually inverts properly
     }
