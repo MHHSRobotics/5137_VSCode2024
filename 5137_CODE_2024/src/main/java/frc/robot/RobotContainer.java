@@ -61,6 +61,7 @@ public class RobotContainer {
     vision.setDefaultCommand(new AddVisionMeasurement(vision, swerve));
     led_Commands = new LED_Commands(led);
 
+    
     NamedCommands.registerCommand("intake", 
         new ParallelCommandGroup(
           arm_Commands.moveToIntake(),
@@ -115,6 +116,7 @@ public class RobotContainer {
         )
       )
     );
+    
 
     swerve.setUpPathPlanner();
 
@@ -140,9 +142,9 @@ public class RobotContainer {
     //Swerve Bindings
 
     swerve.setDefaultCommand(swerve_Commands.drive(
-      () -> getAllianceInvert()*-MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
-      () -> getAllianceInvert()*-MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
-      () -> -MathUtil.applyDeadband(driver.getRightX(), Swerve_Constants.RX_Deadband),
+      () -> getAllianceInvert()*MathUtil.applyDeadband(-driver.getLeftY(), Swerve_Constants.LY_Deadband),
+      () -> getAllianceInvert()*MathUtil.applyDeadband(-driver.getLeftX(), Swerve_Constants.LX_Deadband),
+      () -> MathUtil.applyDeadband(-driver.getRightX(), Swerve_Constants.RX_Deadband),
       () -> true
     ));
 
@@ -274,31 +276,6 @@ public class RobotContainer {
       ))
     .onFalse(led_Commands.greenLedsOff());
 
-    //Swerve Invert
-
-    new Trigger(new BooleanSupplier() {
-      @Override
-      public boolean getAsBoolean() {
-        return (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false);
-      }
-    })
-    .onTrue(new InstantCommand(() -> swerve.motorInvert()));
-
-    new Trigger(new BooleanSupplier() {
-      @Override
-      public boolean getAsBoolean() {
-        return (DriverStation.getAlliance().isPresent() ? true : false);
-      }
-    })
-    .onTrue(new InstantCommand(() -> swerve.motorInvert()));
-
-    new Trigger(new BooleanSupplier() {
-      @Override
-      public boolean getAsBoolean() {
-        return (DriverStation.isEnabled());
-      }
-    })
-    .onTrue(new InstantCommand(() -> swerve.motorInvert()));
   }
   
 
@@ -314,7 +291,4 @@ public class RobotContainer {
     return 1;
   }
 
-  public void autonomousInit() {
-    swerve.autonomousInit();
-  }
 }

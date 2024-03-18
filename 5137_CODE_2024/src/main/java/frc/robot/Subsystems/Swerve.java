@@ -21,10 +21,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Angle;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Velocity;
-import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -53,7 +49,6 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Volts;
-import edu.wpi.first.units.MutableMeasure;
 import static edu.wpi.first.units.MutableMeasure.mutable;
 
 
@@ -122,8 +117,8 @@ public class Swerve extends SubsystemBase {
         driveController.setTolerance(0.05, 0.01);
         swerveField = new Field2d();
         SmartDashboard.putData("Swerve Field", swerveField);
-        motorInvert();
         swerve.chassisVelocityCorrection = true;
+        //TODO: When tuning auto maybe turn this off? enable only in teleop? 
         alignToSpeaker = false;
         module0 = swerve.getModules()[0];
         module1 = swerve.getModules()[1];
@@ -199,7 +194,11 @@ public class Swerve extends SubsystemBase {
       }
 
     public void zeroGyro() {
-        swerve.zeroGyro();        
+        swerve.zeroGyro();
+        if(isRedAlliance())
+        {
+            resetOdometry(new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(180)));
+        }
     }
 
     public ChassisSpeeds getRobotVelocity() {
@@ -219,7 +218,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getSpeakerAimVelocity() {
-        return allianceInvert()*-turnController.calculate(getRadiansToTarget(),0);
+        return -turnController.calculate(getRadiansToTarget(),0);
     }
 
     public boolean turnAligned() {
@@ -238,17 +237,6 @@ public class Swerve extends SubsystemBase {
         return distanceToPose;
     }
 
-    public void autonomousInit(){
-        motorInvert();
-    }
-
-    public void motorInvert(){
-        //boolean invert = isRedAlliance(); 
-        for(int i = 0; i < 4; i++){
-            swerve.getModules()[i].getDriveMotor().setInverted(true);
-        } 
-        //TODO: Check if redesigned method actually inverts properly
-    }
 
     public boolean isRedAlliance(){
         return DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == DriverStation.Alliance.Red : false; 
@@ -256,15 +244,6 @@ public class Swerve extends SubsystemBase {
 
     public Pose2d flipPose(Pose2d pose) {
         return new Pose2d(Swerve_Constants.fieldLengthMeters - pose.getX(), pose.getY(), new Rotation2d(Math.PI).minus(pose.getRotation()));
-    }
-
-    public double allianceInvert()
-    {
-        if(isRedAlliance())
-        {
-            return -1;
-        }
-        return 1;
     }
 
     @Override
