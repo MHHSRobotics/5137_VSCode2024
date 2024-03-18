@@ -182,7 +182,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void driveToTrap(){
-        Pose2d targetPose = isRedAlliance() ? flipPose(Swerve_Constants.trapAlignPose) : Swerve_Constants.trapAlignPose;       
+        Pose2d closestPose = isRedAlliance() ? flipPose(getPose()).nearest(Swerve_Constants.trapAlignPoses) : getPose().nearest(Swerve_Constants.trapAlignPoses);       
+        Pose2d targetPose = isRedAlliance() ? flipPose(closestPose) : closestPose;       
         PathConstraints constraints = new PathConstraints(3.0, 3.0, Units.degreesToRadians(360), Units.degreesToRadians(720));
         Command pathfindingCommand = AutoBuilder.pathfindToPose(targetPose,constraints,0.0, 0.1);
         pathfindingCommand.addRequirements(this);

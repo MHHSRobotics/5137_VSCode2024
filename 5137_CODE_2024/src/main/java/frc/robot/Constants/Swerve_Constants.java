@@ -1,5 +1,8 @@
 package frc.robot.Constants;
 
+import java.util.Arrays;
+import java.util.List;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -28,7 +31,11 @@ public class Swerve_Constants {
     public static final double driveKD = 0.0;
 
     //Align Positions
-    public static final Pose2d trapAlignPose = new Pose2d(4.40, 3.37, Rotation2d.fromDegrees(-120));
+    public static final Pose2d trapAlignPoseTop = new Pose2d(4.40, 3.37, Rotation2d.fromDegrees(-120));
+    public static final Pose2d trapAlignPoseBottom = new Pose2d(4.40, 4.8, Rotation2d.fromDegrees(120));
+    public static final Pose2d trapAlignPoseSide = new Pose2d(5.8, 4.1, Rotation2d.fromDegrees(0));
+    public static final List<Pose2d> trapAlignPoses = Arrays.asList(trapAlignPoseTop, trapAlignPoseSide, trapAlignPoseBottom);
+
     public static final Pose2d ampAlignPose = new Pose2d(1.8, 7.81, Rotation2d.fromDegrees(-90));
     public static final double fieldLengthMeters = Units.inchesToMeters(651.25);
 
