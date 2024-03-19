@@ -1,82 +1,80 @@
 package frc.robot.Subsystems;
 
-import com.ctre.phoenix6.controls.MusicTone;
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Objects.Note;
-import frc.robot.Objects.Note.Articulation;
 
 public class Music extends SubsystemBase {
 
-    private double bpm;
-
-    private TalonFX motor1;
-    private TalonFX motor2;
-    private TalonFX motor3;
-    private TalonFX motor4;
-    private TalonFX motor5;
-    private TalonFX motor6;
-    private TalonFX motor7;
-    private TalonFX motor8;
+    private TalonFX[] motors;
+    private Orchestra orchesta;
+    private String[] songs;
+    private SendableChooser<String> songChooser;
+    private String currentSongName;
     
     public Music() {
-        bpm = 120;
+        motors = new TalonFX[] {
+            new TalonFX(1),
+            new TalonFX(2),
+            new TalonFX(3),
+            new TalonFX(4),
+            new TalonFX(5),
+            new TalonFX(6),
+            new TalonFX(7),
+            new TalonFX(8)
+        };
 
-        motor1 = new TalonFX(1);
-        motor2 = new TalonFX(2);
-        motor3 = new TalonFX(3);
-        motor4 = new TalonFX(4);
-        motor5 = new TalonFX(5);
-        motor6 = new TalonFX(6);
-        motor7 = new TalonFX(7);
-        motor8 = new TalonFX(8);
-    }
+        orchesta = new Orchestra();
 
-    public void setBPM(double bpm) {
-        this.bpm = bpm;
-    }
-
-    public double getBPM() {
-        return this.bpm;
-    }
-
-    public void set(double hz) {
-        motor1.setControl(new MusicTone(hz));
-        motor2.setControl(new MusicTone(hz));
-        motor3.setControl(new MusicTone(hz));
-        motor4.setControl(new MusicTone(hz));
-        motor5.setControl(new MusicTone(hz));
-        motor6.setControl(new MusicTone(hz));
-        motor7.setControl(new MusicTone(hz));
-        motor8.setControl(new MusicTone(hz));
-    }
-
-    public void play(Note note) {
-        set(note.getFrequency());
-        try {
-            switch (note.getArticulation()) {
-                case kStacatto: Thread.sleep(Double.doubleToLongBits(500*(note.getLength()*60/bpm))); break;
-                case kTenuto: Thread.sleep(Double.doubleToLongBits(1000*(note.getLength()*60/bpm))); break;
-                default: Thread.sleep(Double.doubleToLongBits(950*(note.getLength()*60/bpm)));
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        for (var i = 0; i < motors.length; i++) {
+            orchesta.addInstrument(motors[i]);
         }
-        try {
-            switch (note.getArticulation()) {
-                case kStacatto: set(0); Thread.sleep(Double.doubleToLongBits(500*(note.getLength()*60/bpm))); break;
-                case kTenuto: break;
-                default: set(0); Thread.sleep(Double.doubleToLongBits(50*(note.getLength()*60/bpm)));
+
+        songs = new String[] {
+            "Song1"
+        };
+
+        songChooser = new SendableChooser<String>();
+        
+        for (var i = 0; i < songs.length; i++) {
+            songChooser.addOption(songs[i], songs[i]);
+            if (i == 0) {
+                songChooser.setDefaultOption(songs[i], songs[i]);
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        }
+
+        currentSongName = songs[0];
+
+        SmartDashboard.putData("Song Choice", songChooser);
+    }
+
+    public void play() {
+        System.out.println("Orchesta Playing");
+        orchesta.play();
+    }
+
+    public void pause() {
+        System.out.println("Orchesta Paused");
+        orchesta.pause();
+    }
+
+    public void togglePlaying() {
+        if (orchesta.isPlaying()) {
+            this.pause();
+        } else {
+            this.play();
         }
     }
 
-    public void play(Note... notes) {
-        for (var i = 0; i < notes.length; i++) {
-            play(notes[i]);
+    @Override
+    public void periodic() {
+        if (!songChooser.getSelected().equals(currentSongName)) {
+            this.pause();
+            orchesta.loadMusic(songChooser.getSelected());
+            currentSongName = songChooser.getSelected();
         }
     }
 }

@@ -33,10 +33,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     musician.cross()
-    .onTrue(music_Commands.BbMajorScale());
-
-    musician.circle()
-    .onTrue(music_Commands.HotCrossBuns());
+    .onTrue(music_Commands.toggleMusic());
   }
 
   public Command getAutonomousCommand() {
