@@ -20,11 +20,11 @@ public class Vision_Constants {
     public static final double pitchAR1 = Units.degreesToRadians(-55);
     public static final double yawAR1 = Units.degreesToRadians(200);
     
-    public static final double offsetXOBJ = 0;
+    public static final double offsetXOBJ = 13;
     public static final double offsetYOBJ = 0;
-    public static final double offsetZOBJ = Units.inchesToMeters(9.5);
+    public static final double offsetZOBJ = Units.inchesToMeters(6.5);
     public static final double rollOBJ = 0;
-    public static final double pitchOBJ = -11;
+    public static final double pitchOBJ = -17;
     public static final double yawOBJ= 0;
 
     public static final Transform3d robotToAR1 = new Transform3d(offsetXAR1, offsetYAR1, offsetZAR1, new Rotation3d(rollAR1,pitchAR1, yawAR1));

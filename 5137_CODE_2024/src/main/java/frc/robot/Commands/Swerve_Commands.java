@@ -2,6 +2,7 @@ package frc.robot.Commands;
 
 import frc.robot.Constants.Swerve_Constants;
 import frc.robot.Subsystems.Swerve;
+import frc.robot.Subsystems.Vision;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class Swerve_Commands {
     private Swerve swerve;
+    private Vision vision;
 
     public Swerve_Commands(Swerve swerve) {
         this.swerve = swerve;
@@ -47,6 +49,10 @@ public class Swerve_Commands {
 
     public Command driveToTrap() {
         return new InstantCommand(() -> swerve.driveToTrap());
+    }
+
+    public FunctionalCommand driveToNote(DoubleSupplier distanceToNote, DoubleSupplier rotationToNote) {
+        return new FunctionalCommand(() -> {}, () -> swerve.driveToNote(rotationToNote.getAsDouble(), distanceToNote.getAsDouble()), (Boolean x) -> {}, () -> swerve.driveComplete(), swerve);
     }
 
 }

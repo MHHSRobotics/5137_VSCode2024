@@ -1,6 +1,7 @@
 package frc.robot.Subsystems;
 
 import frc.robot.Constants.Swerve_Constants;
+import frc.robot.Constants.Vision_Constants;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,11 +27,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Distance;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.MutableMeasure;
+
 import static edu.wpi.first.units.MutableMeasure.mutable;
-import edu.wpi.first.units.Velocity;
+
 import edu.wpi.first.units.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
@@ -189,6 +188,19 @@ public class Swerve extends SubsystemBase {
         pathfindingCommand.addRequirements(this);
         pathfindingCommand.schedule();
     }
+
+        public void driveToNote(double radiansToNote, double metersToNote){
+       
+        double distance = metersToNote;
+        double turnVelocity = turnController.calculate(radiansToNote,0);
+        double driveVelocity = turnController.calculate(distance, Vision_Constants.notePickupDistance);
+        drive(new Translation2d(driveVelocity, 0), turnVelocity, false);
+    }
+    public boolean driveComplete(){
+        return driveController.atSetpoint(); 
+    }
+
+
 
     public void setChassisSpeeds(ChassisSpeeds velocity) {
         swerve.setChassisSpeeds(velocity);
