@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 import frc.robot.Commands.*;
+import frc.robot.Constants.Climb_Constants;
 import frc.robot.Constants.Swerve_Constants;
 import frc.robot.Subsystems.*;
 
@@ -38,12 +39,14 @@ public class RobotContainer {
   private Shooter shooter;
   private Vision vision;
   private LED led;
+  private Climb climb;
 
   private Swerve_Commands swerve_Commands;
   private Arm_Commands arm_Commands;
   private Intake_Commands intake_Commands;
   private Shooter_Commands shooter_Commands;
   private LED_Commands led_Commands;
+  private Climb_Commands climb_Commands;
 
   public RobotContainer() {
     driver = new CommandXboxController(0);
@@ -55,6 +58,8 @@ public class RobotContainer {
     shooter = new Shooter();
     vision = new Vision();
     led = new LED();
+    climb = new Climb();
+    
 
     swerve_Commands = new Swerve_Commands(swerve);
     arm_Commands = new Arm_Commands(arm);
@@ -62,6 +67,7 @@ public class RobotContainer {
     shooter_Commands = new Shooter_Commands(shooter);
     vision.setDefaultCommand(new AddVisionMeasurement(vision, swerve));
     led_Commands = new LED_Commands(led);
+    climb_Commands = new Climb_Commands(climb);
 
     NamedCommands.registerCommand("intake", 
         new ParallelCommandGroup(
@@ -196,6 +202,10 @@ public class RobotContainer {
     // Arm Bindings
 
     arm.setDefaultCommand(arm_Commands.manualMove(() -> -MathUtil.applyDeadband(operator.getLeftY(), 0.1)));
+
+    // Climb Bindings
+
+    climb.setDefaultCommand(climb_Commands.move(()-> -MathUtil.applyDeadband(operator.getRightY(), Climb_Constants.RY_Deadband)));
 
     // Shooting Bindings
 
