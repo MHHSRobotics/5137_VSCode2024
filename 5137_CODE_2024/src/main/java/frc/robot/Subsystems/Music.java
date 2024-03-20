@@ -34,7 +34,7 @@ public class Music extends SubsystemBase {
         }
 
         songs = new String[] {
-            "EntryOfTheGladiators"
+            "EntryOfTheGladiators.chrp"
         };
 
         songChooser = new SendableChooser<String>();
