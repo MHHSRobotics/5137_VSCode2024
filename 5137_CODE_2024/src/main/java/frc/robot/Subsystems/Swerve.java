@@ -72,13 +72,13 @@ public class Swerve extends SubsystemBase {
     private boolean alignToSpeaker;
      
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
-    private final MutableMeasure<Distance> m_distance = mutable(Meters.of(0));
-    private final MutableMeasure<Velocity<Distance>> m_velocity = mutable(MetersPerSecond.of(0));
+    private final MutableMeasure<Angle> m_distance = mutable(Radians.of(0));
+    private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
 
-    private PIDController angle1 = new PIDController(.01, 0, 0.0);
-    private PIDController angle2 = new PIDController(.01, 0, 0.0);
-    private PIDController angle3 = new PIDController(.01, 0, 0.0);
-    private PIDController angle4 = new PIDController(.01, 0, 0.0);
+    private PIDController angle1 = new PIDController(.005, 0, 0.0);
+    private PIDController angle2 = new PIDController(.005, 0, 0.0);
+    private PIDController angle3 = new PIDController(.005, 0, 0.0);
+    private PIDController angle4 = new PIDController(.005, 0, 0.0);
     private Timer timer;
 
     private SwerveModule module0;
@@ -96,9 +96,9 @@ public class Swerve extends SubsystemBase {
                 log.motor("swerve-left")
                 .voltage(
                     m_appliedVoltage.mut_replace(
-                        RobotController.getBatteryVoltage()*module0.getDriveMotor().getAppliedOutput(), Volts))
-                        .linearPosition(m_distance.mut_replace(module0.getDriveMotor().getPosition(), Meters))
-                        .linearVelocity(m_velocity.mut_replace(module0.getDriveMotor().getVelocity(), MetersPerSecond));
+                        RobotController.getBatteryVoltage()*module0.getAngleMotor().getAppliedOutput(), Volts))
+                        .angularPosition(m_distance.mut_replace(Math.toRadians(module0.getAngleMotor().getPosition()), Radians))
+                        .angularVelocity(m_velocity.mut_replace(Math.toRadians(module0.getAngleMotor().getVelocity()), RadiansPerSecond));
                 },
             this
         ));
@@ -289,14 +289,14 @@ public class Swerve extends SubsystemBase {
     
      public void setVoltage(double volts){
         //System.out.println(volts);
-            module0.getDriveMotor().setVoltage(volts);
-            module1.getDriveMotor().setVoltage(volts);
-            module2.getDriveMotor().setVoltage(volts);
-            module3.getDriveMotor().setVoltage(volts);
+            module0.getAngleMotor().setVoltage(volts);
+            //module1.getDriveMotor().setVoltage(volts);
+            //module2.getDriveMotor().setVoltage(volts);
+            //module3.getDriveMotor().setVoltage(volts);
 
-            module0.getAngleMotor().set(angle1.calculate(module0.getAbsolutePosition(), 270));
-            module1.getAngleMotor().set(angle2.calculate(module1.getAbsolutePosition(), 270));
-            module2.getAngleMotor().set(angle3.calculate(module2.getAbsolutePosition(), 270));
-            module3.getAngleMotor().set(angle4.calculate(module3.getAbsolutePosition(), 270));
+            //module0.getAngleMotor().set(angle1.calculate(module0.getAbsolutePosition(), 270));
+            //module1.getAngleMotor().set(angle2.calculate(module1.getAbsolutePosition(), 270));
+            //module2.getAngleMotor().set(angle3.calculate(module2.getAbsolutePosition(), 270));
+            //module3.getAngleMotor().set(angle4.calculate(module3.getAbsolutePosition(), 270));
         }
 }

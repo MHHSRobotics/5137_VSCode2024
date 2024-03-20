@@ -11,6 +11,8 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -123,14 +125,14 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    /* 
-    driver.cross()
+     /* 
+    driver.a()
     .onTrue(swerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    driver.circle()
+    driver.b()
     .onTrue(swerve.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    driver.square()
+    driver.x()
     .onTrue(swerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    driver.triangle()
+    driver.y()
     .onTrue(swerve.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
     */
 
@@ -139,6 +141,7 @@ public class RobotContainer {
     //TODO: Check if the fieldRelativeTrigger fixes loop ovverrun
     //Swerve Bindings
 
+    
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> getAllianceInvert()*-MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
       () -> getAllianceInvert()*-MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
@@ -171,6 +174,7 @@ public class RobotContainer {
     
     driver.back()
     .onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
+    
     
     
     // Arm Bindings
@@ -273,7 +277,7 @@ public class RobotContainer {
         led_Commands.greenLedsOn()
       ))
     .onFalse(led_Commands.greenLedsOff());
-
+    
     //Swerve Invert
 
     new Trigger(new BooleanSupplier() {
@@ -299,6 +303,7 @@ public class RobotContainer {
       }
     })
     .onTrue(new InstantCommand(() -> swerve.motorInvert()));
+    
   }
   
 
