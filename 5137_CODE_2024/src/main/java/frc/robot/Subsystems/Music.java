@@ -34,7 +34,7 @@ public class Music extends SubsystemBase {
         }
 
         songs = new String[] {
-            "Song1"
+            "EntryOfTheGladiators"
         };
 
         songChooser = new SendableChooser<String>();
@@ -43,6 +43,10 @@ public class Music extends SubsystemBase {
             songChooser.addOption(songs[i], songs[i]);
             if (i == 0) {
                 songChooser.setDefaultOption(songs[i], songs[i]);
+                var status = orchesta.loadMusic(songs[i]);
+                if (!status.isOK()) {
+                    System.out.println(status);
+                }
             }
         }
 
@@ -71,10 +75,12 @@ public class Music extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (!songChooser.getSelected().equals(currentSongName)) {
-            this.pause();
-            orchesta.loadMusic(songChooser.getSelected());
-            currentSongName = songChooser.getSelected();
+        if (songChooser.getSelected() != null) {
+            if (!songChooser.getSelected().equals(currentSongName)) {
+                this.pause();
+                orchesta.loadMusic(songChooser.getSelected());
+                currentSongName = songChooser.getSelected();
+            }
         }
     }
 }

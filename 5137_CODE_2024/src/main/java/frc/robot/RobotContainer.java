@@ -22,7 +22,7 @@ public class RobotContainer {
   public Music_Commands music_Commands;
 
   public RobotContainer() {
-    musician = new CommandPS4Controller(0);
+    musician = new CommandPS4Controller(1);
 
     music = new Music();
 
