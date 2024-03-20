@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6694501638412476,
+      "y": 4.417128086090088
+    },
+    "rotation": -59.7435682835813
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot_Delay"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 7.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L-ML"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Low",
+  "choreoAuto": true
+}

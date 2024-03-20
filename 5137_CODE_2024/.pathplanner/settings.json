@@ -8,9 +8,10 @@
     "High"
   ],
   "autoFolders": [
+    "High",
     "Low",
     "Middle",
-    "High"
+    "Test"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

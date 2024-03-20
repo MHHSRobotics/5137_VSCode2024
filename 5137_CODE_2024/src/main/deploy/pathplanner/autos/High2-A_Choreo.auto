@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6499590277671814,
+      "y": 6.717046737670898
+    },
+    "rotation": 61.11341775392224
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot_Delay"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "H-1H"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1H-A"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "amp"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "High",
+  "choreoAuto": true
+}

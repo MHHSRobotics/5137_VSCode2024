@@ -95,6 +95,22 @@ public class RobotContainer {
       )
     );
 
+    NamedCommands.registerCommand("amp",
+      new SequentialCommandGroup(
+        new ParallelCommandGroup(
+          arm_Commands.moveToAmp(),
+          shooter_Commands.shootIntake()
+        ),
+        new WaitCommand(0.65),
+        intake_Commands.intakeForward(),
+        new WaitCommand(0.3),
+        new ParallelCommandGroup(
+          shooter_Commands.rest(),
+          intake_Commands.stop()
+        )
+      )
+    );
+
     NamedCommands.registerCommand("shoot_Delay",
       new SequentialCommandGroup(
         new ParallelCommandGroup(
