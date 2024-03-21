@@ -18,6 +18,7 @@ public class Climb extends SubsystemBase{
         winchMotor = new CANSparkMax(Climb_Constants.motorPort, MotorType.kBrushless);
         winchMotor.setInverted(false);
         winchMotor.setIdleMode(IdleMode.kBrake);
+        winchMotor.setSmartCurrentLimit(80)
 
         limitSwitch = new DigitalInput(Climb_Constants.limitSwitchPort);
     }
