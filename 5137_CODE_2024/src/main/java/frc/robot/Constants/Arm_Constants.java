@@ -38,7 +38,7 @@ public class Arm_Constants {
     public static final double normalRangeCenter = (minimumNormalAngle+maximumNormalAngle)/2.0; //Radians
 
     // Characteristics
-    public static final double encoderOffset = 0.314125007853;
+    public static final double encoderOffset = 0.314125007853-0.16666666666;
     public static final double gearRatio = 227.555/1.0; 
 
 
