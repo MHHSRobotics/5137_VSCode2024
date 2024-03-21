@@ -11,18 +11,10 @@
           "open": true
         }
       },
-      "SPARK MAX [2]": {
+      "SPARK MAX [5]": {
         "header": {
           "open": true
         }
-      },
-      "SPARK MAX [6]": {
-        "header": {
-          "open": true
-        }
-      },
-      "window": {
-        "visible": false
       }
     },
     "RoboRIO": {

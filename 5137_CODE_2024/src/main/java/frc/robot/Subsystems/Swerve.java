@@ -153,7 +153,7 @@ public class Swerve extends SubsystemBase {
                 return false;
             },
             this);
-            autoChooser = AutoBuilder.buildAutoChooser("Mid2");
+            autoChooser = AutoBuilder.buildAutoChooser("Mid4_Choreo");
 
         SmartDashboard.putData("Auto Selection", autoChooser);
     }
