@@ -39,14 +39,14 @@ public class RobotContainer {
   private Shooter shooter;
   private Vision vision;
   private LED led;
-  private Climb climb;
+  //private Climb climb;
 
   private Swerve_Commands swerve_Commands;
   private Arm_Commands arm_Commands;
   private Intake_Commands intake_Commands;
   private Shooter_Commands shooter_Commands;
   private LED_Commands led_Commands;
-  private Climb_Commands climb_Commands;
+  //private Climb_Commands climb_Commands;
 
   public RobotContainer() {
     driver = new CommandXboxController(0);
@@ -58,7 +58,7 @@ public class RobotContainer {
     shooter = new Shooter();
     vision = new Vision();
     led = new LED();
-    climb = new Climb();
+    //climb = new Climb();
     
 
     swerve_Commands = new Swerve_Commands(swerve);
@@ -67,7 +67,7 @@ public class RobotContainer {
     shooter_Commands = new Shooter_Commands(shooter);
     vision.setDefaultCommand(new AddVisionMeasurement(vision, swerve));
     led_Commands = new LED_Commands(led);
-    climb_Commands = new Climb_Commands(climb);
+    //climb_Commands = new Climb_Commands(climb);
 
     NamedCommands.registerCommand("intake", 
         new ParallelCommandGroup(
@@ -163,12 +163,20 @@ public class RobotContainer {
     //TODO: Check if the fieldRelativeTrigger fixes loop ovverrun
     //Swerve Bindings
 
+    Trigger leftBumper = new Trigger(new BooleanSupplier() {
+      @Override
+      public boolean getAsBoolean() {
+        return !driver.leftBumper().getAsBoolean();
+      }
+    });
+    
+
     
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> getAllianceInvert()*-MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
       () -> getAllianceInvert()*-MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> -MathUtil.applyDeadband(driver.getRightX(), Swerve_Constants.RX_Deadband),
-      () -> true
+      () -> leftBumper.getAsBoolean()
     ));
 
     driver.a()
@@ -205,7 +213,7 @@ public class RobotContainer {
 
     // Climb Bindings
 
-    climb.setDefaultCommand(climb_Commands.move(()-> -MathUtil.applyDeadband(operator.getRightY(), Climb_Constants.RY_Deadband)));
+    //climb.setDefaultCommand(climb_Commands.move(()-> -MathUtil.applyDeadband(operator.getRightY(), Climb_Constants.RY_Deadband)));
 
     // Shooting Bindings
 
@@ -213,7 +221,6 @@ public class RobotContainer {
     .onTrue(
       new SequentialCommandGroup(
         shooter_Commands.shootSpeaker(),
-        new WaitCommand(1),
         arm_Commands.moveToSpeaker(
           new DoubleSupplier() {
             @Override
@@ -222,7 +229,7 @@ public class RobotContainer {
             }
           }
         ),
-        new WaitCommand(1),
+        new WaitCommand(0.65),
         intake_Commands.intakeForward()
       )
     )
@@ -267,6 +274,12 @@ public class RobotContainer {
         intake_Commands.stop()
       )
     );
+
+    operator.R1()
+    .onTrue(shooter_Commands.shootSpeaker());
+
+    operator.L1()
+    .onTrue(shooter_Commands.stop());
 
     // Intake Bindings & Stop Command
 

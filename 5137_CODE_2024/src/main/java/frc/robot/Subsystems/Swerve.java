@@ -219,7 +219,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getSpeakerAimVelocity() {
-        return allianceInvert()*-turnController.calculate(getRadiansToTarget(),0);
+        return -turnController.calculate(getRadiansToTarget(),0);
     }
 
     public boolean turnAligned() {
