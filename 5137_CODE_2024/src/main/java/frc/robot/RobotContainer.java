@@ -163,12 +163,14 @@ public class RobotContainer {
     //TODO: Check if the fieldRelativeTrigger fixes loop ovverrun
     //Swerve Bindings
 
-    Trigger leftBumper = new Trigger(new BooleanSupplier() {
+    /*Trigger leftBumper = new Trigger(new BooleanSupplier() {
       @Override
       public boolean getAsBoolean() {
         return !driver.leftBumper().getAsBoolean();
       }
-    });
+    });*/
+
+    Trigger leftBumper = driver.leftBumper();
     
 
     
@@ -176,7 +178,7 @@ public class RobotContainer {
       () -> getAllianceInvert()*-MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
       () -> getAllianceInvert()*-MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> -MathUtil.applyDeadband(driver.getRightX(), Swerve_Constants.RX_Deadband),
-      () -> leftBumper.getAsBoolean()
+      () -> !leftBumper.getAsBoolean()
     ));
 
     driver.a()

@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
@@ -16,15 +17,18 @@ public class Intake extends SubsystemBase {
 
     private TalonSRX intakeMotor;
     private Ultrasonic ultrasonic;
+    private DigitalInput irSensor;
     private MedianFilter m_filter;  // Ultrasonic sensors tend to be quite noisy and susceptible to sudden outliers, so measurements are filtered with a 5-sample median filter
 
     public Intake() {
         SmartDashboard.putNumber("Object Distance", 1000.0);
 
-        ultrasonic = new Ultrasonic(1, 0);
+        ultrasonic = new Ultrasonic(4, 5); //1, 0
         ultrasonic.setEnabled(true);
         Ultrasonic.setAutomaticMode(true);
         m_filter = new MedianFilter(5);
+        irSensor = new DigitalInput(0);
+
 
         intakeMotor= new TalonSRX(20);
         intakeMotor.setInverted(true);
@@ -38,10 +42,13 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean objectInRange(){
+        return !irSensor.get();
+        /* 
         if(getDistance() <= 10){
             return true;
         }
         return false;
+        */
     }
 
     public void set (double speed) {
