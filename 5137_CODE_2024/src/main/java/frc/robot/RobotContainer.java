@@ -13,8 +13,7 @@ import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
-
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -171,7 +170,6 @@ public class RobotContainer {
     });*/
 
     Trigger leftBumper = driver.leftBumper();
-    
 
     
     swerve.setDefaultCommand(swerve_Commands.drive(
@@ -218,7 +216,15 @@ public class RobotContainer {
     //climb.setDefaultCommand(climb_Commands.move(()-> -MathUtil.applyDeadband(operator.getRightY(), Climb_Constants.RY_Deadband)));
 
     // Shooting Bindings
+    
+    operator.cross().onTrue(shooter.sysIdQuasistatic(Direction.kForward));
+    operator.square().onTrue(shooter.sysIdQuasistatic(Direction.kReverse));
+    operator.triangle().onTrue(shooter.sysIdDynamic(Direction.kForward));
+    operator.circle().onTrue(shooter.sysIdDynamic(Direction.kReverse));
 
+    /*
+  
+     
     operator.cross()
     .onTrue(
       new SequentialCommandGroup(
@@ -276,15 +282,6 @@ public class RobotContainer {
         intake_Commands.stop()
       )
     );
-
-    operator.R1()
-    .onTrue(shooter_Commands.shootSpeaker());
-
-    operator.L1()
-    .onTrue(shooter_Commands.stop());
-
-    // Intake Bindings & Stop Command
-
     operator.triangle()
     .onTrue(
       new ParallelCommandGroup(
@@ -297,6 +294,17 @@ public class RobotContainer {
         intake_Commands.stop()
       )
     );
+    */
+
+    operator.R1()
+    .onTrue(shooter_Commands.shootSpeaker());
+
+    operator.L1()
+    .onTrue(shooter_Commands.stop());
+
+    // Intake Bindings & Stop Command
+
+  
 
     operator.R2()
     .onTrue(intake_Commands.intakeForward())
