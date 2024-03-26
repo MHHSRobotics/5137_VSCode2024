@@ -83,8 +83,8 @@ public class ArmTrajectoryAlignment {
 
     public double calculateAngle(double position) {
         if (position > minRange && position < maxRange) {
-            if (position >= 1.57){
-                return Math.toRadians(Math.sqrt(position - 1.5)*16.9 + 12.26);
+            if (position >= 1.25 && position <= 4.75){
+                return Math.toRadians(-3.3015*(Math.pow(position, 2)) + 28.658*position-15.867);
             }
             else{    
                 double x = position;
