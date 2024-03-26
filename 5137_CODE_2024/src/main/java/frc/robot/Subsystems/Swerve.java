@@ -270,6 +270,7 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putString("SwervePose", swerve.getPose().toString());
+        System.out.println();
        //swerveField.setRobotPose(swerve.getPose());
         SmartDashboard.putNumber("Distance to Speaker", getDistanceToTarget());
     }
