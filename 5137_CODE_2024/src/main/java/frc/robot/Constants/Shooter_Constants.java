@@ -2,7 +2,7 @@ package frc.robot.Constants;
 
 public class Shooter_Constants {
     
-    public static final double defaultShooterSpeed = .75;
+    public static final double defaultShooterSpeed = .90;
     public static final double restSpeed = .4;
     public static final double ampShooterSpeed = .1;
 
