@@ -51,12 +51,12 @@ public class Shooter extends SubsystemBase {
                 setVoltage(volts.in(Volts));
             },
             log -> {
-                log.motor("lower-shooter-motor")
+                log.motor("upper-shooter-motor")
                 .voltage(
                     m_appliedVoltage.mut_replace(
-                        RobotController.getBatteryVoltage()*lowerMotor.getAppliedOutput(), Volts))
-                        .angularPosition(m_distance.mut_replace(lowerEncoder.getPosition(), Rotation))
-                        .angularVelocity(m_velocity.mut_replace(lowerEncoder.getVelocity(), RotationsPerSecond));
+                        RobotController.getBatteryVoltage()*upperMotor.getAppliedOutput(), Volts))
+                        .angularPosition(m_distance.mut_replace(upperEncoder.getPosition(), Rotation))
+                        .angularVelocity(m_velocity.mut_replace(upperEncoder.getVelocity(), RotationsPerSecond));
                 },
             this
         ));
@@ -83,7 +83,7 @@ public class Shooter extends SubsystemBase {
 
     public void setVoltage(double voltage)
     {
-        lowerMotor.setVoltage(voltage);
+        upperMotor.setVoltage(voltage);
     }
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {

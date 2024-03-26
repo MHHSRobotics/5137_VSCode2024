@@ -11,11 +11,11 @@ public class Shooter_Constants {
     public static final int lowerMotorID = 21; 
     public static final int upperMotorID = 22; 
 
-    public static final double lowerKP = 0.0;
+    public static final double lowerKP = 0.000028673;
     public static final double lowerKI = 0.0;
     public static final double lowerKD = 0.0;
-    public static final double lowerKS = 0.0;
-    public static final double lowerKV = 0.0;
+    public static final double lowerKS = 0.15881;
+    public static final double lowerKV = 0.0076164;
 
     public static final double upperKP = 0.0;
     public static final double upperKI = 0.0;
