@@ -32,11 +32,11 @@ public class Shooter extends SubsystemBase {
     private RelativeEncoder upperEncoder;
 
 
-    private PIDController lowerPID = new PIDController(Shooter_Constants.lowerKP, Shooter_Constants.lowerKI, Shooter_Constants.lowerKD);
-    private PIDController upperPID = new PIDController(Shooter_Constants.upperKP, Shooter_Constants.upperKI, Shooter_Constants.upperKD);
+    private PIDController lowerPID;
+    private PIDController upperPID;
 
-    private SimpleMotorFeedforward lowerFeedForward = new SimpleMotorFeedforward(Shooter_Constants.lowerKS, Shooter_Constants.lowerKV);
-    private SimpleMotorFeedforward upperFeedForward = new SimpleMotorFeedforward(Shooter_Constants.upperKS, Shooter_Constants.upperKV);
+    private SimpleMotorFeedforward lowerFeedForward;
+    private SimpleMotorFeedforward upperFeedForward;
 
 
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
@@ -63,6 +63,11 @@ public class Shooter extends SubsystemBase {
 
 
     public Shooter(){
+        lowerPID = new PIDController(Shooter_Constants.lowerKP, Shooter_Constants.lowerKI, Shooter_Constants.lowerKD);
+        upperPID = new PIDController(Shooter_Constants.upperKP, Shooter_Constants.upperKI, Shooter_Constants.upperKD);
+        lowerFeedForward = new SimpleMotorFeedforward(Shooter_Constants.lowerKS, Shooter_Constants.lowerKV);
+        upperFeedForward = new SimpleMotorFeedforward(Shooter_Constants.upperKS, Shooter_Constants.upperKV);
+
         lowerMotor = new CANSparkMax(Shooter_Constants.lowerMotorID, MotorType.kBrushless);
         upperMotor = new CANSparkMax(Shooter_Constants.upperMotorID, MotorType.kBrushless);
         lowerEncoder = lowerMotor.getEncoder();
@@ -76,11 +81,18 @@ public class Shooter extends SubsystemBase {
     }
 
     public void shoot(double desiredRPM) {
+        
         lowerMotor.setVoltage(lowerPID.calculate(lowerEncoder.getVelocity(), desiredRPM) + lowerFeedForward.calculate(desiredRPM));
         upperMotor.setVoltage(upperPID.calculate(upperEncoder.getVelocity(), desiredRPM) + upperFeedForward.calculate(desiredRPM));
 
     }
 
+    @Override
+    public void periodic()
+    {
+        System.out.println("pid" + lowerPID.calculate(0, 4800));
+        System.out.println("feedforaard "+ lowerFeedForward.calculate(4800));
+    }
     public void setVoltage(double voltage)
     {
         upperMotor.setVoltage(voltage);
