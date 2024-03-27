@@ -216,13 +216,13 @@ public class RobotContainer {
     //climb.setDefaultCommand(climb_Commands.move(()-> -MathUtil.applyDeadband(operator.getRightY(), Climb_Constants.RY_Deadband)));
 
     // Shooting Bindings
-    
+    /* *
     operator.cross().onTrue(shooter.sysIdQuasistatic(Direction.kForward));
     operator.square().onTrue(shooter.sysIdQuasistatic(Direction.kReverse));
     operator.triangle().onTrue(shooter.sysIdDynamic(Direction.kForward));
     operator.circle().onTrue(shooter.sysIdDynamic(Direction.kReverse));
-
-    /*
+*/
+    
   
      
     operator.cross()
@@ -294,7 +294,7 @@ public class RobotContainer {
         intake_Commands.stop()
       )
     );
-    */
+    
 
     operator.R1()
     .onTrue(shooter_Commands.shootSpeaker());

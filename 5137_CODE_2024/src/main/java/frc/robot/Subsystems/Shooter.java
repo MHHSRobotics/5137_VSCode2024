@@ -14,6 +14,7 @@ import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -42,6 +43,8 @@ public class Shooter extends SubsystemBase {
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
     private final MutableMeasure<Angle> m_distance = mutable(Rotations.of(0));
     private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RotationsPerSecond.of(0));
+
+    private double desiredRPM = 4800;
     
 
     SysIdRoutine routine = new SysIdRoutine(
@@ -51,12 +54,12 @@ public class Shooter extends SubsystemBase {
                 setVoltage(volts.in(Volts));
             },
             log -> {
-                log.motor("upper-shooter-motor")
+                log.motor("lower-shooter-motor")
                 .voltage(
                     m_appliedVoltage.mut_replace(
-                        RobotController.getBatteryVoltage()*upperMotor.getAppliedOutput(), Volts))
-                        .angularPosition(m_distance.mut_replace(upperEncoder.getPosition(), Rotation))
-                        .angularVelocity(m_velocity.mut_replace(upperEncoder.getVelocity(), RotationsPerSecond));
+                        RobotController.getBatteryVoltage()*lowerMotor.getAppliedOutput(), Volts))
+                        .angularPosition(m_distance.mut_replace(lowerEncoder.getPosition(), Rotation))
+                        .angularVelocity(m_velocity.mut_replace(lowerEncoder.getVelocity(), RotationsPerSecond));
                 },
             this
         ));
@@ -71,13 +74,18 @@ public class Shooter extends SubsystemBase {
         lowerMotor = new CANSparkMax(Shooter_Constants.lowerMotorID, MotorType.kBrushless);
         upperMotor = new CANSparkMax(Shooter_Constants.upperMotorID, MotorType.kBrushless);
         lowerEncoder = lowerMotor.getEncoder();
-        upperEncoder = lowerMotor.getEncoder();
+        upperEncoder = upperMotor.getEncoder();
 
+        lowerMotor.setInverted(false);
+        lowerEncoder.setVelocityConversionFactor(1);
         lowerMotor.setSmartCurrentLimit(Shooter_Constants.maxSupplyCurrent);
         lowerMotor.setIdleMode(IdleMode.kBrake);
 
+        upperMotor.setInverted(false);
         upperMotor.setSmartCurrentLimit(Shooter_Constants.maxSupplyCurrent);
         upperMotor.setIdleMode(IdleMode.kBrake);
+        upperEncoder.setVelocityConversionFactor(1);
+
     }
 
     public void shoot(double desiredRPM) {
@@ -95,7 +103,7 @@ public class Shooter extends SubsystemBase {
     }
     public void setVoltage(double voltage)
     {
-        upperMotor.setVoltage(voltage);
+        lowerMotor.setVoltage(voltage);
     }
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
