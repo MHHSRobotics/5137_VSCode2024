@@ -76,6 +76,18 @@ public class RobotContainer {
         )
     );
 
+    NamedCommands.registerCommand("arm3.9", 
+        new InstantCommand(()-> arm.alignToSpeaker(3.9), arm)
+    );
+
+    NamedCommands.registerCommand("rev",
+      new InstantCommand(() -> shooter_Commands.shootSpeaker(), shooter)
+    );
+
+    NamedCommands.registerCommand("release",
+     new InstantCommand(() -> intake_Commands.intakeForward())
+    );
+
     NamedCommands.registerCommand("default", arm_Commands.moveToTrap());
 
     NamedCommands.registerCommand("shoot",
