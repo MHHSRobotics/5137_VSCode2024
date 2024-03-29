@@ -13,8 +13,7 @@ import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
-
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -77,6 +76,14 @@ public class RobotContainer {
     );
 
     NamedCommands.registerCommand("default", arm_Commands.moveToTrap());
+
+    NamedCommands.registerCommand("release",
+      intake_Commands.intakeForward()
+  );
+
+  NamedCommands.registerCommand("rev",
+          shooter_Commands.shootSpeaker()
+    );
 
     NamedCommands.registerCommand("shoot",
       new SequentialCommandGroup(
@@ -208,9 +215,14 @@ public class RobotContainer {
     .onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
     
     
-    
-    // Arm Bindings
+    /* 
+    operator.cross().onTrue(arm.sysIdQuasisttatic(SysIdRoutine.Direction.kForward));
+    operator.square().onTrue(arm.sysIdQuasisttatic(SysIdRoutine.Direction.kReverse));
+    operator.triangle().onTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    operator.circle().onTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    */
 
+    // Arm Bindings
     arm.setDefaultCommand(arm_Commands.manualMove(() -> -MathUtil.applyDeadband(operator.getLeftY(), 0.1)));
 
     // Climb Bindings
@@ -344,6 +356,7 @@ public class RobotContainer {
       }
     })
     .onTrue(new InstantCommand(() -> swerve.motorInvert()));
+    
     
   }
   

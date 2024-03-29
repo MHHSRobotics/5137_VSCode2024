@@ -6,12 +6,17 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
-
+import edu.wpi.first.units.*;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 //import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 //import static edu.wpi.first.units.MutableMeasure.mutable;
 //import static edu.wpi.first.units.Units.Volts;
@@ -21,28 +26,44 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 //import edu.wpi.first.units.Measure;
 //import edu.wpi.first.units.MutableMeasure;
 //import edu.wpi.first.units.Velocity;
-//import edu.wpi.first.units.Voltage;
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.Radian;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.io.File;
 
 import org.apache.commons.math3.util.MathUtils;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import static edu.wpi.first.units.MutableMeasure.mutable;
+
 
 public class Arm extends ProfiledPIDSubsystem {
     
-    /* 
+    
+   
+     
+
+    private ArmTrajectoryAlignment align;
+    private CANSparkMax leftMotor;
+    private CANSparkMax rightMotor;
+    private DutyCycleEncoder encoder;
+    private ArmFeedforward feedForward;
+
+    private SendableChooser<Boolean> manualControlChoice;
     private RelativeEncoder leftEncoder;
     private RelativeEncoder rightEncoder;
 
-    private Timer timer;
 
 
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
-    private final MutableMeasure<Angle> m_distance = mutable(Rotations.of(0));
-    private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RotationsPerSecond.of(0));
+    private final MutableMeasure<Angle> m_distance = mutable(Radian.of(0));
+    private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
 
     SysIdRoutine routine = new SysIdRoutine(
         new SysIdRoutine.Config(),
@@ -55,27 +76,17 @@ public class Arm extends ProfiledPIDSubsystem {
                 .voltage(
                     m_appliedVoltage.mut_replace(
                         leftMotor.getBusVoltage()*leftMotor.getAppliedOutput(), Volts))
-                        .angularPosition(m_distance.mut_replace((leftEncoder.getPosition())/(Arm_Constants.gearRatio), Rotations))
-                        .angularVelocity(m_velocity.mut_replace((leftEncoder.getVelocity())/(Arm_Constants.gearRatio*60), RotationsPerSecond));
+                        .angularPosition(m_distance.mut_replace(2*Math.PI*(leftEncoder.getPosition())/(Arm_Constants.gearRatio), Radian))
+                        .angularVelocity(m_velocity.mut_replace(2*Math.PI*(leftEncoder.getVelocity())/(Arm_Constants.gearRatio), RadiansPerSecond));
                 log.motor("arm-right")
                 .voltage(
                     m_appliedVoltage.mut_replace(
                         rightMotor.getBusVoltage()*rightMotor.getAppliedOutput(), Volts))
-                        .angularPosition(m_distance.mut_replace((rightEncoder.getPosition())/(Arm_Constants.gearRatio), Rotations))
-                        .angularVelocity(m_velocity.mut_replace((rightEncoder.getVelocity())/(Arm_Constants.gearRatio*60), RotationsPerSecond));
+                        .angularPosition(m_distance.mut_replace(2*Math.PI*(rightEncoder.getPosition())/(Arm_Constants.gearRatio), Rotations))
+                        .angularVelocity(m_velocity.mut_replace(2*Math.PI*(rightEncoder.getVelocity())/(Arm_Constants.gearRatio), RotationsPerSecond));
             },
             this
         ));
-     */
-
-    private ArmTrajectoryAlignment align;
-    private CANSparkMax leftMotor;
-    private CANSparkMax rightMotor;
-    private DutyCycleEncoder encoder;
-    private ArmFeedforward feedForward;
-
-    private SendableChooser<Boolean> manualControlChoice;
-
     public Arm(File RobotConstants) {
         super(
             new ProfiledPIDController(
@@ -102,12 +113,13 @@ public class Arm extends ProfiledPIDSubsystem {
         leftMotor.setInverted(false);
         rightMotor.setInverted(true);
 
-        /* 
+        
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
-        timer = new Timer();
-        timer.reset();
-        */
+        leftEncoder.setPosition(0);
+        rightEncoder.setPosition(0);
+
+        
         feedForward = new ArmFeedforward(
             Arm_Constants.kS,
             Arm_Constants.kG,
@@ -163,7 +175,7 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     public void alignToSpeaker(double position) {
-        setGoal((align.calculateAngle(position))); 
+        setGoal((align.calculateAngle(position)/*-Math.toRadians(2)*/)); 
     }
 
     public double getGoal() {
@@ -177,7 +189,7 @@ public class Arm extends ProfiledPIDSubsystem {
     private void updateDashboard() {
         //SmartDashboard.putBoolean("Encoder", encoder.isConnected());
     SmartDashboard.putNumber("Arm Position", Math.toDegrees(this.getMeasurement()));
-       // SmartDashboard.putNumber("Arm Goal", Math.toDegrees(this.getGoal()));
+        SmartDashboard.putNumber("Arm Goal", Math.toDegrees(this.getGoal()));
     }
 
     @Override
@@ -189,15 +201,13 @@ public class Arm extends ProfiledPIDSubsystem {
 
     }
 
-    /* 
+     
     public Command sysIdQuasisttatic(SysIdRoutine.Direction direction) {
-        timer.restart();
         return routine.quasistatic(direction);
     }
 
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-        timer.restart();
         return routine.dynamic(direction);
     }
-    */
+    
 }
