@@ -2,24 +2,24 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6856427795446332,
-      "y": 4.42334502413814
+      "x": 0.7504937052726746,
+      "y": 6.655574798583984
     },
-    "rotation": -58.141220232983706
+    "rotation": 60.25511870305779
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "shoot_Delay"
+            "pathName": "High234"
           }
         }
       ]
     }
   },
-  "folder": "Low",
-  "choreoAuto": false
+  "folder": null,
+  "choreoAuto": true
 }

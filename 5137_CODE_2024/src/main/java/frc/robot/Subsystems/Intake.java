@@ -17,7 +17,8 @@ public class Intake extends SubsystemBase {
 
     private TalonSRX intakeMotor;
     private Ultrasonic ultrasonic;
-    private DigitalInput irSensor;
+    private DigitalInput irSensor0;
+    private DigitalInput irSensor1;
     private MedianFilter m_filter;  // Ultrasonic sensors tend to be quite noisy and susceptible to sudden outliers, so measurements are filtered with a 5-sample median filter
 
     public Intake() {
@@ -27,7 +28,9 @@ public class Intake extends SubsystemBase {
         ultrasonic.setEnabled(true);
         Ultrasonic.setAutomaticMode(true);
         m_filter = new MedianFilter(5);
-        irSensor = new DigitalInput(0);
+        irSensor0 = new DigitalInput(0);
+        irSensor1 = new DigitalInput(1);
+
 
 
         intakeMotor= new TalonSRX(20);
@@ -42,7 +45,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean objectInRange(){
-        return !irSensor.get();
+        return (!irSensor0.get() || !irSensor1.get());
         /* 
         if(getDistance() <= 10){
             return true;

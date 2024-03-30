@@ -98,15 +98,44 @@ public class RobotContainer {
           ),
           shooter_Commands.shootSpeaker()
         ),
-        new WaitCommand(0.65),
+        new WaitCommand(.65),
         intake_Commands.intakeForward(),
         new WaitCommand(0.3),
         new ParallelCommandGroup(
-          shooter_Commands.rest(),
           intake_Commands.stop()
         )
       )
     );
+    
+    NamedCommands.registerCommand("liftArm",
+        arm_Commands.moveToSpeaker(
+          new DoubleSupplier() {
+            @Override
+            public double getAsDouble() {
+              return 6.0;
+            }
+          }
+        ));
+
+        NamedCommands.registerCommand("liftArm3",
+        arm_Commands.moveToSpeaker(
+          new DoubleSupplier() {
+            @Override
+            public double getAsDouble() {
+              return 3.0;
+            }
+          }
+        ));
+
+        NamedCommands.registerCommand("liftArm1.2",
+        arm_Commands.moveToSpeaker(
+          new DoubleSupplier() {
+            @Override
+            public double getAsDouble() {
+              return 1.2;
+            }
+          }
+        ));
 
     NamedCommands.registerCommand("amp",
       new SequentialCommandGroup(

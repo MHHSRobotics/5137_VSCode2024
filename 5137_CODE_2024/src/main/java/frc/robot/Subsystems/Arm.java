@@ -130,7 +130,7 @@ public class Arm extends ProfiledPIDSubsystem {
         encoder.setDistancePerRotation(-2*Math.PI);
         encoder.setPositionOffset(Arm_Constants.encoderOffset);
 
-        align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 5.5, Arm_Constants.defaultPosition);
+        align = new ArmTrajectoryAlignment(RobotConstants, 0.65, 10, Arm_Constants.defaultPosition);
 
         manualControlChoice = new SendableChooser<Boolean>();
         manualControlChoice.addOption("Enabled", true);
@@ -175,7 +175,7 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     public void alignToSpeaker(double position) {
-        setGoal((align.calculateAngle(position)/*-Math.toRadians(2)*/)); 
+        setGoal((align.calculateAngle(position))); 
     }
 
     public double getGoal() {
