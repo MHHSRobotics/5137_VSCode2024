@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6499590277671814,
-      "y": 4.436619281768799
+      "x": 0.6694501638412476,
+      "y": 6.678064823150635
     },
-    "rotation": -60.57254228597142
+    "rotation": 59.53445372926423
   },
   "command": {
     "type": "sequential",
@@ -26,13 +26,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L-1L"
+            "pathName": "HighStart-C1-Shoot.1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "1L-S"
+            "pathName": "Shoot-C2-Shoot"
           }
         },
         {
@@ -44,6 +56,6 @@
       ]
     }
   },
-  "folder": "Low",
+  "folder": null,
   "choreoAuto": true
 }

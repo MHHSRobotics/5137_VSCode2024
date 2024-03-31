@@ -2,36 +2,30 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6694501638412476,
-      "y": 4.417128086090088
+      "x": 0.6860811114311218,
+      "y": 4.429877281188965
     },
-    "rotation": -59.7435682835813
+    "rotation": -58.52514558939277
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "shoot_Delay"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 7.0
+            "pathName": "LowStart-C5-Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "L-ML"
+            "pathName": "Shoot-C4-Shoot"
           }
         }
       ]
     }
   },
-  "folder": "Low",
+  "folder": null,
   "choreoAuto": true
 }
