@@ -3,7 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 import frc.robot.Commands.*;
-import frc.robot.Constants.Climb_Constants;
 import frc.robot.Constants.Swerve_Constants;
 import frc.robot.Subsystems.*;
 
@@ -12,7 +11,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -161,21 +159,9 @@ public class RobotContainer {
     .onTrue(swerve.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
     */
 
-  
-
-    //TODO: Check if the fieldRelativeTrigger fixes loop ovverrun
     //Swerve Bindings
 
-    /*Trigger leftBumper = new Trigger(new BooleanSupplier() {
-      @Override
-      public boolean getAsBoolean() {
-        return !driver.leftBumper().getAsBoolean();
-      }
-    });*/
-
     Trigger leftBumper = driver.leftBumper();
-    
-
     
     swerve.setDefaultCommand(swerve_Commands.drive(
       () -> getAllianceInvert()*-MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
@@ -205,7 +191,6 @@ public class RobotContainer {
     .onTrue(swerve_Commands.zeroGyro());
 
     // Other Bindings
-
     
     driver.back()
     .onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));

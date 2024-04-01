@@ -4,11 +4,6 @@ import frc.robot.Constants.Swerve_Constants;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.math3.util.MathUtils;
 import org.photonvision.PhotonUtils;
@@ -40,10 +35,7 @@ import swervelib.parser.SwerveParser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.RotationTarget;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -79,7 +71,6 @@ public class Swerve extends SubsystemBase {
     private PIDController angle2 = new PIDController(.005, 0, 0.0);
     private PIDController angle3 = new PIDController(.005, 0, 0.0);
     private PIDController angle4 = new PIDController(.005, 0, 0.0);
-    private Timer timer;
 
     private SwerveModule module0;
     private SwerveModule module1;
@@ -247,7 +238,6 @@ public class Swerve extends SubsystemBase {
         for(int i = 0; i < 4; i++){
             swerve.getModules()[i].getDriveMotor().setInverted(true);
         } 
-        //TODO: Check if redesigned method actually inverts properly
     }
 
     public boolean isRedAlliance(){
