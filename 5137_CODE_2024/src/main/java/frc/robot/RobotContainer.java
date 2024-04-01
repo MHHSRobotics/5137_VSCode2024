@@ -81,10 +81,6 @@ public class RobotContainer {
       intake_Commands.intakeForward()
   );
 
-  NamedCommands.registerCommand("rev",
-          shooter_Commands.shootSpeaker()
-    );
-
     NamedCommands.registerCommand("shoot",
       new SequentialCommandGroup(
         new ParallelCommandGroup(
@@ -102,33 +98,13 @@ public class RobotContainer {
         intake_Commands.intakeForward()
       )
     );
-    
-    NamedCommands.registerCommand("liftArm",
-        arm_Commands.moveToSpeaker(
-          new DoubleSupplier() {
-            @Override
-            public double getAsDouble() {
-              return 6.0;
-            }
-          }
-        ));
 
-        NamedCommands.registerCommand("liftArm3",
+        NamedCommands.registerCommand("liftArm3.6",
         arm_Commands.moveToSpeaker(
           new DoubleSupplier() {
             @Override
             public double getAsDouble() {
-              return 3.0;
-            }
-          }
-        ));
-
-        NamedCommands.registerCommand("liftArm1.2",
-        arm_Commands.moveToSpeaker(
-          new DoubleSupplier() {
-            @Override
-            public double getAsDouble() {
-              return 1.2;
+              return 3.632;
             }
           }
         ));
