@@ -99,11 +99,7 @@ public class RobotContainer {
           shooter_Commands.shootSpeaker()
         ),
         new WaitCommand(.65),
-        intake_Commands.intakeForward(),
-        new WaitCommand(0.3),
-        new ParallelCommandGroup(
-          intake_Commands.stop()
-        )
+        intake_Commands.intakeForward()
       )
     );
     
