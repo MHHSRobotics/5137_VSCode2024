@@ -119,6 +119,16 @@ public class RobotContainer {
           }
         ));
 
+        NamedCommands.registerCommand("liftArm4.2",
+        arm_Commands.moveToSpeaker(
+          new DoubleSupplier() {
+            @Override
+            public double getAsDouble() {
+              return 4.22;
+            }
+          }
+        ));
+
     NamedCommands.registerCommand("amp",
       new SequentialCommandGroup(
         new ParallelCommandGroup(
