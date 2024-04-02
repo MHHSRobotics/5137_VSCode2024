@@ -12,6 +12,8 @@ import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -92,7 +94,7 @@ public class RobotContainer {
           ),
           shooter_Commands.shootSpeaker()
         ),
-        new WaitCommand(.65),
+        new WaitCommand(1.1),
         intake_Commands.intakeForward()
       )
     );
@@ -103,6 +105,16 @@ public class RobotContainer {
             @Override
             public double getAsDouble() {
               return 3.632;
+            }
+          }
+        ));
+
+          NamedCommands.registerCommand("liftArm4.3",
+        arm_Commands.moveToSpeaker(
+          new DoubleSupplier() {
+            @Override
+            public double getAsDouble() {
+              return 4.3;
             }
           }
         ));
@@ -191,18 +203,19 @@ public class RobotContainer {
     .onTrue(swerve_Commands.zeroGyro());
 
     // Other Bindings
-    
+
     driver.back()
     .onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
     
     
-    /* 
+   /* 
     operator.cross().onTrue(arm.sysIdQuasisttatic(SysIdRoutine.Direction.kForward));
     operator.square().onTrue(arm.sysIdQuasisttatic(SysIdRoutine.Direction.kReverse));
     operator.triangle().onTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kForward));
     operator.circle().onTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     */
 
+    
     // Arm Bindings
     arm.setDefaultCommand(arm_Commands.manualMove(() -> -MathUtil.applyDeadband(operator.getLeftY(), 0.1)));
 

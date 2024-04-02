@@ -1063,5 +1063,15 @@
       "timestamp": 4.385930637431322
     }
   ],
-  "eventMarkers": []
+  "eventMarkers": [
+    {
+      "timestamp": 2.416444292945496,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "liftArm4.3"
+        }
+      }
+    }
+  ]
 }

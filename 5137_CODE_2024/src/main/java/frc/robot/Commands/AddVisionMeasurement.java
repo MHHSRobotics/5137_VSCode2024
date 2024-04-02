@@ -13,8 +13,6 @@ public class AddVisionMeasurement extends Command {
 
   Vision vision;
   Swerve swerve;
-  Pose2d estimatedPose;
-  double timestamp;
 
   public AddVisionMeasurement(Vision vision, Swerve swerve) {
     this.vision = vision;
@@ -33,6 +31,22 @@ public class AddVisionMeasurement extends Command {
     {
       Pose2d pose = ar2Pose.get().estimatedPose.toPose2d();
       double timestamp = ar2Pose.get().timestampSeconds;
+      swerve.addVisionMeasurement(pose, timestamp);
+    }
+
+    Optional<EstimatedRobotPose> ov1Pose = vision.getEstimatedOV1Pose(swerve.getPose());
+    if(ov1Pose.isPresent())
+    {
+      Pose2d pose = ov1Pose.get().estimatedPose.toPose2d();
+      double timestamp = ov1Pose.get().timestampSeconds;
+      swerve.addVisionMeasurement(pose, timestamp);
+    }
+
+    Optional<EstimatedRobotPose> ov2Pose = vision.getEstimatedOV2Pose(swerve.getPose());
+    if(ov2Pose.isPresent())
+    {
+      Pose2d pose = ov2Pose.get().estimatedPose.toPose2d();
+      double timestamp = ov2Pose.get().timestampSeconds;
       swerve.addVisionMeasurement(pose, timestamp);
     }
 
