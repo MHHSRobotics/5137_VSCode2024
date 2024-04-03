@@ -95,7 +95,64 @@ public class RobotContainer {
           shooter_Commands.shootSpeaker()
         ),
         new WaitCommand(1.1),
+        intake_Commands.intakeForward(),
+        new WaitCommand(0.1)
+      )
+    );
+
+     NamedCommands.registerCommand("shootKindaFast",
+      new SequentialCommandGroup(
+        new ParallelCommandGroup(
+          arm_Commands.moveToSpeaker(
+            new DoubleSupplier() {
+              @Override
+              public double getAsDouble() {
+                return swerve.getDistanceToTarget();
+              }
+            }
+          ),
+          shooter_Commands.shootSpeaker()
+        ),
+        new WaitCommand(1.0),
+        intake_Commands.intakeForward(),
+        new WaitCommand(0.0)
+      )
+    );
+
+     NamedCommands.registerCommand("shootDelayFast",
+      new SequentialCommandGroup(
+        new ParallelCommandGroup(
+          arm_Commands.moveToSpeaker(
+            new DoubleSupplier() {
+              @Override
+              public double getAsDouble() {
+                return swerve.getDistanceToTarget();
+              }
+            }
+          ),
+          shooter_Commands.shootSpeaker()
+        ),
+        new WaitCommand(1.0),
         intake_Commands.intakeForward()
+      )
+    );
+
+    NamedCommands.registerCommand("shootFast",
+      new SequentialCommandGroup(
+        new ParallelCommandGroup(
+          arm_Commands.moveToSpeaker(
+            new DoubleSupplier() {
+              @Override
+              public double getAsDouble() {
+                return swerve.getDistanceToTarget();
+              }
+            }
+          ),
+          shooter_Commands.shootSpeaker()
+        ),
+        new WaitCommand(0.87),
+        intake_Commands.intakeForward(),
+        new WaitCommand(0.0 )
       )
     );
 
@@ -218,7 +275,7 @@ public class RobotContainer {
     .onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
     
     
-   /* 
+    /* =
     operator.cross().onTrue(arm.sysIdQuasisttatic(SysIdRoutine.Direction.kForward));
     operator.square().onTrue(arm.sysIdQuasisttatic(SysIdRoutine.Direction.kReverse));
     operator.triangle().onTrue(arm.sysIdDynamic(SysIdRoutine.Direction.kForward));

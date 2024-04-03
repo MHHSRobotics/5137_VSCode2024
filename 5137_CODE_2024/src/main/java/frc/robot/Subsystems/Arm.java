@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import frc.robot.Constants.Arm_Constants;
 import frc.robot.Other.ArmTrajectoryAlignment;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -61,8 +62,8 @@ public class Arm extends ProfiledPIDSubsystem {
 
 
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
-    private final MutableMeasure<Angle> m_distance = mutable(Radian.of(0));
-    private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
+    private final MutableMeasure<Angle> m_distance = mutable(Rotations.of(0));
+    private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RotationsPerSecond.of(0));
 
     SysIdRoutine routine = new SysIdRoutine(
         new SysIdRoutine.Config(),
@@ -75,14 +76,14 @@ public class Arm extends ProfiledPIDSubsystem {
                 .voltage(
                     m_appliedVoltage.mut_replace(
                         leftMotor.getBusVoltage()*leftMotor.getAppliedOutput(), Volts))
-                        .angularPosition(m_distance.mut_replace(2*Math.PI*(leftEncoder.getPosition())/(Arm_Constants.gearRatio), Radian))
-                        .angularVelocity(m_velocity.mut_replace(2*Math.PI*(leftEncoder.getVelocity())/(Arm_Constants.gearRatio), RadiansPerSecond));
+                        .angularPosition(m_distance.mut_replace(getMeasurement()/(2*Math.PI), Rotations))
+                        .angularVelocity(m_velocity.mut_replace(2*Math.PI*(leftEncoder.getVelocity())/(Arm_Constants.gearRatio)/60.0, RotationsPerSecond));
                 log.motor("arm-right")
                 .voltage(
                     m_appliedVoltage.mut_replace(
                         rightMotor.getBusVoltage()*rightMotor.getAppliedOutput(), Volts))
-                        .angularPosition(m_distance.mut_replace(2*Math.PI*(rightEncoder.getPosition())/(Arm_Constants.gearRatio), Rotations))
-                        .angularVelocity(m_velocity.mut_replace(2*Math.PI*(rightEncoder.getVelocity())/(Arm_Constants.gearRatio), RotationsPerSecond));
+                        .angularPosition(m_distance.mut_replace(getMeasurement()/(2*Math.PI), Rotations))
+                        .angularVelocity(m_velocity.mut_replace((rightEncoder.getVelocity())/(Arm_Constants.gearRatio)/60.0, RotationsPerSecond));
             },
             this
         ));
@@ -117,6 +118,10 @@ public class Arm extends ProfiledPIDSubsystem {
         rightEncoder = rightMotor.getEncoder();
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
+        leftEncoder.setPositionConversionFactor(1.0);
+        leftEncoder.setVelocityConversionFactor(1.0);
+        rightEncoder.setPositionConversionFactor(1.0);
+        rightEncoder.setVelocityConversionFactor(1.0);
 
         
         feedForward = new ArmFeedforward(
@@ -166,7 +171,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
     public void runManual(double output) {
         if (encoder.isConnected()) {
-            this.setGoal(this.getGoal()+(output*0.02));
+            this.setGoal(MathUtil.clamp(this.getGoal()+(output*0.02),0,Math.PI/2));
         } else {
             leftMotor.set(0.3*output);
             rightMotor.set(0.3*output);

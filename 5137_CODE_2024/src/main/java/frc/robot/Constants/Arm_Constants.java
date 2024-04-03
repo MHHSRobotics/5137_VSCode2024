@@ -17,15 +17,15 @@ public class Arm_Constants {
     public static final int maxSupplyCurrent = 80;
 
     // Feedforward Constants
-    public static final double kS = 0.092308; // 0.15803 Volts to overcome static friction
-    public static final double kG = .50473; // 0.50797 Volts to overcome gravity
-    public static final double kV = .072111; // 4.6682 
-    public static final double kA = .013706; // 0.35139
+    public static final double kS = 0.2642; // 0.15803 Volts to overcome static friction
+    public static final double kG = .23172; // 0.50797 Volts to overcome gravity
+    public static final double kV = .68469; // 4.6682 
+    public static final double kA = .069366; // 0.35139
 
     // PID Constants
-    public static final double kP = 27.688; // 5.7574
+    public static final double kP = 26; // 5.7574
     public static final double kI = 0.0; // 0.0
-    public static final double kD = 0.0; // 0.82021
+    public static final double kD = 0.5; // 0.82021
 
     // Control Constants
     public static final double kShooterVelocity = 11.0; // Move to Speaker Constants

@@ -5,7 +5,7 @@
       "x": 1.2931568622589111,
       "y": 5.586577892303467
     },
-    "rotation": 7.778642810455344e-24
+    "rotation": 2.4116403676310833e-22
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shootDelayFast"
           }
         },
         {
@@ -26,31 +26,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MidStart-W1"
+            "pathName": "MidStart-W3"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "W1-W2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
+            "name": "shootFast"
           }
         },
         {
@@ -62,13 +44,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "W2-W3"
+            "pathName": "W3-W1"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shootKindaFast"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.24
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "W1-W2 (Mid5)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootFast"
           }
         },
         {
