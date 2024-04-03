@@ -9082,31 +9082,6 @@
             "circleObstacles": [],
             "eventMarkers": [],
             "isTrajectoryStale": false
-        },
-        "New Path": {
-            "waypoints": [],
-            "trajectory": [],
-            "trajectoryWaypoints": [],
-            "constraints": [
-                {
-                    "scope": [
-                        "first"
-                    ],
-                    "type": "StopPoint"
-                },
-                {
-                    "scope": [
-                        "last"
-                    ],
-                    "type": "StopPoint"
-                }
-            ],
-            "usesControlIntervalGuessing": true,
-            "defaultControlIntervalCount": 40,
-            "usesDefaultFieldObstacles": true,
-            "circleObstacles": [],
-            "eventMarkers": [],
-            "isTrajectoryStale": true
         }
     },
     "splitTrajectoriesAtStopPoints": false,
