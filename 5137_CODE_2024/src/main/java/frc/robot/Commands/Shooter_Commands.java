@@ -13,11 +13,19 @@ public class Shooter_Commands {
     }
     
     public InstantCommand shootSpeaker() {
-        return new InstantCommand(() -> shooter.shoot(Shooter_Constants.defaultShooterSpeed), shooter);
+        return new InstantCommand(() -> shooter.shoot(Shooter_Constants.speakerSpeed), shooter);
     }
 
-    public InstantCommand shootIntake() {
-        return new InstantCommand(() -> shooter.shoot(Shooter_Constants.ampShooterSpeed), shooter);
+    public InstantCommand shootTrap() {
+        return new InstantCommand(() -> shooter.shoot(Shooter_Constants.trapSpeed), shooter);
+    }
+
+    public InstantCommand shootAmp() {
+        return new InstantCommand(() -> shooter.shoot(Shooter_Constants.ampSpeed), shooter);
+    }
+
+    public InstantCommand pass() {
+        return new InstantCommand(() -> shooter.shoot(Shooter_Constants.passSpeed), shooter);
     }
 
     public InstantCommand rest() {

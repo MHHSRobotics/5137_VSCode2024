@@ -31,11 +31,19 @@ public class Arm_Commands {
         return new InstantCommand(() -> arm.setGoal(Arm_Constants.defaultPosition), arm);
     }
 
+     public InstantCommand moveToPass() {
+        return new InstantCommand(() -> arm.setGoal(Arm_Constants.passPosition), arm);
+    }
+
     public InstantCommand moveToAmp() {
         return new InstantCommand(() -> arm.setGoal(Arm_Constants.ampPosition), arm);
     }
 
     public InstantCommand moveToTrap() {
         return new InstantCommand(() -> arm.setGoal(Arm_Constants.trapPosition), arm);
+    }
+
+    public InstantCommand moveToStage() {
+        return new InstantCommand(() -> arm.setGoal(Arm_Constants.stagePosition), arm);
     }
 }

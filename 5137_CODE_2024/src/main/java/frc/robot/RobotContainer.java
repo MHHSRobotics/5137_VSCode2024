@@ -21,8 +21,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -75,84 +77,73 @@ public class RobotContainer {
         )
     );
 
-    NamedCommands.registerCommand("default", arm_Commands.moveToTrap());
+    NamedCommands.registerCommand("default", arm_Commands.moveToStage());
 
     NamedCommands.registerCommand("release",
       intake_Commands.intakeForward()
   );
 
     NamedCommands.registerCommand("shoot",
-      new SequentialCommandGroup(
-        new ParallelCommandGroup(
-          arm_Commands.moveToSpeaker(
-            new DoubleSupplier() {
-              @Override
+       new SequentialCommandGroup(
+        shooter_Commands.shootSpeaker(),
+        arm_Commands.moveToSpeaker(
+          new DoubleSupplier() {
+            @Override
               public double getAsDouble() {
-                return swerve.getDistanceToTarget();
-              }
+              return swerve.getDistanceToTarget();
             }
-          ),
-          shooter_Commands.shootSpeaker()
+          }
         ),
-        new WaitCommand(1.1),
-        intake_Commands.intakeForward(),
-        new WaitCommand(0.1)
+        new ParallelRaceGroup(new WaitCommand(1.1), new WaitUntilCommand(() -> {return arm.atSetpoint();})),
+        intake_Commands.intakeForward()
       )
     );
 
      NamedCommands.registerCommand("shootKindaFast",
       new SequentialCommandGroup(
-        new ParallelCommandGroup(
-          arm_Commands.moveToSpeaker(
-            new DoubleSupplier() {
-              @Override
+        shooter_Commands.shootSpeaker(),
+        arm_Commands.moveToSpeaker(
+          new DoubleSupplier() {
+            @Override
               public double getAsDouble() {
-                return swerve.getDistanceToTarget();
-              }
+              return swerve.getDistanceToTarget();
             }
-          ),
-          shooter_Commands.shootSpeaker()
+          }
         ),
-        new WaitCommand(1.0),
-        intake_Commands.intakeForward(),
-        new WaitCommand(0.0)
+        new ParallelRaceGroup(new WaitCommand(1.1), new WaitUntilCommand(() -> {return arm.atSetpoint();})),
+        intake_Commands.intakeForward()
       )
     );
 
      NamedCommands.registerCommand("shootDelayFast",
-      new SequentialCommandGroup(
-        new ParallelCommandGroup(
-          arm_Commands.moveToSpeaker(
-            new DoubleSupplier() {
-              @Override
+     new SequentialCommandGroup(
+        shooter_Commands.shootSpeaker(),
+        arm_Commands.moveToSpeaker(
+          new DoubleSupplier() {
+            @Override
               public double getAsDouble() {
-                return swerve.getDistanceToTarget();
-              }
+              return swerve.getDistanceToTarget();
             }
-          ),
-          shooter_Commands.shootSpeaker()
+          }
         ),
-        new WaitCommand(1.0),
+        new ParallelRaceGroup(new WaitCommand(1.3), new WaitUntilCommand(() -> {return arm.atSetpoint();})),
         intake_Commands.intakeForward()
       )
     );
 
     NamedCommands.registerCommand("shootFast",
       new SequentialCommandGroup(
-        new ParallelCommandGroup(
-          arm_Commands.moveToSpeaker(
-            new DoubleSupplier() {
-              @Override
+        shooter_Commands.shootSpeaker(),
+        arm_Commands.moveToSpeaker(
+          new DoubleSupplier() {
+            @Override
               public double getAsDouble() {
-                return swerve.getDistanceToTarget();
-              }
+              return swerve.getDistanceToTarget();
             }
-          ),
-          shooter_Commands.shootSpeaker()
+          }
         ),
-        new WaitCommand(0.87),
-        intake_Commands.intakeForward(),
-        new WaitCommand(0.0 )
+        new ParallelRaceGroup(new WaitCommand(.95), new WaitUntilCommand(() -> {return arm.atSetpoint();})),
+        intake_Commands.intakeForward()
       )
     );
 
@@ -171,7 +162,7 @@ public class RobotContainer {
           new DoubleSupplier() {
             @Override
             public double getAsDouble() {
-              return 4.3;
+              return 4.4;
             }
           }
         ));
@@ -190,7 +181,7 @@ public class RobotContainer {
       new SequentialCommandGroup(
         new ParallelCommandGroup(
           arm_Commands.moveToAmp(),
-          shooter_Commands.shootIntake()
+          shooter_Commands.shootAmp()
         ),
         new WaitCommand(0.65),
         intake_Commands.intakeForward(),
@@ -203,19 +194,17 @@ public class RobotContainer {
     );
 
     NamedCommands.registerCommand("shoot_Delay",
-      new SequentialCommandGroup(
-        new ParallelCommandGroup(
-          arm_Commands.moveToSpeaker(
-            new DoubleSupplier() {
-              @Override
+       new SequentialCommandGroup(
+        shooter_Commands.shootSpeaker(),
+        arm_Commands.moveToSpeaker(
+          new DoubleSupplier() {
+            @Override
               public double getAsDouble() {
-                return swerve.getDistanceToTarget();
-              }
+              return swerve.getDistanceToTarget();
             }
-          ),
-          shooter_Commands.shootSpeaker()
+          }
         ),
-        new WaitCommand(1.5),
+        new ParallelRaceGroup(new WaitCommand(1.5), new WaitUntilCommand(() -> {return arm.atSetpoint();})),
         intake_Commands.intakeForward()
       )
     );
@@ -304,7 +293,7 @@ public class RobotContainer {
             }
           }
         ),
-        new WaitCommand(0.65),
+        new ParallelRaceGroup(new WaitCommand(1.1), new WaitUntilCommand(() -> {return arm.atSetpoint() && shooter.atSpeed();})),
         intake_Commands.intakeForward()
       )
     )
@@ -321,7 +310,7 @@ public class RobotContainer {
       new SequentialCommandGroup(
         arm_Commands.moveToAmp(),
         new WaitCommand(1),
-        shooter_Commands.shootIntake()
+        shooter_Commands.shootAmp()
       )
     )
     .onFalse(
@@ -335,8 +324,26 @@ public class RobotContainer {
     .onTrue(
       new SequentialCommandGroup(
         new ParallelCommandGroup(
+        arm_Commands.moveToPass(),
+        shooter_Commands.pass()
+        ),
+        new WaitCommand(0.5),
+        intake_Commands.intakeForward()
+      )
+    )
+    .onFalse(
+      new ParallelCommandGroup(
+        shooter_Commands.stop(),
+        intake_Commands.stop()
+      )
+    );
+
+    operator.options()
+    .onTrue(
+      new SequentialCommandGroup(
+        new ParallelCommandGroup(
         arm_Commands.moveToTrap(),
-        shooter_Commands.shootSpeaker()
+        shooter_Commands.shootTrap()
         ),
         new WaitCommand(1),
         intake_Commands.intakeForward()
@@ -345,10 +352,15 @@ public class RobotContainer {
     .onFalse(
       new ParallelCommandGroup(
         shooter_Commands.stop(),
-        arm_Commands.moveToDefault(),
         intake_Commands.stop()
       )
     );
+
+    operator.povDown()
+    .onTrue(arm_Commands.moveToStage());
+
+    operator.povUp()
+    .onTrue(arm_Commands.moveToDefault());
 
     operator.R1()
     .onTrue(shooter_Commands.shootSpeaker());

@@ -6,12 +6,12 @@ import edu.wpi.first.math.util.Units;
 
 public class Vision_Constants {
 
-    public static final double offsetXAR2 = Units.inchesToMeters(-0.9);
-    public static final double offsetYAR2 = Units.inchesToMeters(-4);
-    public static final double offsetZAR2 = Units.inchesToMeters(11.0);
+    public static final double offsetXAR2 = Units.inchesToMeters(-8.5);
+    public static final double offsetYAR2 = Units.inchesToMeters(-2.8);
+    public static final double offsetZAR2 = Units.inchesToMeters(11.75);
     public static final double rollAR2= Units.degreesToRadians(0);
-    public static final double pitchAR2 = Units.degreesToRadians(-60);
-    public static final double yawAR2 = Units.degreesToRadians(180.48);
+    public static final double pitchAR2 = Units.degreesToRadians(-37 ); //-35
+    public static final double yawAR2 = Units.degreesToRadians(182.25);
 
     public static final double offsetXOV1 = Units.inchesToMeters(6.5);
     public static final double offsetYOV1 = Units.inchesToMeters(-11.5);

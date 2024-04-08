@@ -11,6 +11,9 @@ import edu.wpi.first.units.*;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,6 +36,7 @@ import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.io.File;
+import java.util.Map;
 
 import org.apache.commons.math3.util.MathUtils;
 
@@ -56,6 +60,7 @@ public class Arm extends ProfiledPIDSubsystem {
     private ArmFeedforward feedForward;
 
     private SendableChooser<Boolean> manualControlChoice;
+    private SimpleWidget speakerShooterOffset;
     private RelativeEncoder leftEncoder;
     private RelativeEncoder rightEncoder;
 
@@ -97,7 +102,8 @@ public class Arm extends ProfiledPIDSubsystem {
                 Arm_Constants.kMaxVelocity,
                 Arm_Constants.kMaxAcceleration)),
             0.0);
-
+        super.m_controller.setTolerance(Math.toRadians(0.5));
+        
         leftMotor = new CANSparkMax(Arm_Constants.leftMotorID, MotorType.kBrushless);
         rightMotor = new CANSparkMax(Arm_Constants.rightMotorID, MotorType.kBrushless);
 
@@ -141,6 +147,11 @@ public class Arm extends ProfiledPIDSubsystem {
         manualControlChoice.setDefaultOption("Disabled", false);
         SmartDashboard.putData("Arm Manual Control", manualControlChoice);
 
+        speakerShooterOffset = Shuffleboard.getTab("Tab 2")
+        .add("Shooter Offset", 0.0)
+        .withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min", -5.0, "max", 5.0));
+
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -171,7 +182,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
     public void runManual(double output) {
         if (encoder.isConnected()) {
-            this.setGoal(MathUtil.clamp(this.getGoal()+(output*0.02),0,Math.PI/2));
+            this.setGoal(MathUtil.clamp(this.getGoal()+(output*0.02),0,Math.toRadians(90)));
         } else {
             leftMotor.set(0.3*output);
             rightMotor.set(0.3*output);
@@ -179,7 +190,7 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     public void alignToSpeaker(double position) {
-        setGoal((align.calculateAngle(position))); 
+        setGoal((align.calculateAngle(position))+ Math.toRadians(-5.0)+Math.toRadians(speakerShooterOffset.getEntry().getDouble(0.0)));
     }
 
     public double getGoal() {
@@ -202,7 +213,11 @@ public class Arm extends ProfiledPIDSubsystem {
         if (encoder.isConnected()) {
             useOutput(super.m_controller.calculate(getMeasurement()), super.m_controller.getSetpoint());
         }
+    }
 
+    public boolean atSetpoint()
+    {
+        return Math.abs(getMeasurement() - getGoal()) < Math.toRadians(0.5);
     }
 
      

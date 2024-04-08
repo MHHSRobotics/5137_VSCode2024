@@ -4,8 +4,10 @@ public class Arm_Constants {
     
     // Positions
     public static final double intakePosition = Math.toRadians(0);
-    public static final double defaultPosition = Math.toRadians(30);
     public static final double trapPosition = Math.toRadians(5);
+    public static final double stagePosition = Math.toRadians(15);
+    public static final double defaultPosition = Math.toRadians(30);
+    public static final double passPosition = Math.toRadians(27);
     public static final double ampPosition = Math.toRadians(90);
 
     // Hardware IDS
@@ -25,7 +27,7 @@ public class Arm_Constants {
     // PID Constants
     public static final double kP = 26; // 5.7574
     public static final double kI = 0.0; // 0.0
-    public static final double kD = 0.5; // 0.82021
+    public static final double kD = 0.2; // 0.2
 
     // Control Constants
     public static final double kShooterVelocity = 11.0; // Move to Speaker Constants
@@ -38,7 +40,7 @@ public class Arm_Constants {
     public static final double normalRangeCenter = (minimumNormalAngle+maximumNormalAngle)/2.0; //Radians
 
     // Characteristics
-    public static final double encoderOffset = 0.96819444;
+    public static final double encoderOffset = 0.95461111;
     public static final double gearRatio = 227.555/1.0; 
 
 
