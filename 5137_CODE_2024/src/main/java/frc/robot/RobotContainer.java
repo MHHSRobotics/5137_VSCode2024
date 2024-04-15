@@ -263,6 +263,9 @@ public class RobotContainer {
     driver.back()
     .onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
     
+    driver.povUp()
+    .onTrue(swerve_Commands.driveToNote(()-> vision.getMetersToNote(),()-> vision.getTranslationToNote().getAngle().getRadians()));
+    
     
     /* =
     operator.cross().onTrue(arm.sysIdQuasisttatic(SysIdRoutine.Direction.kForward));

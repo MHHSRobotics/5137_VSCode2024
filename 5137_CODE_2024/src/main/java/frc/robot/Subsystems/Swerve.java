@@ -1,6 +1,7 @@
 package frc.robot.Subsystems;
 
 import frc.robot.Constants.Swerve_Constants;
+import frc.robot.Constants.Vision_Constants;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +62,10 @@ public class Swerve extends SubsystemBase {
     private PIDController turnController;
     private PIDController driveController;
 
+
+    private PIDController objectDistanceController;
+    private PIDController objectYawController;
+
     private boolean alignToSpeaker;
      
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
@@ -120,6 +125,12 @@ public class Swerve extends SubsystemBase {
         module1 = swerve.getModules()[1];
         module2 = swerve.getModules()[2];
         module3 = swerve.getModules()[3];
+
+        objectDistanceController = new PIDController(Vision_Constants.objectDistanceKP, Vision_Constants.objectDistanceKI, Vision_Constants.objectDistanceKD);
+        objectDistanceController.setTolerance(Vision_Constants.allowableDistanceError);
+        objectYawController = new PIDController(Vision_Constants.objectYawKP, Vision_Constants.objectYawKI, Vision_Constants.objectYawKD);
+        objectYawController.setTolerance(Vision_Constants.allowableRotationError);
+
     }
     
 
@@ -199,6 +210,18 @@ public class Swerve extends SubsystemBase {
 
     public Pose2d getPose() {
         return swerve.getPose();
+    }
+
+    public void driveToNote(double radiansToNote, double metersToNote){
+       
+        double distance = metersToNote;
+        double turnVelocity = objectYawController.calculate(radiansToNote,0);
+        double driveVelocity = objectDistanceController.calculate(distance, Vision_Constants.notePickupDistance);
+        drive(new Translation2d(driveVelocity, 0), turnVelocity, false);
+    }
+
+    public boolean notePickUpComplete(){
+        return objectYawController.atSetpoint() && objectDistanceController.atSetpoint(); 
     }
 
     public void addVisionMeasurement(Pose2d pose, double timestamp){ 
