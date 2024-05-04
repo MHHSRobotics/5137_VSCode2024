@@ -33,9 +33,9 @@ public class Vision_Constants {
 
     public static final double objectCameraX = Units.inchesToMeters(0);
     public static final double objectCameraY = 0.0;
-    public static final double objectCameraZ = Units.inchesToMeters(10);
+    public static final double objectCameraZ = Units.inchesToMeters(7);
     public static final double objectCameraRoll = 0.0;
-    public static final double objectCameraPitch = Math.toRadians(-5);
+    public static final double objectCameraPitch = Math.toRadians(-8);
     public static final double objectCameraYaw = 0.0;
     public static final Transform3d objectCameraToRobot = new Transform3d(objectCameraX, objectCameraY, objectCameraZ, new Rotation3d(objectCameraRoll, objectCameraPitch, objectCameraYaw));
 
@@ -51,7 +51,7 @@ public class Vision_Constants {
     public static final double objectYawKD = 0.0; 
 
     //TODO: Change for real robot
-    public static final double allowableDistanceError = .65;
+    public static final double allowableDistanceError = .01;
     public static final double allowableRotationError = Units.degreesToRadians(3);
 
     

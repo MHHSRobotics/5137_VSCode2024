@@ -41,8 +41,8 @@ public class Swerve_Commands {
         return swerve.getAuto();
     }
 
-    public FunctionalCommand driveToNote(DoubleSupplier distanceToNote, DoubleSupplier rotationToNote) {
-        return new FunctionalCommand(() -> {}, () -> swerve.driveToNote(rotationToNote.getAsDouble(), distanceToNote.getAsDouble()), (Boolean x) -> {}, () -> swerve.notePickUpComplete(), swerve);
+    public FunctionalCommand driveToNote(DoubleSupplier distanceToNote, DoubleSupplier rotationToNote, BooleanSupplier noteDetected) {
+        return new FunctionalCommand(() -> {}, () -> swerve.driveToNote(rotationToNote.getAsDouble(), distanceToNote.getAsDouble()), (Boolean x) -> {}, () -> swerve.notePickUpComplete() || noteDetected.getAsBoolean(), swerve);
     }
 
     public Command driveToAmp() {

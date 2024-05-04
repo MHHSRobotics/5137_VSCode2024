@@ -217,7 +217,7 @@ public class Swerve extends SubsystemBase {
         double distance = metersToNote;
         double turnVelocity = objectYawController.calculate(radiansToNote,0);
         double driveVelocity = objectDistanceController.calculate(distance, Vision_Constants.notePickupDistance);
-        drive(new Translation2d(driveVelocity, 0), turnVelocity, false);
+        drive(new Translation2d(-driveVelocity, 0), -turnVelocity, false);
     }
 
     public boolean notePickUpComplete(){

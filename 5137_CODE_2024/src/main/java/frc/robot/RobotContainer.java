@@ -263,8 +263,10 @@ public class RobotContainer {
     driver.back()
     .onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
     
+    
     driver.povUp()
-    .onTrue(swerve_Commands.driveToNote(()-> vision.getMetersToNote(),()-> vision.getTranslationToNote().getAngle().getRadians()));
+    .onTrue(swerve_Commands.driveToNote(()-> vision.getMetersToNote(),()-> vision.getTranslationToNote().getAngle().getRadians(), ()-> intake.objectInRange()))
+    .onTrue(intake_Commands.intakeForward());
     
     
     /* =
