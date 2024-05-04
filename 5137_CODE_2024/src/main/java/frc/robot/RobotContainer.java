@@ -235,7 +235,7 @@ public class RobotContainer {
       () -> getAllianceInvert()*-MathUtil.applyDeadband(driver.getLeftY(), Swerve_Constants.LY_Deadband),
       () -> getAllianceInvert()*-MathUtil.applyDeadband(driver.getLeftX(), Swerve_Constants.LX_Deadband),
       () -> -MathUtil.applyDeadband(driver.getRightX(), Swerve_Constants.RX_Deadband),
-      () -> !leftBumper.getAsBoolean()
+      () -> true
     ));
 
     driver.a()
@@ -249,12 +249,13 @@ public class RobotContainer {
     })
     .onTrue(swerve_Commands.alignToSpeaker(false));
 
+    /* 
     driver.b()
     .onTrue(swerve_Commands.driveToAmp());
 
     driver.x()
     .onTrue(swerve_Commands.driveToTrap());
-
+*/
     driver.y()
     .onTrue(swerve_Commands.zeroGyro());
 
@@ -273,7 +274,7 @@ public class RobotContainer {
 
     
     // Arm Bindings
-    arm.setDefaultCommand(arm_Commands.manualMove(() -> -MathUtil.applyDeadband(operator.getLeftY(), 0.1)));
+    //arm.setDefaultCommand(arm_Commands.manualMove(() -> -MathUtil.applyDeadband(operator.getLeftY(), 0.1)));
 
     // Climb Bindings
 
@@ -399,9 +400,11 @@ public class RobotContainer {
     })
     .onTrue(
       new ParallelCommandGroup(
-        intake_Commands.stop(),
+        new SequentialCommandGroup(new WaitCommand(0.1),
+        intake_Commands.stop()),
         led_Commands.greenLedsOn()
-      ))
+      )
+      )
     .onFalse(led_Commands.greenLedsOff());
     
     //Swerve Invert

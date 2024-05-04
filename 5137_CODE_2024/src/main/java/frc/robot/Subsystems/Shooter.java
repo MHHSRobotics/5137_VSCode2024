@@ -15,6 +15,8 @@ public class Shooter extends SubsystemBase {
     private CANSparkMax upperMotor = new CANSparkMax(22, MotorType.kBrushless);
 
     private RelativeEncoder upperEncoder;
+    private RelativeEncoder lowerEncoder;
+
 
     public Shooter(){
         lowerMotor.setSmartCurrentLimit(Shooter_Constants.maxSupplyCurrent);
@@ -22,6 +24,8 @@ public class Shooter extends SubsystemBase {
         lowerMotor.setIdleMode(IdleMode.kCoast);
         upperMotor.setIdleMode(IdleMode.kCoast);
         upperEncoder = upperMotor.getEncoder();
+        lowerEncoder = lowerMotor.getEncoder();
+
 
     }
 
@@ -37,12 +41,15 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean atSpeed(){
-        return Math.abs(upperEncoder.getVelocity()) > 4500;
+        return Math.abs(upperEncoder.getVelocity()) > 5000 && Math.abs(lowerEncoder.getVelocity()) > 5000;
+    
     }
 
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("RPM",upperEncoder.getVelocity());
+        SmartDashboard.putNumber(" upper RPM",upperEncoder.getVelocity());
+                SmartDashboard.putNumber(" lower RPM",lowerEncoder.getVelocity());
+
     }
 }
