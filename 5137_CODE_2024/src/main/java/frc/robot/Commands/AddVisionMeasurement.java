@@ -42,13 +42,14 @@ public class AddVisionMeasurement extends Command {
       swerve.addVisionMeasurement(pose, timestamp);
     }
 
+    /*
     Optional<EstimatedRobotPose> ov2Pose = vision.getEstimatedOV2Pose(swerve.getPose());
     if(ov2Pose.isPresent())
     {
       Pose2d pose = ov2Pose.get().estimatedPose.toPose2d();
       double timestamp = ov2Pose.get().timestampSeconds;
       swerve.addVisionMeasurement(pose, timestamp);
-    }
+    }*/
 
  
      /* 

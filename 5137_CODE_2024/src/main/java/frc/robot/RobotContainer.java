@@ -274,7 +274,7 @@ public class RobotContainer {
 
     
     // Arm Bindings
-    //arm.setDefaultCommand(arm_Commands.manualMove(() -> -MathUtil.applyDeadband(operator.getLeftY(), 0.1)));
+    arm.setDefaultCommand(arm_Commands.manualMove(() -> -MathUtil.applyDeadband(operator.getLeftY(), 0.1)));
 
     // Climb Bindings
 

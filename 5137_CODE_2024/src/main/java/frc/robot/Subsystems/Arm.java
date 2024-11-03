@@ -182,7 +182,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
     public void runManual(double output) {
         if (encoder.isConnected()) {
-            this.setGoal(MathUtil.clamp(this.getGoal()+(output*0.02),0,Math.toRadians(90)));
+            this.setGoal(MathUtil.clamp(this.getGoal()+(output*0.02),0,Math.toRadians(100)));
         } else {
             leftMotor.set(0.3*output);
             rightMotor.set(0.3*output);
@@ -190,7 +190,7 @@ public class Arm extends ProfiledPIDSubsystem {
     }
 
     public void alignToSpeaker(double position) {
-        setGoal((align.calculateAngle(position))+ Math.toRadians(-5.0)+Math.toRadians(speakerShooterOffset.getEntry().getDouble(0.0)));
+        setGoal((align.calculateAngle(position))+Math.toRadians(speakerShooterOffset.getEntry().getDouble(0.0)));
     }
 
     public double getGoal() {
@@ -203,7 +203,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
     private void updateDashboard() {
         //SmartDashboard.putBoolean("Encoder", encoder.isConnected());
-    SmartDashboard.putNumber("Arm Position", Math.toDegrees(this.getMeasurement()));
+        SmartDashboard.putNumber("Arm Position", Math.toDegrees(this.getMeasurement()));
         SmartDashboard.putNumber("Arm Goal", Math.toDegrees(this.getGoal()));
     }
 

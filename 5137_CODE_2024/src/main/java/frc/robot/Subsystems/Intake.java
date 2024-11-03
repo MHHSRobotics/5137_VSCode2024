@@ -29,21 +29,19 @@ public class Intake extends SubsystemBase {
         irSensor0 = new DigitalInput(0);
         irSensor1 = new DigitalInput(1);
 
-
-
-        intakeMotor= new TalonSRX(20);
+        intakeMotor = new TalonSRX(20);
         intakeMotor.setInverted(true);
         intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, Intake_Constants.maxSupplyCurrent, Intake_Constants.maxSupplyCurrent, 0));
     }
 
-    public double getDistance(){
+    public double getDistance() {
         double measurement = ultrasonic.getRangeInches();
         double filteredMeasurement = m_filter.calculate(measurement);
         return filteredMeasurement;
     }
 
     public boolean objectInRange(){
-        return (!irSensor0.get() || !irSensor1.get());
+        return (/*!irSensor0.get() || */!irSensor1.get());
         /* 
         if(getDistance() <= 10){
             return true;
@@ -65,5 +63,8 @@ public class Intake extends SubsystemBase {
     public void periodic() {     
         SmartDashboard.putNumber("Object Distance", getDistance());
         SmartDashboard.putBoolean("Object In Range", objectInRange());
+        SmartDashboard.putBoolean("IR 0", !irSensor0.get());
+        SmartDashboard.putBoolean("IR 1", !irSensor1.get());
+        //System.out.println(irSensor0.get() + "     " + irSensor1.get());
     }
 }

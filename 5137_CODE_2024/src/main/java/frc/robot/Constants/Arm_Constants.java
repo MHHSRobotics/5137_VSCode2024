@@ -8,7 +8,7 @@ public class Arm_Constants {
     public static final double stagePosition = Math.toRadians(15);
     public static final double defaultPosition = Math.toRadians(30);
     public static final double passPosition = Math.toRadians(27);
-    public static final double ampPosition = Math.toRadians(90);
+    public static final double ampPosition = Math.toRadians(95);
 
     // Hardware IDS
     public static final int leftMotorID = 23;
